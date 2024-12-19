@@ -1,0 +1,44 @@
+{
+    "bedManagement": {
+        "title": "Bed Management",
+        "sections": {
+            "overview": "Overview",
+            "wings": "Wings",
+            "rooms": "Rooms",
+            "assignments": "Bed Assignments"
+        },
+        "status": {
+            "available": "Available",
+            "occupied": "Occupied",
+            "maintenance": "Under Maintenance",
+            "reserved": "Reserved"
+        },
+        "actions": {
+            "assign": "Assign Bed",
+            "transfer": "Transfer Resident",
+            "markMaintenance": "Mark for Maintenance",
+            "markAvailable": "Mark as Available",
+            "viewHistory": "View History"
+        },
+        "fields": {
+            "wing": "Wing",
+            "room": "Room",
+            "bedNumber": "Bed Number",
+            "resident": "Resident",
+            "status": "Status",
+            "assignedBy": "Assigned By",
+            "assignedAt": "Assigned At",
+            "notes": "Notes"
+        },
+        "messages": {
+            "assignmentSuccess": "Bed assigned successfully",
+            "transferSuccess": "Resident transferred successfully",
+            "maintenanceSuccess": "Bed marked for maintenance",
+            "error": {
+                "alreadyOccupied": "This bed is already occupied",
+                "residentHasBed": "Resident already has a bed assigned",
+                "invalidTransfer": "Invalid transfer request"
+            }
+        }
+    }
+}

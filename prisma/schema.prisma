@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== Core Models =====
+model User {
+  id              String    @id @default(cuid())
+  name            String?
+  email           String?   @unique
+  emailVerified   DateTime?
+  image           String?
+  role            String    @default("USER")
+  tenantId        String
+  careHomeId      String
+  
+  tenant          Tenant    @relation(fields: [tenantId], references: [id])
+  careHome        CareHome  @relation(fields: [careHomeId], references: [id])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([tenantId])
+  @@index([careHomeId])
+}
+
+model Tenant {
+  id            String    @id @default(cuid())
+  name          String
+  domain        String    @unique
+  status        String    @default("ACTIVE")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  users         User[]
+  careHomes     CareHome[]
+
+  @@index([domain])
+  @@index([status])
+}
+
+model CareHome {
+  id            String     @id @default(cuid())
+  name          String
+  type          String     // RESIDENTIAL, NURSING, DEMENTIA, etc.
+  status        String     @default("ACTIVE")
+  tenantId      String
+  tenant        Tenant     @relation(fields: [tenantId], references: [id])
+  
+  // Relationships
+  users         User[]
+  address       Address?
+  
+  // Metadata
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([type])
+  @@index([status])
+  @@index([tenantId])
+}
+
+model Address {
+  id            String    @id @default(cuid())
+  careHomeId    String    @unique
+  street        String
+  city          String
+  county        String
+  postcode      String
+  country       String    @default("UK")
+  careHome      CareHome  @relation(fields: [careHomeId], references: [id])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}

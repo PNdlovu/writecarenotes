@@ -1,0 +1,3 @@
+export { documentRoutes } from './documentRoutes';
+
+

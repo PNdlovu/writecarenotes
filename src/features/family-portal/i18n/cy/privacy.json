@@ -1,0 +1,50 @@
+{
+  "audit": {
+    "title": "Log Archwilio",
+    "error": "Methwyd â llwytho'r log archwilio",
+    "selectDateRange": "Dewiswch ystod dyddiad",
+    "selectCategory": "Dewiswch gategori",
+    "selectAction": "Dewiswch weithred",
+    "allCategories": "Pob Categori",
+    "allActions": "Pob Gweithred",
+    "medical": "Meddygol",
+    "personal": "Personol",
+    "financial": "Ariannol",
+    "communication": "Cyfathrebu",
+    "view": "Gweld",
+    "create": "Creu",
+    "update": "Diweddaru",
+    "delete": "Dileu",
+    "export": "Allforio",
+    "share": "Rhannu",
+    "reason": "Rheswm",
+    "resourceAccessed": "{{user}} {{action}} {{resource}}"
+  },
+  "permissions": {
+    "title": "Rheolwr Caniatâd",
+    "error": "Methwyd â llwytho caniatâd",
+    "updateSuccess": "Caniatâd wedi'i Ddiweddaru",
+    "updateSuccessDetail": "Mae'r caniatâd wedi'i ddiweddaru'n llwyddiannus",
+    "updateError": "Diweddariad wedi Methu",
+    "updateErrorDetail": "Methwyd â diweddaru'r caniatâd. Ceisiwch eto.",
+    "medical": "Meddygol",
+    "personal": "Personol",
+    "financial": "Ariannol",
+    "communication": "Cyfathrebu",
+    "read": "Darllen",
+    "write": "Ysgrifennu",
+    "admin": "Gweinyddol",
+    "toggle": "Toglo caniatâd",
+    "details": "Gweld Manylion",
+    "grantedTo": "Rhoddwyd I",
+    "conditions": "Amodau",
+    "expiration": "Dyddiad Dod i Ben"
+  },
+  "common": {
+    "offlineMode": "Modd All-lein",
+    "previous": "Blaenorol",
+    "next": "Nesaf",
+    "page": "Tudalen",
+    "close": "Cau"
+  }
+}

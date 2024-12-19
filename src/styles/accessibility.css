@@ -1,0 +1,257 @@
+/* Base font size configuration */
+:root {
+  --base-font-size: 16px;
+}
+
+/* Font size scaling */
+html {
+  font-size: var(--base-font-size);
+}
+
+/* High Contrast Mode */
+.high-contrast {
+  /* Core colors */
+  --background: #000000;
+  --foreground: #ffffff;
+  --muted: #666666;
+  --muted-foreground: #999999;
+  
+  /* UI colors */
+  --primary: #ffff00;
+  --primary-foreground: #000000;
+  --secondary: #00ffff;
+  --secondary-foreground: #000000;
+  --accent: #ff00ff;
+  --accent-foreground: #000000;
+  
+  /* Status colors */
+  --success: #00ff00;
+  --error: #ff0000;
+  --warning: #ffff00;
+  
+  /* Border colors */
+  --border: #ffffff;
+  --input: #ffffff;
+  --ring: #ffff00;
+  
+  /* Apply high contrast overrides */
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* High contrast text adjustments */
+.high-contrast h1,
+.high-contrast h2,
+.high-contrast h3,
+.high-contrast h4,
+.high-contrast h5,
+.high-contrast h6 {
+  color: var(--foreground);
+}
+
+.high-contrast a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.high-contrast a:hover {
+  color: var(--secondary);
+}
+
+/* High contrast UI elements */
+.high-contrast button:not([aria-label="Toggle theme"]) {
+  background-color: var(--foreground);
+  color: var(--background);
+  border: 2px solid var(--border);
+}
+
+.high-contrast button:not([aria-label="Toggle theme"]):hover {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+.high-contrast input,
+.high-contrast select,
+.high-contrast textarea {
+  background-color: var(--background);
+  color: var(--foreground);
+  border: 2px solid var(--border);
+}
+
+.high-contrast input:focus,
+.high-contrast select:focus,
+.high-contrast textarea:focus {
+  border-color: var(--ring);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--ring);
+}
+
+/* Increased Text Spacing */
+.increased-spacing {
+  line-height: 1.8;
+  letter-spacing: 0.12em;
+  word-spacing: 0.16em;
+}
+
+.increased-spacing p {
+  margin-bottom: 2em;
+}
+
+/* Skip Links */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 8px;
+  z-index: 100;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Screen Reader Only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ARIA Live Regions */
+[aria-live="polite"],
+[aria-live="assertive"] {
+  position: fixed;
+  top: -10000px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: var(--background);
+  color: var(--foreground);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: top 0.3s ease-in-out;
+}
+
+[aria-live].visible {
+  top: 1rem;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .reduce-motion *,
+  .reduce-motion *::before,
+  .reduce-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.reduce-motion * {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Keyboard Navigation Focus Styles */
+.keyboard-navigation :focus {
+  outline: 3px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.keyboard-navigation button:focus,
+.keyboard-navigation a:focus,
+.keyboard-navigation input:focus,
+.keyboard-navigation select:focus,
+.keyboard-navigation textarea:focus {
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+/* Font Size Scale */
+@media screen and (max-width: 640px) {
+  html {
+    font-size: calc(var(--base-font-size) * 0.9);
+  }
+}
+
+/* Text size utilities that scale with base font size */
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.text-base {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+}
+
+/* Focus styles for keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  .increased-spacing {
+    line-height: 1.5;
+    letter-spacing: normal;
+    word-spacing: normal;
+  }
+
+  * {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+
+  abbr[title]::after {
+    content: " (" attr(title) ")";
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "version": {
+    "history": "Hanes Fersiwn",
+    "number": "Fersiwn {{number}}",
+    "current": "Cyfredol",
+    "info": "Gwybodaeth Fersiwn",
+    "compare": "Cymharu Fersiynau",
+    "restore": "Adfer y Fersiwn hon",
+    "confirmRestore": "Ydych chi'n siŵr eich bod am adfer y fersiwn hon? Bydd hyn yn creu fersiwn newydd gyda'r cynnwys wedi'i adfer.",
+    "restored": "Fersiwn wedi'i adfer yn llwyddiannus",
+    "restoreError": "Methu adfer fersiwn",
+    "comparing": "Cymharu Fersiwn {{v1}} gyda Fersiwn {{v2}}",
+    "details": "Manylion Fersiwn",
+    "created": "Crëwyd: {{date}}",
+    "reason": "Rheswm Newid",
+    "loading": "Llwytho hanes fersiwn..."
+  },
+  "search": {
+    "placeholder": "Chwilio dogfennau...",
+    "popular": "Chwiliadau Poblogaidd",
+    "results": "{{count}} canlyniad ({{time}} eiliad)",
+    "noResults": "Ni chanfuwyd unrhyw ddogfennau",
+    "error": "Gwall wrth chwilio",
+    "filters": {
+      "title": "Hidlyddion Chwilio",
+      "type": "Math o Ddogfen",
+      "status": "Statws",
+      "dateFrom": "O Ddyddiad",
+      "dateTo": "Hyd at Ddyddiad",
+      "categories": "Categorïau",
+      "tags": "Tagiau",
+      "all": "Pob un",
+      "clear": "Clirio Hidlyddion",
+      "apply": "Cymhwyso Hidlyddion"
+    }
+  },
+  "documentTypes": {
+    "POLICY": "Polisi",
+    "PROCEDURE": "Gweithdrefn",
+    "FORM": "Ffurflen",
+    "REPORT": "Adroddiad",
+    "ASSESSMENT": "Asesiad",
+    "CARE_PLAN": "Cynllun Gofal",
+    "INCIDENT": "Adroddiad Digwyddiad",
+    "TRAINING": "Dogfen Hyfforddiant",
+    "OTHER": "Arall"
+  },
+  "status": {
+    "draft": "Drafft",
+    "published": "Cyhoeddwyd",
+    "archived": "Archifwyd",
+    "pending": "Aros am Adolygiad",
+    "rejected": "Gwrthodwyd"
+  }
+}

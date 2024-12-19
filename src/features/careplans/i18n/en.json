@@ -1,0 +1,91 @@
+{
+    "carePlan": {
+        "status": {
+            "DRAFT": "Draft",
+            "ACTIVE": "Active",
+            "UNDER_REVIEW": "Under Review",
+            "ARCHIVED": "Archived"
+        },
+        "categories": {
+            "PERSONAL_CARE": "Personal Care",
+            "MOBILITY": "Mobility",
+            "NUTRITION": "Nutrition",
+            "MEDICATION": "Medication",
+            "SOCIAL": "Social Activities",
+            "MENTAL_HEALTH": "Mental Health",
+            "END_OF_LIFE": "End of Life Care",
+            "DEMENTIA_CARE": "Dementia Care",
+            "PALLIATIVE_CARE": "Palliative Care",
+            "REHABILITATION": "Rehabilitation",
+            "RESPITE_CARE": "Respite Care",
+            "NURSING_CARE": "Nursing Care",
+            "PSYCHIATRIC_CARE": "Psychiatric Care",
+            "BEHAVIORAL_SUPPORT": "Behavioral Support",
+            "CRISIS_INTERVENTION": "Crisis Intervention",
+            "THERAPEUTIC_SUPPORT": "Therapeutic Support",
+            "ADDICTION_SUPPORT": "Addiction Support",
+            "TRAUMA_INFORMED_CARE": "Trauma Informed Care",
+            "PHYSICAL_DISABILITY": "Physical Disability Support",
+            "LEARNING_DISABILITY": "Learning Disability Support",
+            "SENSORY_NEEDS": "Sensory Needs",
+            "COMMUNICATION_SUPPORT": "Communication Support",
+            "ASSISTIVE_TECHNOLOGY": "Assistive Technology",
+            "INDEPENDENT_LIVING": "Independent Living Skills",
+            "VOCATIONAL_SUPPORT": "Vocational Support",
+            "EDUCATIONAL_SUPPORT": "Educational Support",
+            "DEVELOPMENTAL_SUPPORT": "Developmental Support",
+            "SAFEGUARDING": "Safeguarding",
+            "FAMILY_CONTACT": "Family Contact",
+            "LIFE_SKILLS": "Life Skills",
+            "PLAY_AND_RECREATION": "Play and Recreation",
+            "TRANSITION_PLANNING": "Transition Planning",
+            "CULTURAL_NEEDS": "Cultural Needs",
+            "SPIRITUAL_NEEDS": "Spiritual Needs",
+            "ADVOCACY": "Advocacy"
+        },
+        "priority": {
+            "ROUTINE": "Routine",
+            "IMPORTANT": "Important",
+            "URGENT": "Urgent",
+            "CRITICAL": "Critical",
+            "SAFEGUARDING": "Safeguarding"
+        },
+        "regulatory": {
+            "CQC": "Care Quality Commission",
+            "CARE_INSPECTORATE": "Care Inspectorate Scotland",
+            "CIW": "Care Inspectorate Wales",
+            "RQIA": "RQIA Northern Ireland",
+            "HIQA": "HIQA Ireland"
+        },
+        "accessibility": {
+            "screenReader": {
+                "carePlanStatus": "Care plan status: {{status}}",
+                "lastUpdated": "Last updated {{date}}",
+                "nextReview": "Next review due {{date}}",
+                "riskLevel": "Risk level: {{level}}"
+            },
+            "keyboardShortcuts": {
+                "save": "Press Ctrl + S to save",
+                "review": "Press Ctrl + R to start review",
+                "print": "Press Ctrl + P to print"
+            }
+        },
+        "errors": {
+            "loadFailed": "Failed to load care plan",
+            "saveFailed": "Failed to save care plan",
+            "validationFailed": "Please check required fields",
+            "networkError": "Network connection lost",
+            "syncError": "Sync failed, changes saved locally"
+        },
+        "success": {
+            "saved": "Care plan saved successfully",
+            "reviewed": "Review completed successfully",
+            "synced": "Changes synced successfully"
+        },
+        "offline": {
+            "status": "Working offline",
+            "pendingSync": "{{count}} changes pending sync",
+            "lastSync": "Last synced: {{date}}"
+        }
+    }
+}

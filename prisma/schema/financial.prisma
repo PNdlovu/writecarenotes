@@ -1,0 +1,138 @@
+// Financial Module Schema
+
+model Account {
+  id          String   @id @default(cuid())
+  tenantId    String
+  code        String
+  name        String
+  type        String   // AccountType enum
+  description String?
+  parentId    String?
+  balance     Decimal  @default(0)
+  region      String   // Region enum
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  parent      Account?       @relation("AccountHierarchy", fields: [parentId], references: [id])
+  children    Account[]      @relation("AccountHierarchy")
+  entries     TransactionEntry[]
+  budgets     Budget[]
+
+  @@unique([tenantId, code])
+  @@index([tenantId, type])
+  @@index([region])
+}
+
+model Transaction {
+  id           String   @id @default(cuid())
+  tenantId     String
+  date         DateTime
+  type         String   // TransactionType enum
+  status       String   // TransactionStatus enum
+  reference    String?
+  description  String
+  amount       Decimal
+  currency     String
+  exchangeRate Decimal? @default(1)
+  metadata     Json?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  entries      TransactionEntry[]
+
+  @@index([tenantId, date])
+  @@index([tenantId, status])
+  @@index([tenantId, type])
+}
+
+model TransactionEntry {
+  id            String   @id @default(cuid())
+  transactionId String
+  accountId     String
+  description   String?
+  debit         Decimal  @default(0)
+  credit        Decimal  @default(0)
+  metadata      Json?
+
+  // Relations
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  account       Account     @relation(fields: [accountId], references: [id])
+
+  @@index([transactionId])
+  @@index([accountId])
+}
+
+model FinancialReport {
+  id          String   @id @default(cuid())
+  tenantId    String
+  type        String   // ReportType enum
+  startDate   DateTime
+  endDate     DateTime
+  data        Json
+  metadata    Json?
+  generatedAt DateTime @default(now())
+
+  @@index([tenantId, type])
+  @@index([tenantId, startDate, endDate])
+}
+
+model TaxRegistration {
+  id                String   @id @default(cuid())
+  tenantId         String
+  region           String   // Region enum
+  registrationNumber String
+  taxAuthority     String
+  validFrom        DateTime
+  validTo          DateTime?
+  metadata         Json?
+
+  @@unique([tenantId, region, registrationNumber])
+  @@index([tenantId, region])
+}
+
+model TaxRate {
+  id        String   @id @default(cuid())
+  tenantId  String
+  code      String
+  name      String
+  rate      Decimal
+  validFrom DateTime
+  validTo   DateTime?
+  metadata  Json?
+
+  @@unique([tenantId, code])
+  @@index([tenantId])
+}
+
+model Budget {
+  id        String   @id @default(cuid())
+  tenantId  String
+  accountId String
+  fiscalYear Int
+  amount    Decimal
+  metadata  Json?
+
+  // Relations
+  account   Account  @relation(fields: [accountId], references: [id])
+
+  @@unique([tenantId, accountId, fiscalYear])
+  @@index([tenantId])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  tenantId   String
+  entityType String
+  entityId   String
+  action     String
+  userId     String
+  changes    Json
+  metadata   Json?
+  timestamp  DateTime @default(now())
+
+  @@index([tenantId, entityType, entityId])
+  @@index([tenantId, timestamp])
+}

@@ -1,0 +1,102 @@
+{
+  "Common": {
+    "selectLanguage": "Select language",
+    "region": "Region"
+  },
+  "StaffOnboarding": {
+    "title": "Staff Registration",
+    "description": "Register key staff members for your care home. You can add more staff members later.",
+    "fields": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "role": "Staff Role",
+      "regulatoryBody": "Regulatory Body",
+      "qualificationNumber": "Professional Registration Number",
+      "emergencyContact": "Emergency Contact"
+    },
+    "placeholders": {
+      "selectRole": "Select a role",
+      "selectRegulator": "Select regulatory body",
+      "emergencyName": "Contact Name",
+      "relationship": "Relationship",
+      "emergencyPhone": "Contact Phone"
+    },
+    "roles": {
+      "careWorker": "Care Worker",
+      "seniorCareWorker": "Senior Care Worker",
+      "nurse": "Nurse",
+      "manager": "Care Home Manager",
+      "deputyManager": "Deputy Manager",
+      "administrator": "Administrator",
+      "activitiesCoordinator": "Activities Coordinator",
+      "maintenance": "Maintenance Staff",
+      "kitchenStaff": "Kitchen Staff",
+      "housekeeping": "Housekeeping"
+    },
+    "regulators": {
+      "CQC": "Care Quality Commission",
+      "CIW": "Care Inspectorate Wales",
+      "CI": "Care Inspectorate Scotland",
+      "RQIA": "RQIA Northern Ireland",
+      "HIQA": "HIQA Ireland"
+    },
+    "buttons": {
+      "back": "Back",
+      "continue": "Continue to Compliance",
+      "saving": "Saving..."
+    },
+    "success": {
+      "title": "Staff Registered",
+      "description": "Staff member has been registered successfully."
+    },
+    "error": {
+      "title": "Registration Error",
+      "description": "Failed to register staff member. Please try again.",
+      "offline": "You are currently offline. Your changes will be saved and synchronized when you're back online."
+    },
+    "validation": {
+      "required": "This field is required",
+      "email": "Please enter a valid email address",
+      "phone": "Please enter a valid phone number",
+      "qualificationNumber": "Please enter a valid registration number",
+      "cqcNumber": "Enter a valid CQC registration number (format: 1-123456789)",
+      "scwNumber": "Enter a valid SCW number (format: W-1234567)",
+      "ssscNumber": "Enter a valid SSSC number (format: 12345678)",
+      "nisccNumber": "Enter a valid NISCC PIN (format: 1234567N)",
+      "coru": "Enter a valid CORU registration number (format: SW123456)",
+      "dbs": "Enter a valid DBS certificate number (format: 001234567890)",
+      "pvg": "Enter a valid PVG membership number (format: 123456789012)",
+      "accessni": "Enter a valid AccessNI number (format: 1234567890)",
+      "garda": "Enter a valid Garda vetting number (format: NVB123456)"
+    },
+    "regionalRequirements": {
+      "england": {
+        "cqcNumber": "CQC Registration Number",
+        "dbs": "DBS Check Number",
+        "minQualification": "Minimum Level 2 Diploma in Care required for Care Workers"
+      },
+      "wales": {
+        "scwNumber": "Social Care Wales Registration Number",
+        "dbs": "DBS Check Number",
+        "minQualification": "QCF Level 2 Diploma in Health and Social Care required"
+      },
+      "scotland": {
+        "ssscNumber": "SSSC Registration Number",
+        "pvg": "PVG Scheme Membership Number",
+        "minQualification": "SVQ Level 2 in Social Services and Healthcare required"
+      },
+      "belfast": {
+        "nisccNumber": "NISCC Registration Number",
+        "accessni": "AccessNI Check Number",
+        "minQualification": "Level 2 Diploma in Health and Social Care required"
+      },
+      "dublin": {
+        "coru": "CORU Registration Number",
+        "garda": "Garda Vetting Number",
+        "minQualification": "QQI Level 5 in Healthcare Support required"
+      }
+    }
+  }
+}

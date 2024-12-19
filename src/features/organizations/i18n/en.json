@@ -1,0 +1,30 @@
+{
+  "organization": {
+    "dashboard": {
+      "title": "Organization Dashboard",
+      "description": "Manage your organization settings and view analytics",
+      "stats": {
+        "totalCareHomes": "Total Care Homes",
+        "activeResidents": "Active Residents",
+        "totalStaff": "Total Staff"
+      }
+    },
+    "settings": {
+      "title": "Organization Settings",
+      "sections": {
+        "general": "General Settings",
+        "security": "Security & Compliance",
+        "billing": "Billing & Subscription",
+        "integrations": "Integrations"
+      }
+    },
+    "analytics": {
+      "title": "Organization Analytics",
+      "metrics": {
+        "occupancy": "Occupancy Rate",
+        "staffing": "Staffing Levels",
+        "compliance": "Compliance Score"
+      }
+    }
+  }
+}

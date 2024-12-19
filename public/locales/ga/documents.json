@@ -1,0 +1,18 @@
+{
+  "version": {
+    "history": "Stair Leagan",
+    "number": "Leagan {{number}}",
+    "current": "Reatha",
+    "info": "Eolas Leagan",
+    "compare": "Cuir Leaganacha i gComparáid",
+    "restore": "Athchóirigh an Leagan seo",
+    "confirmRestore": "An bhfuil tú cinnte gur mian leat an leagan seo a athchóiriú? Cruthóidh sé seo leagan nua leis an ábhar athchóirithe.",
+    "restored": "Leagan athchóirithe go rathúil",
+    "restoreError": "Theip ar athchóiriú an leagain",
+    "comparing": "Ag cur Leagan {{v1}} i gcomparáid le Leagan {{v2}}",
+    "details": "Sonraí Leagan",
+    "created": "Cruthaithe: {{date}}",
+    "reason": "Cúis Athraithe",
+    "loading": "Ag lódáil stair leagain..."
+  }
+}

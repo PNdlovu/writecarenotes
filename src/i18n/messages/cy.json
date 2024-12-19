@@ -1,0 +1,75 @@
+{
+  "Common": {
+    "selectLanguage": "Dewis iaith",
+    "region": "Rhanbarth"
+  },
+  "StaffOnboarding": {
+    "title": "Cofrestru Staff",
+    "description": "Cofrestrwch aelodau allweddol o staff eich cartref gofal. Gallwch ychwanegu mwy o aelodau staff yn ddiweddarach.",
+    "fields": {
+      "firstName": "Enw Cyntaf",
+      "lastName": "Cyfenw",
+      "email": "Cyfeiriad E-bost",
+      "phone": "Rhif Ffôn",
+      "role": "Rôl Staff",
+      "regulatoryBody": "Corff Rheoleiddio",
+      "qualificationNumber": "Rhif Cofrestru Proffesiynol",
+      "emergencyContact": "Cyswllt Brys"
+    },
+    "placeholders": {
+      "selectRole": "Dewiswch rôl",
+      "selectRegulator": "Dewiswch gorff rheoleiddio",
+      "emergencyName": "Enw Cyswllt",
+      "relationship": "Perthynas",
+      "emergencyPhone": "Ffôn Cyswllt"
+    },
+    "roles": {
+      "careWorker": "Gweithiwr Gofal",
+      "seniorCareWorker": "Uwch Weithiwr Gofal",
+      "nurse": "Nyrs",
+      "manager": "Rheolwr Cartref Gofal",
+      "deputyManager": "Dirprwy Reolwr",
+      "administrator": "Gweinyddwr",
+      "activitiesCoordinator": "Cydlynydd Gweithgareddau",
+      "maintenance": "Staff Cynnal a Chadw",
+      "kitchenStaff": "Staff Cegin",
+      "housekeeping": "Staff Cadw Tŷ"
+    },
+    "regulators": {
+      "CQC": "Comisiwn Ansawdd Gofal",
+      "CIW": "Arolygiaeth Gofal Cymru",
+      "CI": "Arolygiaeth Gofal yr Alban",
+      "RQIA": "RQIA Gogledd Iwerddon",
+      "HIQA": "HIQA Iwerddon"
+    },
+    "buttons": {
+      "back": "Yn ôl",
+      "continue": "Parhau i Gydymffurfiaeth",
+      "saving": "Yn cadw..."
+    },
+    "success": {
+      "title": "Staff wedi'i Gofrestru",
+      "description": "Mae'r aelod staff wedi'i gofrestru'n llwyddiannus."
+    },
+    "error": {
+      "title": "Gwall Cofrestru",
+      "description": "Methodd cofrestru'r aelod staff. Rhowch gynnig arall arni.",
+      "offline": "Rydych all-lein ar hyn o bryd. Bydd eich newidiadau'n cael eu cadw a'u cydweddu pan fyddwch yn ôl ar-lein."
+    },
+    "validation": {
+      "required": "Mae'r maes hwn yn ofynnol",
+      "email": "Rhowch gyfeiriad e-bost dilys",
+      "phone": "Rhowch rif ffôn dilys",
+      "qualificationNumber": "Rhowch rif cofrestru dilys",
+      "scwNumber": "Rhowch rif SCW dilys (fformat: W-1234567)",
+      "dbs": "Rhowch rif tystysgrif DBS dilys (fformat: 001234567890)"
+    },
+    "regionalRequirements": {
+      "wales": {
+        "scwNumber": "Rhif Cofrestru Gofal Cymdeithasol Cymru",
+        "dbs": "Rhif Gwiriad DBS",
+        "minQualification": "Diploma Lefel 2 QCF mewn Iechyd a Gofal Cymdeithasol yn ofynnol"
+      }
+    }
+  }
+}

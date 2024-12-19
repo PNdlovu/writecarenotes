@@ -1,0 +1,75 @@
+{
+  "resident": {
+    "title": "Residents",
+    "details": "Resident Details",
+    "create": "Add New Resident",
+    "edit": "Edit Resident",
+    "fields": {
+      "name": "Full Name",
+      "dateOfBirth": "Date of Birth",
+      "nhsNumber": "NHS Number",
+      "careLevel": "Care Level",
+      "status": "Status",
+      "roomNumber": "Room Number",
+      "admissionDate": "Admission Date",
+      "dischargeDate": "Discharge Date"
+    },
+    "careLevels": {
+      "LOW": "Low Care",
+      "MEDIUM": "Medium Care",
+      "HIGH": "High Care"
+    },
+    "status": {
+      "ACTIVE": "Active",
+      "DISCHARGED": "Discharged",
+      "TEMPORARY_LEAVE": "Temporary Leave"
+    },
+    "validation": {
+      "required": "This field is required",
+      "invalidNHS": "Invalid NHS number format",
+      "futureDateOfBirth": "Date of birth cannot be in future",
+      "dischargeDateBeforeAdmission": "Discharge date must be after admission date"
+    },
+    "hospitalPass": {
+      "title": "Hospital Passes",
+      "created": "Hospital Pass Created",
+      "createdDescription": "The hospital pass has been created successfully",
+      "error": "Error",
+      "errorDescription": "There was an error creating the hospital pass",
+      "form": {
+        "hospitalName": "Hospital Name",
+        "department": "Department",
+        "appointmentDateTime": "Appointment Date & Time",
+        "expectedReturnDateTime": "Expected Return Date & Time",
+        "reason": "Reason for Visit",
+        "accompaniedBy": "Accompanied By",
+        "transportMethod": "Transport Method",
+        "selectTransport": "Select transport method",
+        "transportNotes": "Transport Notes",
+        "medications": "Taking Medications",
+        "medicationNotes": "Medication Notes",
+        "submit": "Create Hospital Pass"
+      },
+      "list": {
+        "empty": "No hospital passes found",
+        "hospital": "Hospital",
+        "date": "Date",
+        "reason": "Reason",
+        "transport": "Transport",
+        "status": "Status"
+      },
+      "transport": {
+        "ambulance": "Ambulance",
+        "private": "Private Transport",
+        "taxi": "Taxi",
+        "other": "Other"
+      },
+      "status": {
+        "scheduled": "Scheduled",
+        "in_progress": "In Progress",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "StaffOnboarding": {
+    "title": "Staff Registration",
+    "description": "Register key staff members fer yer care hame. Ye can add mair staff members later.",
+    "fields": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "role": "Staff Role",
+      "regulatoryBody": "Regulatory Body",
+      "qualificationNumber": "Professional Registration Number",
+      "emergencyContact": "Emergency Contact"
+    },
+    "placeholders": {
+      "selectRole": "Select role",
+      "selectRegulator": "Select regulatory body",
+      "emergencyName": "Contact Name",
+      "relationship": "Relationship",
+      "emergencyPhone": "Emergency Phone"
+    },
+    "roles": {
+      "careWorker": "Care Worker",
+      "seniorCareWorker": "Senior Care Worker",
+      "nurse": "Nurse",
+      "manager": "Care Home Manager",
+      "deputyManager": "Deputy Manager",
+      "administrator": "Administrator",
+      "activitiesCoordinator": "Activities Coordinator",
+      "maintenance": "Maintenance Staff",
+      "kitchenStaff": "Kitchen Staff",
+      "housekeeping": "Housekeeping Staff"
+    },
+    "regulators": {
+      "CQC": "Care Quality Commission",
+      "CIW": "Care Inspectorate Wales",
+      "CI": "Care Inspectorate Scotland",
+      "RQIA": "RQIA Northern Ireland",
+      "HIQA": "HIQA Ireland"
+    },
+    "buttons": {
+      "back": "Back",
+      "continue": "Continue tae Compliance",
+      "saving": "Saving..."
+    },
+    "success": {
+      "title": "Staff Member Registered",
+      "description": "Staff member has been successfully registered."
+    },
+    "error": {
+      "title": "Registration Error",
+      "description": "Failed tae register staff member. Please try again.",
+      "offline": "Ye're offline richt noo. Yer changes will be saved an synced when ye're back online."
+    },
+    "validation": {
+      "required": "This field is required",
+      "email": "Enter a valid email address",
+      "phone": "Enter a valid phone number",
+      "qualificationNumber": "Enter a valid registration number"
+    }
+  }
+}

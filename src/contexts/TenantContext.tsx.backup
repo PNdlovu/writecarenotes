@@ -1,0 +1,95 @@
+'use client'
+
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useOfflineStorage } from '@/hooks/useOfflineStorage';
+
+interface TenantConfig {
+  id: string;
+  name: string;
+  settings: {
+    theme: string;
+    dateFormat: string;
+    timeFormat: string;
+    timezone: string;
+    features: string[];
+    limits: {
+      maxUsers: number;
+      maxStorage: number;
+      maxHistoryDays: number;
+    };
+  };
+  branding: {
+    logo: string;
+    colors: {
+      primary: string;
+      secondary: string;
+    };
+  };
+}
+
+interface TenantContextType {
+  tenant: TenantConfig | null;
+  loading: boolean;
+  error: Error | null;
+  setTenant: (id: string) => Promise<void>;
+}
+
+const TenantContext = createContext<TenantContextType | undefined>(undefined);
+
+export function TenantProvider({ children }: { children: React.ReactNode }) {
+  const [tenant, setTenantConfig] = useState<TenantConfig | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+  const { getOfflineData, storeOfflineData } = useOfflineStorage();
+
+  const setTenant = async (id: string) => {
+    try {
+      setLoading(true);
+      // Try to get from offline storage first
+      const offlineTenant = await getOfflineData('tenants', id);
+      
+      if (offlineTenant) {
+        setTenantConfig(offlineTenant);
+        return;
+      }
+
+      // Fetch from API if not in offline storage
+      const response = await fetch(`/api/tenants/${id}`);
+      if (!response.ok) throw new Error('Failed to fetch tenant configuration');
+      
+      const tenantData = await response.json();
+      await storeOfflineData('tenants', { id, ...tenantData });
+      setTenantConfig(tenantData);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error('Unknown error'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initialize from localStorage
+  useEffect(() => {
+    const tenantId = localStorage.getItem('tenantId');
+    if (tenantId) {
+      setTenant(tenantId);
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  return (
+    <TenantContext.Provider value={{ tenant, loading, error, setTenant }}>
+      {children}
+    </TenantContext.Provider>
+  );
+}
+
+export function useTenant() {
+  const context = useContext(TenantContext);
+  if (context === undefined) {
+    throw new Error('useTenant must be used within a TenantProvider');
+  }
+  return context;
+}
+
+

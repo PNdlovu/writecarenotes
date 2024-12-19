@@ -1,0 +1,213 @@
+import React from 'react';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/badge';
+import {
+  ClipboardList,
+  Clock,
+  AlertCircle,
+  CheckCircle2,
+  Calendar,
+  Filter,
+} from 'lucide-react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+
+interface Assessment {
+  id: string;
+  title: string;
+  residentId: string;
+  residentName: string;
+  type: string;
+  dueDate: string;
+  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'OVERDUE' | 'REQUIRES_REVIEW';
+  priority: 'HIGH' | 'MEDIUM' | 'LOW';
+  completedBy?: {
+    id: string;
+    name: string;
+  };
+  completedAt?: string;
+  lastUpdated: string;
+}
+
+interface AssessmentDashboardProps {
+  assessments: Assessment[];
+  onCreateAssessment: () => void;
+  onViewAssessment: (id: string) => void;
+  onFilterChange: (filters: AssessmentFilters) => void;
+}
+
+interface AssessmentFilters {
+  status?: string;
+  priority?: string;
+  type?: string;
+  timeframe?: string;
+}
+
+const statusColors = {
+  PENDING: 'bg-blue-100 text-blue-800',
+  IN_PROGRESS: 'bg-yellow-100 text-yellow-800',
+  COMPLETED: 'bg-green-100 text-green-800',
+  OVERDUE: 'bg-red-100 text-red-800',
+  REQUIRES_REVIEW: 'bg-purple-100 text-purple-800',
+};
+
+export function AssessmentDashboard({
+  assessments,
+  onCreateAssessment,
+  onViewAssessment,
+  onFilterChange,
+}: AssessmentDashboardProps) {
+  const [filters, setFilters] = React.useState<AssessmentFilters>({});
+
+  const handleFilterChange = (key: keyof AssessmentFilters, value: string) => {
+    const newFilters = { ...filters, [key]: value };
+    setFilters(newFilters);
+    onFilterChange(newFilters);
+  };
+
+  const getStatusIcon = (status: Assessment['status']) => {
+    switch (status) {
+      case 'PENDING':
+        return <Clock className="h-4 w-4" />;
+      case 'IN_PROGRESS':
+        return <ClipboardList className="h-4 w-4" />;
+      case 'COMPLETED':
+        return <CheckCircle2 className="h-4 w-4" />;
+      case 'OVERDUE':
+        return <AlertCircle className="h-4 w-4" />;
+      case 'REQUIRES_REVIEW':
+        return <ClipboardList className="h-4 w-4" />;
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">Assessments Dashboard</h1>
+        <Button onClick={onCreateAssessment}>
+          <ClipboardList className="h-4 w-4 mr-2" />
+          New Assessment
+        </Button>
+      </div>
+
+      <Card className="p-4">
+        <div className="flex items-center space-x-4 mb-6">
+          <div className="flex items-center space-x-2">
+            <Filter className="h-4 w-4 text-gray-500" />
+            <span className="text-sm font-medium">Filters:</span>
+          </div>
+          
+          <Select
+            value={filters.status}
+            onValueChange={(value) => handleFilterChange('status', value)}
+          >
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">All Statuses</SelectItem>
+              <SelectItem value="PENDING">Pending</SelectItem>
+              <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+              <SelectItem value="COMPLETED">Completed</SelectItem>
+              <SelectItem value="OVERDUE">Overdue</SelectItem>
+              <SelectItem value="REQUIRES_REVIEW">Requires Review</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={filters.priority}
+            onValueChange={(value) => handleFilterChange('priority', value)}
+          >
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Priority" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">All Priorities</SelectItem>
+              <SelectItem value="HIGH">High</SelectItem>
+              <SelectItem value="MEDIUM">Medium</SelectItem>
+              <SelectItem value="LOW">Low</SelectItem>
+            </SelectContent>
+          </Select>
+
+          <Select
+            value={filters.timeframe}
+            onValueChange={(value) => handleFilterChange('timeframe', value)}
+          >
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Timeframe" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">All Time</SelectItem>
+              <SelectItem value="TODAY">Today</SelectItem>
+              <SelectItem value="THIS_WEEK">This Week</SelectItem>
+              <SelectItem value="THIS_MONTH">This Month</SelectItem>
+              <SelectItem value="OVERDUE">Overdue</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <ScrollArea className="h-[600px]">
+          <div className="space-y-4">
+            {assessments.map((assessment) => (
+              <Card
+                key={assessment.id}
+                className="p-4 hover:bg-gray-50 cursor-pointer"
+                onClick={() => onViewAssessment(assessment.id)}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <h3 className="font-medium">{assessment.title}</h3>
+                      <Badge
+                        className={`${
+                          statusColors[assessment.status]
+                        } flex items-center space-x-1`}
+                      >
+                        {getStatusIcon(assessment.status)}
+                        <span>{assessment.status.replace('_', ' ')}</span>
+                      </Badge>
+                      {assessment.priority === 'HIGH' && (
+                        <Badge variant="destructive">High Priority</Badge>
+                      )}
+                    </div>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Resident: {assessment.residentName}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="h-4 w-4 text-gray-400" />
+                      <span className="text-sm text-gray-600">
+                        Due: {new Date(assessment.dueDate).toLocaleDateString()}
+                      </span>
+                    </div>
+                    {assessment.completedBy && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        Completed by: {assessment.completedBy.name}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+                  <span>Type: {assessment.type}</span>
+                  <span>
+                    Last updated:{' '}
+                    {new Date(assessment.lastUpdated).toLocaleDateString()}
+                  </span>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </ScrollArea>
+      </Card>
+    </div>
+  );
+}

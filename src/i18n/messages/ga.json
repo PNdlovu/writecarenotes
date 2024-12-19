@@ -1,0 +1,62 @@
+{
+  "StaffOnboarding": {
+    "title": "Clárú Foirne",
+    "description": "Cláraigh príomhbhaill foirne do do theach cúraim. Is féidir leat tuilleadh baill foirne a chur leis níos déanaí.",
+    "fields": {
+      "firstName": "Céadainm",
+      "lastName": "Sloinne",
+      "email": "Seoladh Ríomhphoist",
+      "phone": "Uimhir Ghutháin",
+      "role": "Ról Foirne",
+      "regulatoryBody": "Comhlacht Rialála",
+      "qualificationNumber": "Uimhir Chláraithe Gairmiúil",
+      "emergencyContact": "Teagmhálaí Éigeandála"
+    },
+    "placeholders": {
+      "selectRole": "Roghnaigh ról",
+      "selectRegulator": "Roghnaigh comhlacht rialála",
+      "emergencyName": "Ainm Teagmhála",
+      "relationship": "Gaol",
+      "emergencyPhone": "Guthán Éigeandála"
+    },
+    "roles": {
+      "careWorker": "Oibrí Cúraim",
+      "seniorCareWorker": "Oibrí Cúraim Sinsearach",
+      "nurse": "Altra",
+      "manager": "Bainisteoir Tí Cúraim",
+      "deputyManager": "Leas-Bhainisteoir",
+      "administrator": "Riarthóir",
+      "activitiesCoordinator": "Comhordaitheoir Gníomhaíochtaí",
+      "maintenance": "Foireann Cothabhála",
+      "kitchenStaff": "Foireann Cistine",
+      "housekeeping": "Foireann Tís"
+    },
+    "regulators": {
+      "CQC": "Coimisiún Cáilíochta Cúraim",
+      "CIW": "Arolygiaeth Gofal Cymru",
+      "CI": "Cigireacht Cúraim na hAlban",
+      "RQIA": "RQIA Thuaisceart Éireann",
+      "HIQA": "HIQA Éireann"
+    },
+    "buttons": {
+      "back": "Ar ais",
+      "continue": "Lean ar Aghaidh go Comhlíonadh",
+      "saving": "Ag sábháil..."
+    },
+    "success": {
+      "title": "Ball Foirne Cláraithe",
+      "description": "Rinneadh ball foirne a chlárú go rathúil."
+    },
+    "error": {
+      "title": "Earráid Cláraithe",
+      "description": "Theip ar chlárú ball foirne. Bain triail eile as.",
+      "offline": "Tá tú as líne faoi láthair. Sábhálfar do chuid athruithe agus déanfar iad a shioncronú nuair a bheidh tú ar ais ar líne."
+    },
+    "validation": {
+      "required": "Tá an réimse seo riachtanach",
+      "email": "Iontráil seoladh ríomhphoist bailí",
+      "phone": "Iontráil uimhir ghutháin bhailí",
+      "qualificationNumber": "Iontráil uimhir chláraithe bhailí"
+    }
+  }
+}

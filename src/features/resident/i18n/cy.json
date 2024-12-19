@@ -1,0 +1,34 @@
+{
+  "resident": {
+    "title": "Preswylwyr",
+    "details": "Manylion Preswylydd",
+    "create": "Ychwanegu Preswylydd Newydd",
+    "edit": "Golygu Preswylydd",
+    "fields": {
+      "name": "Enw Llawn",
+      "dateOfBirth": "Dyddiad Geni",
+      "nhsNumber": "Rhif GIG",
+      "careLevel": "Lefel Gofal",
+      "status": "Statws",
+      "roomNumber": "Rhif Ystafell",
+      "admissionDate": "Dyddiad Derbyn",
+      "dischargeDate": "Dyddiad Rhyddhau"
+    },
+    "careLevels": {
+      "LOW": "Gofal Isel",
+      "MEDIUM": "Gofal Canolig",
+      "HIGH": "Gofal Uchel"
+    },
+    "status": {
+      "ACTIVE": "Gweithredol",
+      "DISCHARGED": "Wedi'i Ryddhau",
+      "TEMPORARY_LEAVE": "Absenoldeb Dros Dro"
+    },
+    "validation": {
+      "required": "Mae'r maes hwn yn ofynnol",
+      "invalidNHS": "Fformat rhif GIG annilys",
+      "futureDateOfBirth": "Ni all dyddiad geni fod yn y dyfodol",
+      "dischargeDateBeforeAdmission": "Rhaid i'r dyddiad rhyddhau fod ar ôl y dyddiad derbyn"
+    }
+  }
+}
