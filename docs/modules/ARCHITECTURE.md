@@ -21,7 +21,7 @@
 ├── src/                   # Source Code (Business Logic & Components)
 │   ├── components/       # Shared Components
 │   │   ├── ui/          # Base UI components (Radix UI + Tailwind)
-│   │   │   ├── button/
+│   ���   │   ├── button/
 │   │   │   ├── form/
 │   │   │   └── data-display/
 │   │   ├── layout/      # Layout components
@@ -110,7 +110,7 @@ The Payroll module provides comprehensive payroll management capabilities with:
 #### Directory Structure
 ```bash
 src/features/payroll/
-├─��� api/                # Payroll API endpoints
+├─ api/                # Payroll API endpoints
 │   ├── handlers/      # Request handlers
 │   └── routes/        # API route definitions
 ├── components/        # Payroll UI components
@@ -1794,3 +1794,97 @@ export class AdvancedReportingService {
     }
   }
 }
+```
+
+## Regional Architecture Overview
+
+Write Care Notes is built with a region-first architecture to support different regulatory requirements, care standards, and business processes across different regions.
+
+```bash
+├── app/                    # Next.js 13+ App Router
+│   ├── api/               # Shared API Routes
+│   ├── (auth)/            # Authentication components
+│   ├── (features)/        # Shared feature components
+│   ├── england/           # England-specific implementation
+│   │   ├── features/      # England features (CQC compliant)
+│   │   │   ├── assessments/   # Assessment module
+│   │   │   ├── careplans/     # Care plans
+│   │   │   ├── medications/   # Medication management
+│   │   │   └── ...           # Other features
+│   │   ├── dashboard/    # England dashboard
+│   │   └── layout.tsx    # England-specific layout
+│   └── features/         # Common/shared features
+├── src/
+│   ├── components/       # Shared UI components
+│   ├── features/        # Core feature implementations
+│   │   ├── assessments/  # Base assessment types & utils
+│   │   └── ...          # Other feature bases
+│   ├── lib/            # Shared utilities
+│   └── types/          # Common TypeScript types
+```
+
+## Regional Implementation Strategy
+
+### 1. Region-Specific Features
+- Each region (e.g., England) has its own feature implementation
+- Located in `/app/[region]/features/`
+- Implements region-specific:
+  - Regulatory requirements
+  - Care standards
+  - Documentation templates
+  - Assessment types
+  - Compliance rules
+
+### 2. Shared Components
+- Common UI components in `/src/components`
+- Base feature types & utilities in `/src/features`
+- Shared business logic in `/src/lib`
+
+### 3. Feature Implementation Layers
+
+```typescript
+// Base types (shared)
+/src/features/assessments/types/
+  ├── assessment.types.ts   # Core assessment interfaces
+  └── errors.ts            # Common error types
+
+// Region-specific implementation
+/app/england/features/assessments/
+  ├── page.tsx             # Main UI component
+  ├── components/          # England-specific components
+  └── api/                 # England-specific endpoints
+```
+
+### 4. Regional Compliance
+
+Each region has specific regulatory requirements:
+
+#### England
+- CQC Compliance
+- NHS Digital Standards
+- NICE Guidelines
+- Data Security and Protection Toolkit (DSPT)
+
+#### Wales
+- CIW Compliance
+- Welsh Government Standards
+- NICE Guidelines
+- Data Security and Protection Toolkit (DSPT)
+
+#### Scotland
+- Care Inspectorate Compliance
+- Scottish Government Standards
+- NICE Guidelines
+- Data Security and Protection Toolkit (DSPT)
+
+#### Northern Ireland
+- RQIA Compliance
+- Northern Ireland Government Standards
+- NICE Guidelines
+- Data Security and Protection Toolkit (DSPT)
+
+#### Ireland
+- HIQA Compliance
+- Irish Government Standards
+- NICE Guidelines
+- Data Security and Protection Toolkit (DSPT)

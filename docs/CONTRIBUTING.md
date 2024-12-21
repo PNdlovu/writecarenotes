@@ -1072,3 +1072,392 @@ describe('Ofsted Compliance', () => {
   });
 });
 ```
+
+## Regional Support Guidelines
+
+### Regional Configuration
+```typescript
+// src/config/regions/index.ts
+export const SUPPORTED_REGIONS = {
+  ENGLAND: {
+    code: 'en-GB',
+    regulator: 'CQC',
+    currency: 'GBP',
+    languages: ['en'],
+    timezone: 'Europe/London',
+    compliance: ['CQC', 'NICE', 'NHS']
+  },
+  WALES: {
+    code: 'cy-GB',
+    regulator: 'CIW',
+    currency: 'GBP',
+    languages: ['en', 'cy'],
+    timezone: 'Europe/London',
+    compliance: ['CIW', 'NHS Wales']
+  },
+  SCOTLAND: {
+    code: 'en-GB',
+    regulator: 'Care Inspectorate',
+    currency: 'GBP',
+    languages: ['en', 'gd'],
+    timezone: 'Europe/London',
+    compliance: ['Care Inspectorate', 'NHS Scotland']
+  },
+  NORTHERN_IRELAND: {
+    code: 'en-GB',
+    regulator: 'RQIA',
+    currency: 'GBP',
+    languages: ['en', 'ga'],
+    timezone: 'Europe/London',
+    compliance: ['RQIA', 'NHS Northern Ireland']
+  },
+  IRELAND: {
+    code: 'en-IE',
+    regulator: 'HIQA',
+    currency: 'EUR',
+    languages: ['en', 'ga'],
+    timezone: 'Europe/Dublin',
+    compliance: ['HIQA', 'HSE']
+  }
+} as const;
+```
+
+### Regional Development Process
+1. **Feature Planning**
+   - Review regulatory requirements for each region
+   - Document region-specific variations
+   - Plan for language support
+   - Consider currency handling
+
+2. **Implementation**
+   - Use region-aware components
+   - Implement proper i18n support
+   - Handle regional date/time formats
+   - Support regional currencies
+
+3. **Testing**
+   - Test in all supported regions
+   - Verify language support
+   - Validate regulatory compliance
+   - Check currency handling
+
+## Multi-Tenant Architecture Guidelines
+
+### Tenant Isolation
+```typescript
+// src/lib/tenant/middleware.ts
+export async function withTenant(
+  req: Request,
+  handler: RouteHandler
+): Promise<Response> {
+  const tenantId = req.headers.get('x-tenant-id');
+  if (!tenantId) {
+    throw new UnauthorizedError('Missing tenant ID');
+  }
+
+  const tenant = await validateTenant(tenantId);
+  return handler(req, { tenant });
+}
+```
+
+### Data Access
+```typescript
+// src/lib/db/client.ts
+export class TenantPrismaClient extends PrismaClient {
+  constructor(private tenant: Tenant) {
+    super({
+      datasourceUrl: getTenantDatabaseUrl(tenant),
+    });
+  }
+
+  async $connect() {
+    await super.$connect();
+    await this.setTenantContext();
+  }
+
+  private async setTenantContext() {
+    await this.$executeRaw`
+      SET app.tenant_id = ${this.tenant.id}::uuid;
+    `;
+  }
+}
+```
+
+## Compliance & Security Standards
+
+### Code Security Requirements
+1. **Authentication & Authorization**
+   - Multi-factor authentication
+   - Role-based access control
+   - Session management
+   - JWT handling
+
+2. **Data Protection**
+   - End-to-end encryption
+   - Data anonymization
+   - PII handling
+   - Audit logging
+
+3. **API Security**
+   - Rate limiting
+   - Input validation
+   - Output sanitization
+   - Error handling
+
+### Compliance Testing
+```typescript
+describe('Compliance', () => {
+  describe('Data Protection', () => {
+    test('should encrypt sensitive data', () => {
+      // Test encryption
+    });
+
+    test('should maintain audit logs', () => {
+      // Test audit logging
+    });
+  });
+
+  describe('Access Control', () => {
+    test('should enforce role-based access', () => {
+      // Test RBAC
+    });
+
+    test('should handle MFA correctly', () => {
+      // Test MFA
+    });
+  });
+});
+```
+
+## Testing Requirements
+
+### Regional Testing
+```typescript
+describe('Regional Features', () => {
+  SUPPORTED_REGIONS.forEach((region) => {
+    describe(region.code, () => {
+      test('should handle regional date formats', () => {
+        // Test date formatting
+      });
+
+      test('should support regional languages', () => {
+        // Test i18n
+      });
+
+      test('should handle regional currency', () => {
+        // Test currency
+      });
+    });
+  });
+});
+```
+
+### Offline Support Testing
+```typescript
+describe('Offline Support', () => {
+  test('should work without internet', async () => {
+    // Test offline functionality
+  });
+
+  test('should sync when back online', async () => {
+    // Test sync
+  });
+
+  test('should handle conflicts', async () => {
+    // Test conflict resolution
+  });
+});
+```
+
+### Performance Testing
+```typescript
+describe('Performance', () => {
+  test('should meet load time targets', async () => {
+    // Test load times
+  });
+
+  test('should handle concurrent users', async () => {
+    // Test concurrency
+  });
+
+  test('should optimize memory usage', async () => {
+    // Test memory
+  });
+});
+```
+
+## Naming Conventions
+
+### 1. File & Directory Structure
+```bash
+src/
+├── components/          # React Components (PascalCase)
+│   ├── ui/             # Base UI components
+│   │   ├── Button.tsx
+│   │   └── Card.tsx
+│   └── features/       # Feature components
+│       └── bed-management/  # Feature modules (kebab-case)
+│           ├── BedManagementDashboard.tsx
+│           └── BedStatusOverview.tsx
+├── hooks/              # React Hooks (kebab-case)
+│   ├── use-auth.ts
+│   └── use-bed-management.ts
+├── lib/               # Utilities (kebab-case)
+│   ├── api/
+│   │   └── bed-management.ts
+│   └── utils/
+│       └── date-formatter.ts
+└── types/             # TypeScript types (kebab-case)
+    └── bed-management-types.ts
+```
+
+### 2. Naming Rules
+- **Components**: PascalCase (e.g., `BedManagementDashboard.tsx`)
+- **Hooks**: Kebab-case with 'use-' prefix (e.g., `use-bed-management.ts`)
+- **API Routes**: Kebab-case (e.g., `/api/bed-management/route.ts`)
+- **Types**: Kebab-case for files, PascalCase for types (e.g., `bed-management-types.ts`)
+- **Utilities**: Kebab-case (e.g., `api-utils.ts`)
+
+## Enterprise-Grade Standards
+
+### 1. File Headers
+```typescript
+/**
+ * WriteCareNotes.com
+ * @fileoverview Brief description
+ * @version 1.0.0
+ * @created YYYY-MM-DD
+ * @author [Author Name]
+ * @copyright Phibu Cloud Solutions Ltd.
+ *
+ * Description:
+ * Detailed description of the file's purpose
+ */
+```
+
+### 2. Component Requirements
+- Must include proper TypeScript types
+- Must handle loading states
+- Must implement error boundaries
+- Must support offline functionality
+- Must be accessibility compliant
+- Must support regional variations
+- Must include proper documentation
+
+### 3. Healthcare Compliance
+- CQC (England) compliance
+- CIW (Wales) compliance
+- Care Inspectorate (Scotland) compliance
+- RQIA (Northern Ireland) compliance
+- HIQA (Ireland) compliance
+
+### 4. Security Requirements
+- Data encryption at rest
+- Secure data transmission
+- Role-based access control
+- Audit logging
+- GDPR compliance
+- NHS Data Security standards
+
+### 5. Regional Support
+- Language support (English, Welsh, Irish, Scottish Gaelic)
+- Regional regulatory compliance
+- Regional date/time formats
+- Regional currency handling
+- Regional terminology
+
+### 6. Code Quality Standards
+```typescript
+// Component Example
+interface BedManagementProps {
+  facilityId: string;
+  region: Region;
+  onStatusChange: (status: BedStatus) => void;
+}
+
+export function BedManagement({ 
+  facilityId,
+  region,
+  onStatusChange 
+}: BedManagementProps) {
+  // Implementation
+}
+
+// Hook Example
+export function useBedManagement(facilityId: string) {
+  // Implementation
+}
+
+// Type Example
+export interface BedStatus {
+  id: string;
+  status: BedStatusType;
+  lastUpdated: Date;
+}
+```
+
+### 7. Testing Requirements
+- Unit tests for business logic
+- Integration tests for API endpoints
+- E2E tests for critical workflows
+- Accessibility testing
+- Performance testing
+- Regional compliance testing
+
+### 8. Documentation Requirements
+- Component documentation
+- API documentation
+- Regional compliance documentation
+- Security documentation
+- Deployment documentation
+
+### 9. Performance Standards
+- First contentful paint < 1.5s
+- Time to interactive < 3.5s
+- Offline capability
+- Mobile responsiveness
+- Memory optimization
+
+### 10. Accessibility Requirements
+- WCAG 2.1 AA compliance
+- Screen reader support
+- Keyboard navigation
+- Color contrast compliance
+- Motion reduction support
+
+## Feature Implementation Checklist
+
+### 1. Planning Phase
+- [ ] Regional requirements identified
+- [ ] Compliance requirements documented
+- [ ] Security requirements defined
+- [ ] Offline capabilities planned
+- [ ] API endpoints designed
+
+### 2. Development Phase
+- [ ] TypeScript types defined
+- [ ] Components implemented
+- [ ] API routes created
+- [ ] Tests written
+- [ ] Documentation added
+
+### 3. Review Phase
+- [ ] Code review completed
+- [ ] Security review completed
+- [ ] Accessibility review completed
+- [ ] Performance review completed
+- [ ] Regional compliance verified
+
+### 4. Testing Phase
+- [ ] Unit tests passing
+- [ ] Integration tests passing
+- [ ] E2E tests passing
+- [ ] Accessibility tests passing
+- [ ] Performance benchmarks met
+
+### 5. Deployment Phase
+- [ ] Feature flags configured
+- [ ] Monitoring setup
+- [ ] Documentation published
+- [ ] Release notes prepared
+- [ ] Support team briefed

@@ -1,3 +1,16 @@
+/**
+ * WriteCareNotes.com
+ * @fileoverview Change Log
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Philani Ndlovu
+ * @copyright Phibu Cloud Solutions Ltd.
+ *
+ * Description:
+ * Detailed changelog documenting all changes, updates, and improvements
+ * to the Write Care Notes platform following semantic versioning.
+ */
+
 # Changelog
 
 All notable changes to Write Care Notes will be documented in this file.
