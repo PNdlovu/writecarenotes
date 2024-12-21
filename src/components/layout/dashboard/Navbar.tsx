@@ -1,9 +1,11 @@
 'use client';
 
-import { signOut, useSession } from 'next-auth/react';
-import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import { Menu } from 'lucide-react';
-import UserMenu from './UserMenu';
+import { Button } from '@/components/ui/button';
+import { AccessibilitySettings } from '@/components/theme/accessibility-settings';
+import { UserMenu } from './UserMenu';
 
 interface NavbarProps {
   onMenuButtonClick: () => void;
@@ -14,29 +16,32 @@ export default function Navbar({ onMenuButtonClick, children }: NavbarProps) {
   const { data: session } = useSession();
 
   return (
-    <nav className="bg-white shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="lg:hidden"
-                onClick={onMenuButtonClick}
-              >
-                <Menu className="h-6 w-6" />
-              </Button>
-            </div>
-          </div>
-          <div className="flex items-center">
-            {session ? (
-              <UserMenu />
-            ) : (
-              <Button onClick={() => signOut()}>Sign Out</Button>
-            )}
-            {children}
-          </div>
+    <nav className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 items-center px-4">
+        <div className="flex">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="mr-2 lg:hidden"
+            onClick={onMenuButtonClick}
+          >
+            <Menu className="h-5 w-5" />
+            <span className="sr-only">Toggle menu</span>
+          </Button>
+          <Link href="/" className="mr-6 flex items-center space-x-2">
+            <img
+              src="/logo.svg"
+              alt="Write Care Notes"
+              className="h-6 w-6"
+            />
+            <span className="hidden font-bold sm:inline-block">
+              Write Care Notes
+            </span>
+          </Link>
+        </div>
+        <div className="flex flex-1 items-center justify-end space-x-4">
+          <AccessibilitySettings />
+          {session?.user && <UserMenu />}
         </div>
       </div>
     </nav>
