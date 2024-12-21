@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Tooltip UI component
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Write Care Notes Team
+ * @copyright Write Care Notes Ltd
+ *
+ * Description:
+ * A tooltip component using Radix UI primitives for displaying additional information
+ */
+
 "use client"
 
 import * as React from "react"

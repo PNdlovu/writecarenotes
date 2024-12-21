@@ -1,156 +1,153 @@
-# Organizations Module
+# Organization Module
 
 ## Overview
-The Organizations module provides enterprise-grade management of multi-care home organizations. It focuses on organization-wide operations, resource sharing, and cross-care home coordination.
+The organization module provides enterprise-grade organization management capabilities for the Write Care Notes platform.
 
-## Core Features
-
-### Organization Management
-- Multi-care home coordination
-- Organization-wide policies
-- Resource allocation
-- Cross-care home reporting
-- Group-level analytics
-
-### Security & Compliance
-- GDPR compliant data handling
-- WCAG 2.1 AA accessibility
-- NHS Digital compliance
-- Organization-wide audit logging
-- Security policy enforcement
-
-### Enterprise Features
-- Multi-tenant architecture
-- Role-based access control
-- Error handling and monitoring
-- Performance telemetry
-- Health checks
-- Organization-wide analytics
+## Features
+- Multi-tenant organization management
+- Compliance framework integration
+- Offline capabilities
+- Audit logging
+- Enterprise-grade validation
 
 ## Architecture
-
-### Directory Structure
-```
-organizations/
-├── api/                    # API endpoints
-│   ├── routes/            # API routes
-│   └── handlers/          # Request handlers
-├── components/            # UI Components
-│   ├── dashboard/         # Organization dashboard
-│   ├── settings/         # Organization settings
-│   ├── analytics/        # Organization analytics
-│   └── error/           # Error boundaries
-├── hooks/                # Custom React hooks
-├── lib/                  # Core utilities
-├── providers/           # Context providers
-├── repositories/        # Data access layer
-├── services/           # Business logic
-│   ├── organizationService.ts
-│   ├── analyticsService.ts
-│   ├── securityService.ts
-│   ├── auditService.ts
-│   └── telemetryService.ts
-└── types/             # TypeScript types
+```mermaid
+graph TD
+    A[API Layer] --> B[Service Layer]
+    B --> C[Repository Layer]
+    C --> D[Database]
+    B --> E[Compliance]
+    B --> F[Audit]
+    B --> G[Offline Sync]
 ```
 
-## Getting Started
+## Components
+- `organizationService.ts` - Business logic layer
+- `organizationRepository.ts` - Data access layer
+- `useOrganizationContext.ts` - React hook for state management
+- `routes.ts` - API endpoints
 
-### Basic Setup
+## Usage Examples
+
+### Creating an Organization
 ```typescript
-import { OrganizationProvider, useOrganization } from '@/features/organizations'
+const org = await organizationService.createOrganization({
+  name: "Care Home Ltd",
+  type: "MULTI_SITE",
+  region: "GB-ENG"
+});
+```
 
-function App() {
-  return (
-    <OrganizationProvider organizationId="org_123">
-      <YourComponent />
-    </OrganizationProvider>
-  )
+### Adding a Care Home
+```typescript
+const updated = await organizationService.addCareHome(
+  orgId,
+  careHomeData
+);
+```
+
+## API Documentation
+
+### GET /api/organizations
+Get a list of organizations or a specific organization.
+
+Query Parameters:
+- `id` (optional) - Get specific organization
+- `page` (optional) - Page number
+- `limit` (optional) - Items per page
+
+### POST /api/organizations
+Create a new organization.
+
+Request Body:
+```typescript
+{
+  name: string;
+  type: "SINGLE_SITE" | "MULTI_SITE" | "CORPORATE" | "FRANCHISE";
+  region: string;
+  settings?: OrganizationSettings;
 }
 ```
 
-### Security Features
-```typescript
-import { SecurityService, AuditService } from '@/features/organizations'
+## Security
 
-// Organization-wide audit logging
-const auditService = new AuditService()
-await auditService.logEvent({
-  type: 'organization.updated',
-  organizationId: 'org_123',
-  action: 'update_settings',
-  changes: { name: 'New Name' }
-})
+### Authentication
+All endpoints require authentication using JWT tokens.
+
+### Authorization
+Role-based access control (RBAC) is implemented for all operations.
+
+### Data Protection
+- Tenant isolation
+- Field-level encryption
+- Audit logging
+- GDPR compliance
+
+## Deployment
+
+### Prerequisites
+- Node.js 18+
+- PostgreSQL 14+
+- Redis 6+
+
+### Environment Variables
+```env
+DATABASE_URL=postgresql://...
+REDIS_URL=redis://...
 ```
 
-### Analytics & Reporting
-```typescript
-import { OrganizationAnalyticsService } from '@/features/organizations'
-
-const analytics = new OrganizationAnalyticsService()
-const report = await analytics.generateOrganizationReport({
-  organizationId: 'org_123',
-  metrics: ['occupancy', 'staffing', 'compliance']
-})
-```
-
-## Integration with Care Homes
-
-The Organizations module integrates with the Care Homes module (`@/features/carehome`) for individual care home management. While this module handles organization-wide concerns, care home specific operations are delegated to the Care Homes module.
-
-### Example Integration
-```typescript
-import { useOrganization } from '@/features/organizations'
-import { useCareHomeList } from '@/features/carehome'
-
-function OrganizationDashboard() {
-  const { organization } = useOrganization()
-  const { careHomes } = useCareHomeList(organization.id)
-  
-  return (
-    <Dashboard
-      organization={organization}
-      careHomes={careHomes}
-    />
-  )
-}
+### Installation
+```bash
+npm install
+npm run migrate
+npm run seed
 ```
 
 ## Testing
-- Unit tests for business logic
-- Integration tests for API endpoints
-- E2E tests for critical flows
-- Accessibility testing
-- Security testing
 
-## Error Handling
-All components are wrapped with error boundaries:
-```typescript
-import { OrganizationErrorBoundary } from '@/features/organizations'
-
-function YourComponent() {
-  return (
-    <OrganizationErrorBoundary>
-      <YourFeature />
-    </OrganizationErrorBoundary>
-  )
-}
+### Unit Tests
+```bash
+npm run test:unit
 ```
 
-## Monitoring & Telemetry
-```typescript
-import { TelemetryService } from '@/features/organizations'
-
-const telemetry = TelemetryService.getInstance()
-await telemetry.trackEvent('organization_usage', {
-  feature: 'cross_home_reporting',
-  action: 'generate_report'
-})
+### Integration Tests
+```bash
+npm run test:integration
 ```
 
-## Documentation
-- [Features](./FEATURES.md) - Detailed feature documentation
-- [Changelog](./CHANGELOG.md) - Version history and changes
-- [Architecture](../../ARCHITECTURE.md) - System architecture overview
+### E2E Tests
+```bash
+npm run test:e2e
+```
 
-## Contributing
-Please see [CONTRIBUTING.md](../../CONTRIBUTING.md) for development guidelines.
+## Monitoring
+
+### Health Checks
+- `/health` - Service health
+- `/metrics` - Prometheus metrics
+
+### Logging
+Uses structured logging with the following levels:
+- ERROR - Service errors
+- WARN - Important warnings
+- INFO - General information
+- DEBUG - Debug information
+
+## Troubleshooting
+
+### Common Issues
+
+1. Organization Creation Fails
+```typescript
+// Check compliance validation
+await compliance.validateCompliance(orgData);
+```
+
+2. Offline Sync Issues
+```typescript
+// Check sync queue status
+const status = await offlineSync.getQueueStatus();
+```
+
+## Support
+For enterprise support, contact support@writecarenotes.com

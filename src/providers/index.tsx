@@ -16,7 +16,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     // Register service worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').catch(error => {
+        navigator.serviceWorker.register('/workers/sw.js').catch(error => {
           console.error('Service worker registration failed:', error);
         });
       });

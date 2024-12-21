@@ -28,9 +28,9 @@ export const createStaffSchema = staffBaseSchema.extend({
 
 export const updateStaffSchema = staffBaseSchema.partial()
 
-// Facility validation schemas
-export const facilitySchema = z.object({
-  name: z.string().min(2, 'Facility name must be at least 2 characters'),
+// Care Home validation schemas
+export const careHomeSchema = z.object({
+  name: z.string().min(2, 'Care home name must be at least 2 characters'),
   type: z.enum(['CARE_HOME', 'NURSING_HOME', 'DOMICILIARY']),
   regulatoryBody: z.nativeEnum(RegulatoryBody),
   address: z.object({
@@ -128,7 +128,7 @@ export const complianceValidationSchema = z.object({
 // Export types
 export type CreateStaffInput = z.infer<typeof createStaffSchema>
 export type UpdateStaffInput = z.infer<typeof updateStaffSchema>
-export type FacilityInput = z.infer<typeof facilitySchema>
+export type CareHomeInput = z.infer<typeof careHomeSchema>
 export type RegulatoryReportInput = z.infer<typeof regulatoryReportSchema>
 export type MonitoringEventInput = z.infer<typeof monitoringEventSchema>
 export type RegionalSettingsInput = z.infer<typeof regionalSettingsSchema>

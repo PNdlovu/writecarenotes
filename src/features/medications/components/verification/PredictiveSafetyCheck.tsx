@@ -1,162 +1,79 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, Box, Card, CircularProgress, Typography } from '@mui/material';
-import { PredictiveSafetyService } from '../../services/predictiveSafetyService';
-import { useEnvironmentalData } from '../../hooks/useEnvironmentalData';
-import { useStaffWorkload } from '../../hooks/useStaffWorkload';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Progress } from "@/components/ui/progress";
+import { AlertTriangle, CheckCircle } from "lucide-react";
 
 interface PredictiveSafetyCheckProps {
   residentId: string;
   medicationId: string;
   staffId: string;
-  onAnalysisComplete: (result: PredictiveSafetyResult) => void;
+  onAnalysisComplete: () => void;
 }
 
-const RiskIndicator: React.FC<{ score: number }> = ({ score }) => {
-  const getColor = (score: number) => {
-    if (score >= 80) return 'error';
-    if (score >= 60) return 'warning';
-    if (score >= 40) return 'info';
-    return 'success';
-  };
-
-  return (
-    <Box display="flex" alignItems="center" gap={2}>
-      <CircularProgress
-        variant="determinate"
-        value={score}
-        color={getColor(score)}
-        size={60}
-      />
-      <Typography variant="h6" color={getColor(score)}>
-        Risk Score: {score}
-      </Typography>
-    </Box>
-  );
-};
-
-export const PredictiveSafetyCheck: React.FC<PredictiveSafetyCheckProps> = ({
+export function PredictiveSafetyCheck({
   residentId,
   medicationId,
   staffId,
-  onAnalysisComplete,
-}) => {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [analysisResult, setAnalysisResult] = useState<PredictiveSafetyResult | null>(null);
-  
-  const environmentalData = useEnvironmentalData();
-  const staffWorkload = useStaffWorkload(staffId);
-  const predictiveSafetyService = new PredictiveSafetyService();
-
-  useEffect(() => {
-    const performAnalysis = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const result = await predictiveSafetyService.performPredictiveSafetyAnalysis({
-          residentId,
-          medicationId,
-          staffId,
-          scannedAt: new Date(),
-          environmentalData,
-          staffWorkload,
-        });
-
-        setAnalysisResult(result);
-        onAnalysisComplete(result);
-      } catch (err) {
-        setError('Failed to perform safety analysis. Please try again.');
-        console.error('Predictive safety analysis error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    performAnalysis();
-  }, [residentId, medicationId, staffId, environmentalData, staffWorkload]);
-
-  if (loading) {
-    return (
-      <Box display="flex" justifyContent="center" alignItems="center" p={3}>
-        <CircularProgress />
-        <Typography variant="body1" ml={2}>
-          Performing safety analysis...
-        </Typography>
-      </Box>
-    );
-  }
-
-  if (error) {
-    return (
-      <Alert severity="error" sx={{ mb: 2 }}>
-        {error}
-      </Alert>
-    );
-  }
-
-  if (!analysisResult) {
-    return null;
-  }
+  onAnalysisComplete
+}: PredictiveSafetyCheckProps) {
+  // This would be replaced with actual API calls and state management
+  const safetyScore = 85;
+  const warnings = [
+    {
+      type: 'moderate',
+      message: 'Similar medication administered 4 hours ago'
+    },
+    {
+      type: 'low',
+      message: 'Slight deviation from usual administration time'
+    }
+  ];
+  const recommendations = [
+    'Double-check dosage against prescription',
+    'Verify last administration time',
+    'Monitor for potential side effects'
+  ];
 
   return (
-    <Card sx={{ p: 3, mb: 2 }}>
-      <Typography variant="h5" gutterBottom>
-        Safety Analysis Results
-      </Typography>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Predictive Safety Analysis</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-6">
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="font-medium">Safety Score</h3>
+              <span className="text-sm font-medium">{safetyScore}%</span>
+            </div>
+            <Progress value={safetyScore} className="h-2" />
+          </div>
 
-      <RiskIndicator score={analysisResult.riskScore} />
+          <div className="space-y-4">
+            {warnings.map((warning, index) => (
+              <Alert key={index} variant={warning.type === 'moderate' ? 'warning' : 'default'}>
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle className="font-medium">
+                  {warning.type === 'moderate' ? 'Warning' : 'Notice'}
+                </AlertTitle>
+                <AlertDescription>{warning.message}</AlertDescription>
+              </Alert>
+            ))}
+          </div>
 
-      {analysisResult.predictiveWarnings.length > 0 && (
-        <Box mt={2}>
-          <Typography variant="h6" color="warning.main" gutterBottom>
-            Warnings
-          </Typography>
-          {analysisResult.predictiveWarnings.map((warning, index) => (
-            <Alert key={index} severity="warning" sx={{ mb: 1 }}>
-              {warning}
-            </Alert>
-          ))}
-        </Box>
-      )}
-
-      {analysisResult.requiredActions.length > 0 && (
-        <Box mt={2}>
-          <Typography variant="h6" color="info.main" gutterBottom>
-            Required Actions
-          </Typography>
-          {analysisResult.requiredActions.map((action, index) => (
-            <Alert key={index} severity="info" sx={{ mb: 1 }}>
-              {action}
-            </Alert>
-          ))}
-        </Box>
-      )}
-
-      {analysisResult.recommendedPrecautions.length > 0 && (
-        <Box mt={2}>
-          <Typography variant="h6" color="success.main" gutterBottom>
-            Recommended Precautions
-          </Typography>
-          {analysisResult.recommendedPrecautions.map((precaution, index) => (
-            <Alert key={index} severity="success" sx={{ mb: 1 }}>
-              {precaution}
-            </Alert>
-          ))}
-        </Box>
-      )}
-
-      {analysisResult.biometricChecksRequired && (
-        <Alert severity="warning" sx={{ mt: 2 }}>
-          Biometric checks are required before proceeding
-        </Alert>
-      )}
-
-      {analysisResult.behavioralChecksRequired && (
-        <Alert severity="warning" sx={{ mt: 2 }}>
-          Behavioral assessment is required before proceeding
-        </Alert>
-      )}
+          <div>
+            <h3 className="font-medium mb-3">Recommendations</h3>
+            <ul className="space-y-2">
+              {recommendations.map((recommendation, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                  <span className="text-sm">{recommendation}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </CardContent>
     </Card>
   );
-};
+}

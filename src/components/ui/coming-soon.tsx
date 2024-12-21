@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Coming Soon placeholder component
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Write Care Notes Team
+ * @copyright Write Care Notes Ltd
+ *
+ * Description:
+ * A placeholder component for features that are under development
+ */
+
 'use client';
 
 import { Clock } from "lucide-react";

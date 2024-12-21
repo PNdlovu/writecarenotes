@@ -1,6 +1,17 @@
+/**
+ * WriteCareNotes.com
+ * @fileoverview Authentication Service
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Philani Ndlovu
+ * @copyright Phibu Cloud Solutions Ltd.
+ */
+
 import { User } from '@/types/core';
 import { API_CONFIG, STORAGE_KEYS } from '@/config/app-config';
 import { jwtDecode } from 'jwt-decode';
+import { v4 as uuidv4 } from 'uuid';
+import { addMinutes, isAfter } from 'date-fns';
 
 interface AuthTokens {
   accessToken: string;
@@ -10,16 +21,28 @@ interface AuthTokens {
 interface LoginCredentials {
   email: string;
   password: string;
-  tenantId: string;
+  region: string;
   mfaCode?: string;
 }
 
 interface TokenPayload {
   sub: string;
   email: string;
-  tenantId: string;
+  region: string;
   roles: string[];
   exp: number;
+}
+
+interface MagicLinkRequest {
+  email: string;
+  region: string;
+  ipAddress: string;
+  userAgent: string;
+}
+
+interface MagicLinkVerification {
+  token: string;
+  region: string;
 }
 
 class AuthService {
@@ -65,15 +88,129 @@ class AuthService {
       this.user = user;
       
       // Record login in audit log
-      await this.recordLoginAudit(user.id, true);
+      await this.recordLoginAudit({
+        success: true,
+        region: credentials.region,
+        ipAddress: await this.getClientIP(),
+        method: 'PASSWORD',
+      });
 
       return user;
     } catch (error) {
       // Record failed login attempt
       if (credentials.email) {
-        await this.recordLoginAudit(credentials.email, false);
+        await this.recordLoginAudit({
+          success: false,
+          region: credentials.region,
+          ipAddress: await this.getClientIP(),
+          method: 'PASSWORD',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
       }
       throw error;
+    }
+  }
+
+  async sendMagicLink(request: MagicLinkRequest): Promise<void> {
+    try {
+      // Generate secure token
+      const token = uuidv4();
+      const expiresAt = addMinutes(new Date(), 30); // 30 minutes expiry
+
+      // Store magic link details
+      await fetch(`${API_CONFIG.baseUrl}/auth/magic-link`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: request.email,
+          region: request.region,
+          token,
+          expiresAt,
+          ipAddress: request.ipAddress,
+          userAgent: request.userAgent,
+        }),
+      });
+
+      // Send email with magic link
+      await fetch(`${API_CONFIG.baseUrl}/auth/send-magic-link-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: request.email,
+          region: request.region,
+          token,
+        }),
+      });
+    } catch (error) {
+      throw new Error('Failed to send magic link');
+    }
+  }
+
+  async verifyMagicLink(verification: MagicLinkVerification): Promise<User> {
+    try {
+      const response = await fetch(`${API_CONFIG.baseUrl}/auth/verify-magic-link`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(verification),
+      });
+
+      if (!response.ok) {
+        throw new Error('Invalid or expired magic link');
+      }
+
+      const { accessToken, refreshToken, user } = await response.json();
+
+      // Store tokens
+      this.setTokens({ accessToken, refreshToken });
+      
+      // Store user
+      this.user = user;
+
+      // Record successful login
+      await this.recordLoginAudit({
+        success: true,
+        region: verification.region,
+        ipAddress: await this.getClientIP(),
+        method: 'MAGIC_LINK',
+      });
+
+      return user;
+    } catch (error) {
+      // Record failed verification
+      await this.recordLoginAudit({
+        success: false,
+        region: verification.region,
+        ipAddress: await this.getClientIP(),
+        method: 'MAGIC_LINK',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      });
+      throw error;
+    }
+  }
+
+  async checkUserExists(email: string, region: string): Promise<boolean> {
+    try {
+      const response = await fetch(
+        `${API_CONFIG.baseUrl}/auth/check-user?email=${encodeURIComponent(email)}&region=${region}`,
+        {
+          method: 'GET',
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to check user existence');
+      }
+
+      const { exists } = await response.json();
+      return exists;
+    } catch (error) {
+      throw new Error('Failed to check user existence');
     }
   }
 
@@ -183,66 +320,13 @@ class AuthService {
     }
   }
 
-  async getCurrentUser(): Promise<User | null> {
-    if (!this.getAccessToken()) {
-      return null;
-    }
-
-    try {
-      if (this.user) {
-        return this.user;
-      }
-
-      const response = await fetch(`${API_CONFIG.baseUrl}/auth/me`, {
-        headers: {
-          'Authorization': `Bearer ${this.getAccessToken()}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to get current user');
-      }
-
-      const user = await response.json();
-      this.user = user;
-      return user;
-    } catch (error) {
-      console.error('Error getting current user:', error);
-      return null;
-    }
-  }
-
-  isAuthenticated(): boolean {
-    const token = this.getAccessToken();
-    if (!token) return false;
-
-    try {
-      const decoded = jwtDecode<TokenPayload>(token);
-      return decoded.exp > Date.now() / 1000;
-    } catch {
-      return false;
-    }
-  }
-
-  getAccessToken(): string | null {
-    return localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
-  }
-
-  private setTokens(tokens: AuthTokens): void {
-    localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, tokens.accessToken);
-    localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, tokens.refreshToken);
-  }
-
-  private clearAuth(): void {
-    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
-    this.user = null;
-  }
-
-  private async recordLoginAudit(
-    userIdentifier: string,
-    success: boolean
-  ): Promise<void> {
+  async recordLoginAudit(data: {
+    success: boolean;
+    region: string;
+    ipAddress: string;
+    method: 'PASSWORD' | 'MAGIC_LINK' | 'MAGIC_LINK_REQUEST';
+    error?: string;
+  }): Promise<void> {
     try {
       await fetch(`${API_CONFIG.baseUrl}/audit/login`, {
         method: 'POST',
@@ -250,10 +334,8 @@ class AuthService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          userIdentifier,
-          success,
+          ...data,
           timestamp: new Date(),
-          ipAddress: await this.getClientIP(),
           userAgent: navigator.userAgent,
         }),
       });
@@ -262,7 +344,7 @@ class AuthService {
     }
   }
 
-  private async getClientIP(): Promise<string> {
+  async getClientIP(): Promise<string> {
     try {
       const response = await fetch('https://api.ipify.org?format=json');
       const data = await response.json();
@@ -270,6 +352,21 @@ class AuthService {
     } catch {
       return 'unknown';
     }
+  }
+
+  private setTokens(tokens: AuthTokens): void {
+    localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, tokens.accessToken);
+    localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, tokens.refreshToken);
+  }
+
+  private getAccessToken(): string | null {
+    return localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+  }
+
+  private clearAuth(): void {
+    localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+    this.user = null;
   }
 }
 

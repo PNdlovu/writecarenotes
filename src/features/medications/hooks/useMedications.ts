@@ -6,141 +6,155 @@
  * @copyright Write Care Notes Ltd
  */
 
-import { useQuery, useQueryClient, useMutation, useOnlineStatus } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
-import type { Medication, CreateMedicationDTO, UpdateMedicationDTO } from '../types';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { medicationService } from '../services/medicationService';
-import { useOfflineSync } from '../hooks/useOfflineSync';
-import { toast } from '../components/Toast';
-import { captureError } from '../utils/errorHandling';
+import type { 
+  Medication, 
+  MedicationSchedule,
+  MedicationStatistics,
+  MedicationAdministration
+} from '../types';
+import { useToast } from '@/components/ui/use-toast';
+import { useOrganization } from '@/hooks/useOrganization';
 
-interface UseMedicationsProps {
-  tenantId: string;
-  careHomeId: string;
-  residentId?: string;
-  type?: 'REGULAR' | 'PRN' | 'CONTROLLED';
-}
-
-interface UseMedicationsResult {
-  medications: Medication[];
-  addMedication: (newMedication: CreateMedicationDTO) => Promise<Medication>;
-  updateMedication: (update: { id: string; data: UpdateMedicationDTO }) => Promise<Medication>;
-  isLoading: boolean;
-  isError: boolean;
-  isOffline: boolean;
-  error: Error | null;
-  pendingSync: boolean;
-}
-
-async function fetchMedications({
-  tenantId,
-  careHomeId,
-  residentId,
-  type,
-}: UseMedicationsProps): Promise<Medication[]> {
-  const params = new URLSearchParams({
-    tenantId,
-    careHomeId,
-    ...(residentId && { residentId }),
-    ...(type && { type }),
-  });
-
-  const response = await fetch(`/api/medications?${params.toString()}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch medications');
-  }
-
-  return response.json();
-}
-
-export function useMedications({
-  tenantId,
-  careHomeId,
-  residentId,
-  type,
-}: UseMedicationsProps): UseMedicationsResult {
+export function useMedications() {
+  const { organization } = useOrganization();
+  const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [offlineQueue, setOfflineQueue] = useState<Array<PendingOperation>>([]);
 
-  // Network status
-  const isOnline = useOnlineStatus();
-  const { addToQueue, processQueue } = useOfflineSync();
-
-  const {
-    data = [],
-    isLoading,
-    isError,
-    error,
+  // Fetch statistics
+  const { 
+    data: statistics,
+    isLoading: statisticsLoading,
+    error: statisticsError
   } = useQuery({
-    queryKey: ['medications', tenantId, careHomeId, residentId, type],
-    queryFn: () => fetchMedications({ tenantId, careHomeId, residentId, type }),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    cacheTime: 30 * 60 * 1000, // 30 minutes
-    retry: 3,
+    queryKey: ['medicationStatistics', organization?.id],
+    queryFn: () => medicationService.getStatistics(organization?.id),
+    enabled: !!organization?.id
   });
 
-  const addMedication = useMutation({
-    mutationFn: async (newMedication: CreateMedicationDTO) => {
-      if (!isOnline) {
-        // Store in IndexedDB and queue for sync
-        const tempId = `temp_${Date.now()}`;
-        await addToQueue({
-          type: 'CREATE',
-          resource: 'medication',
-          data: newMedication,
-          tempId,
-        });
-        return { ...newMedication, id: tempId, status: 'PENDING_SYNC' };
-      }
-      return medicationService.createMedication(newMedication, tenantId);
-    },
+  // Create medication
+  const createMutation = useMutation({
+    mutationFn: medicationService.createMedication,
     onSuccess: () => {
-      queryClient.invalidateQueries(['medications', tenantId]);
+      queryClient.invalidateQueries(['medications']);
+      toast({
+        title: 'Success',
+        description: 'Medication created successfully',
+      });
     },
     onError: (error) => {
-      toast.error('Failed to add medication. Will retry when online.');
-      captureError(error);
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
     },
   });
 
-  const updateMedication = useMutation({
-    mutationFn: async (update: { id: string; data: UpdateMedicationDTO }) => {
-      if (!isOnline) {
-        await addToQueue({
-          type: 'UPDATE',
-          resource: 'medication',
-          resourceId: update.id,
-          data: update.data,
-        });
-        return { ...update.data, status: 'PENDING_SYNC' };
-      }
-      return medicationService.updateMedication(update.id, update.data, tenantId);
-    },
+  // Update medication
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }) => medicationService.updateMedication(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries(['medications', tenantId]);
+      queryClient.invalidateQueries(['medications']);
+      toast({
+        title: 'Success',
+        description: 'Medication updated successfully',
+      });
     },
     onError: (error) => {
-      toast.error('Failed to update medication. Will retry when online.');
-      captureError(error);
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
     },
   });
 
-  // Process offline queue when coming back online
-  useEffect(() => {
-    if (isOnline && offlineQueue.length > 0) {
-      processQueue().catch(captureError);
-    }
-  }, [isOnline, offlineQueue]);
+  // Record administration
+  const administrationMutation = useMutation({
+    mutationFn: medicationService.recordAdministration,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['medications']);
+      queryClient.invalidateQueries(['medicationStatistics']);
+      toast({
+        title: 'Success',
+        description: 'Medication administration recorded successfully',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Create schedule
+  const scheduleMutation = useMutation({
+    mutationFn: medicationService.createSchedule,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['medications']);
+      toast({
+        title: 'Success',
+        description: 'Medication schedule created successfully',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
+
+  // Update stock
+  const stockMutation = useMutation({
+    mutationFn: ({ id, quantity, batchNumber }) => 
+      medicationService.updateStock(id, quantity, batchNumber),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['medications']);
+      queryClient.invalidateQueries(['medicationStatistics']);
+      toast({
+        title: 'Success',
+        description: 'Stock updated successfully',
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
 
   return {
-    medications: data,
-    addMedication,
-    updateMedication,
-    isLoading,
-    isError,
-    isOffline: !isOnline,
-    error: error as Error | null,
-    pendingSync: offlineQueue.length > 0,
+    // Data
+    statistics,
+    
+    // Loading states
+    isLoading: statisticsLoading,
+    
+    // Error states
+    error: statisticsError,
+    
+    // Mutations
+    createMedication: createMutation.mutate,
+    updateMedication: updateMutation.mutate,
+    recordAdministration: administrationMutation.mutate,
+    createSchedule: scheduleMutation.mutate,
+    updateStock: stockMutation.mutate,
+    
+    // Mutation states
+    isCreating: createMutation.isLoading,
+    isUpdating: updateMutation.isLoading,
+    isAdministering: administrationMutation.isLoading,
+    isScheduling: scheduleMutation.isLoading,
+    isUpdatingStock: stockMutation.isLoading,
   };
 }
 

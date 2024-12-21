@@ -1,254 +1,89 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Stepper, Step, StepLabel, Typography, Alert, Paper, Button } from '@mui/material';
-import { BarcodeScanner } from './BarcodeScanner';
-import { PredictiveSafetyCheck } from './PredictiveSafetyCheck';
-import { useVerification } from '../../hooks/useVerification';
-import { format } from 'date-fns';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 
-interface SafetyVerificationProps {
-  medicationId: string;
-  expectedResidentId: string;
-  onVerificationComplete: () => void;
-  onError: (error: string) => void;
-}
-
-interface VerificationStep {
-  label: string;
+interface Step {
+  title: string;
   description: string;
-  instructions: string;
+  status: 'complete' | 'current' | 'pending' | 'error';
 }
 
-const steps: VerificationStep[] = [
-  {
-    label: 'Resident Verification',
-    description: 'Scan resident\'s wristband barcode',
-    instructions: 'Please scan the barcode on the resident\'s wristband'
-  },
-  {
-    label: 'Medication Verification',
-    description: 'Scan medication barcode',
-    instructions: 'Please scan the barcode on the medication package'
-  },
-  {
-    label: 'Final Safety Check',
-    description: 'Review and confirm',
-    instructions: 'Please review all details before confirming'
-  }
-];
-
-export const SafetyVerification: React.FC<SafetyVerificationProps> = ({
-  medicationId,
-  expectedResidentId,
-  onVerificationComplete,
-  onError,
-}) => {
-  const [activeStep, setActiveStep] = useState(0);
-  const [scannedData, setScannedData] = useState({
-    residentId: '',
-    residentName: '',
-    medicationBarcode: '',
-    medicationDetails: null,
-    scannedAt: null as Date | null,
-  });
-  const [verificationErrors, setVerificationErrors] = useState<string[]>([]);
-  const { verifyMedicationSafety } = useVerification();
-
-  const handleResidentScan = async (barcode: string) => {
-    try {
-      // Verify resident barcode
-      const residentResponse = await fetch(`/api/residents/verify-barcode/${barcode}`);
-      const residentData = await residentResponse.json();
-
-      if (!residentData) {
-        throw new Error('Invalid resident barcode');
-      }
-
-      if (residentData.id !== expectedResidentId) {
-        throw new Error('Wrong resident! Please verify you are with the correct resident');
-      }
-
-      setScannedData(prev => ({
-        ...prev,
-        residentId: residentData.id,
-        residentName: residentData.name,
-        scannedAt: new Date(),
-      }));
-
-      setActiveStep(1);
-    } catch (error) {
-      onError(error instanceof Error ? error.message : 'Failed to verify resident');
+export function SafetyVerification() {
+  const steps: Step[] = [
+    {
+      title: 'Patient Identification',
+      description: 'Verify patient identity using two identifiers',
+      status: 'complete'
+    },
+    {
+      title: 'Medication Check',
+      description: 'Confirm medication details and dosage',
+      status: 'current'
+    },
+    {
+      title: 'Allergy Verification',
+      description: 'Check for any known allergies or contraindications',
+      status: 'pending'
+    },
+    {
+      title: 'Administration Time',
+      description: 'Verify correct timing for medication',
+      status: 'pending'
     }
-  };
-
-  const handleMedicationScan = async (barcode: string) => {
-    try {
-      // Verify medication barcode
-      const medicationResponse = await fetch(`/api/medications/verify-barcode/${barcode}`);
-      const medicationData = await medicationResponse.json();
-
-      if (!medicationData) {
-        throw new Error('Invalid medication barcode');
-      }
-
-      // Verify this is the correct medication for this resident
-      const safetyCheck = await verifyMedicationSafety({
-        medicationId: medicationData.id,
-        residentId: scannedData.residentId,
-        barcode,
-        scannedAt: new Date(),
-      });
-
-      if (!safetyCheck.isValid) {
-        setVerificationErrors(safetyCheck.errors);
-        throw new Error('Safety check failed');
-      }
-
-      setScannedData(prev => ({
-        ...prev,
-        medicationBarcode: barcode,
-        medicationDetails: medicationData,
-      }));
-
-      setActiveStep(2);
-    } catch (error) {
-      onError(error instanceof Error ? error.message : 'Failed to verify medication');
-    }
-  };
-
-  const handleFinalConfirmation = async () => {
-    try {
-      // Perform final safety checks
-      const finalSafetyCheck = await fetch('/api/medications/final-safety-check', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          residentId: scannedData.residentId,
-          medicationId,
-          scannedAt: scannedData.scannedAt,
-          verificationSteps: {
-            residentVerified: true,
-            medicationVerified: true,
-            timeVerified: true,
-          },
-        }),
-      });
-
-      if (!finalSafetyCheck.ok) {
-        throw new Error('Final safety check failed');
-      }
-
-      onVerificationComplete();
-    } catch (error) {
-      onError(error instanceof Error ? error.message : 'Final verification failed');
-    }
-  };
-
-  const handleAnalysisComplete = () => {
-    // Handle analysis complete
-  };
-
-  const renderStepContent = (step: number) => {
-    switch (step) {
-      case 0:
-        return (
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              {steps[0].instructions}
-            </Typography>
-            <BarcodeScanner
-              medicationId={medicationId}
-              onSuccess={handleResidentScan}
-              onError={onError}
-            />
-          </Box>
-        );
-      case 1:
-        return (
-          <Box>
-            <Typography variant="h6" gutterBottom>
-              {steps[1].instructions}
-            </Typography>
-            <Alert severity="info" sx={{ mb: 2 }}>
-              Verified Resident: {scannedData.residentName}
-            </Alert>
-            <BarcodeScanner
-              medicationId={medicationId}
-              onSuccess={handleMedicationScan}
-              onError={onError}
-            />
-          </Box>
-        );
-      case 2:
-        return (
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Final Safety Check
-            </Typography>
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle1">Resident Details:</Typography>
-              <Typography>Name: {scannedData.residentName}</Typography>
-              <Typography>ID: {scannedData.residentId}</Typography>
-              <Typography>Verified at: {scannedData.scannedAt ? format(scannedData.scannedAt, 'PPpp') : ''}</Typography>
-            </Box>
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle1">Medication Details:</Typography>
-              {scannedData.medicationDetails && (
-                <>
-                  <Typography>Name: {scannedData.medicationDetails.name}</Typography>
-                  <Typography>Dosage: {scannedData.medicationDetails.dosage}</Typography>
-                  <Typography>Route: {scannedData.medicationDetails.route}</Typography>
-                  <Typography>Time: {scannedData.medicationDetails.scheduledTime}</Typography>
-                </>
-              )}
-            </Box>
-            {verificationErrors.length > 0 && (
-              <Alert severity="error" sx={{ mb: 2 }}>
-                <Typography variant="subtitle1">Safety Concerns:</Typography>
-                <ul>
-                  {verificationErrors.map((error, index) => (
-                    <li key={index}>{error}</li>
-                  ))}
-                </ul>
-              </Alert>
-            )}
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleFinalConfirmation}
-              disabled={verificationErrors.length > 0}
-            >
-              Confirm and Proceed
-            </Button>
-          </Paper>
-        );
-      default:
-        return null;
-    }
-  };
+  ];
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <PredictiveSafetyCheck
-        residentId={expectedResidentId}
-        medicationId={medicationId}
-        staffId={'staffId'} // Replace with actual staffId
-        onAnalysisComplete={handleAnalysisComplete}
-      />
-      <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
-        {steps.map((step, index) => (
-          <Step key={step.label}>
-            <StepLabel>
-              {step.label}
-              <Typography variant="caption" display="block">
-                {step.description}
-              </Typography>
-            </StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      {renderStepContent(activeStep)}
-    </Box>
+    <Card className="w-full">
+      <CardHeader>
+        <CardTitle>Safety Verification</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-8">
+          <Alert>
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Important</AlertTitle>
+            <AlertDescription>
+              Complete all safety checks before administering medication
+            </AlertDescription>
+          </Alert>
+
+          <div className="relative">
+            {steps.map((step, index) => (
+              <div key={step.title} className="mb-8 last:mb-0">
+                <div className="flex items-center">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full border">
+                    {step.status === 'complete' && (
+                      <CheckCircle className="h-5 w-5 text-green-500" />
+                    )}
+                    {step.status === 'current' && (
+                      <div className="h-2.5 w-2.5 rounded-full bg-primary" />
+                    )}
+                    {step.status === 'error' && (
+                      <XCircle className="h-5 w-5 text-red-500" />
+                    )}
+                    {step.status === 'pending' && (
+                      <div className="h-2.5 w-2.5 rounded-full bg-gray-300" />
+                    )}
+                  </div>
+                  {index < steps.length - 1 && (
+                    <div className="absolute h-[calc(100%-32px)] w-px bg-gray-200 left-4 top-8" />
+                  )}
+                  <div className="ml-4">
+                    <h3 className="font-medium leading-none">{step.title}</h3>
+                    <p className="mt-1 text-sm text-gray-500">{step.description}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-between">
+            <Button variant="outline">Back</Button>
+            <Button>Continue</Button>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
-};
+}

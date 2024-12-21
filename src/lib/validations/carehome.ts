@@ -1,9 +1,14 @@
 import { z } from 'zod';
 
 /**
- * @fileoverview Facility validation schemas for ensuring data integrity across the application.
- * These schemas are used to validate all facility-related data before processing.
- * @module validations/facility
+ * WriteCareNotes.com
+ * @fileoverview Care Home validation schemas for ensuring data integrity across the application.
+ * These schemas are used to validate all care home-related data before processing.
+ * @module validations/carehome
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Philani Ndlovu
+ * @copyright Phibu Cloud Solutions Ltd.
  */
 
 /**
@@ -62,16 +67,16 @@ const operatingHoursSchema = z.object({
     // Ensure at least one day is open
     return Object.values(data).some(day => day.isOpen);
   },
-  { message: 'Facility must be open at least one day per week' }
+  { message: 'Care home must be open at least one day per week' }
 );
 
 /**
- * Comprehensive facility validation schema
- * @see {@link FacilitySettings}
+ * Comprehensive care home validation schema
+ * @see {@link CareHomeSettings}
  */
 const careHomeSettingsSchema = z.object({
-  id: z.string().uuid('Invalid facility ID'),
-  name: z.string().min(1, 'Facility name is required').max(100),
+  id: z.string().uuid('Invalid care home ID'),
+  name: z.string().min(1, 'Care home name is required').max(100),
   address: z.string().min(1, 'Address is required'),
   contactInfo: contactInfoSchema,
   operatingHours: operatingHoursSchema,
@@ -256,10 +261,10 @@ const contactSchema = z.object({
 });
 
 /**
- * Main facility validation schema
+ * Main care home validation schema
  */
-export const facilitySchema = z.object({
-  name: z.string().min(2, 'Facility name must be at least 2 characters'),
+export const careHomeSchema = z.object({
+  name: z.string().min(2, 'Care home name must be at least 2 characters'),
   type: z.enum(['CARE_HOME', 'NURSING_HOME', 'RESIDENTIAL_HOME', 'SUPPORTED_LIVING'] as const),
   regulatoryBody: z.enum(['CQC', 'CIW', 'RQIA', 'CARE_INSPECTORATE', 'HIQA'] as const),
   address: addressSchema,

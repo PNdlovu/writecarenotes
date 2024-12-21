@@ -1,128 +1,157 @@
+/**
+ * WriteCareNotes.com
+ * @fileoverview Sign Up Form Component
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Write Care Notes Team
+ * @copyright Write Care Notes Ltd
+ */
+
 'use client'
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Alert } from '@/components/ui/alert';
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { useToast } from '@/components/ui/use-toast'
+
+const REGIONS = [
+  { value: 'england', label: 'England (CQC)' },
+  { value: 'wales', label: 'Wales (CIW)' },
+  { value: 'scotland', label: 'Scotland (Care Inspectorate)' },
+  { value: 'northern-ireland', label: 'Northern Ireland (RQIA)' },
+  { value: 'ireland', label: 'Ireland (HIQA)' },
+]
 
 export function SignUpForm() {
-  const router = useRouter();
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const router = useRouter()
+  const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      setLoading(false);
-      return;
-    }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsLoading(true)
 
     try {
-      // TODO: Implement actual signup logic
-      // For now, just redirect to sign in
-      router.push('/auth/signin');
-    } catch (err) {
-      setError('An error occurred during sign up');
+      // TODO: Implement sign up logic
+      toast({
+        title: 'Success',
+        description: 'Your account has been created. Please check your email to verify your account.',
+      })
+      router.push('/verify-email')
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      })
     } finally {
-      setLoading(false);
+      setIsLoading(false)
     }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  }
 
   return (
-    <div className="w-full max-w-md space-y-8">
-      <div className="text-center">
-        <h2 className="mt-6 text-3xl font-bold tracking-tight">
-          Create your account
-        </h2>
-        <p className="mt-2 text-sm text-gray-600">
-          Already have an account?{' '}
-          <Button
-            variant="link"
-            className="p-0 h-auto font-semibold"
-            onClick={() => router.push('/auth/signin')}
-          >
-            Sign in
-          </Button>
-        </p>
-      </div>
-
-      <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-        {error && (
-          <Alert variant="destructive">
-            <p>{error}</p>
-          </Alert>
-        )}
-
-        <div className="space-y-4">
-          <div>
+    <div className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="firstName">First Name</Label>
             <Input
-              name="name"
-              type="text"
-              placeholder="Full name"
-              value={formData.name}
-              onChange={handleChange}
+              id="firstName"
               required
+              disabled={isLoading}
             />
           </div>
-          <div>
+          <div className="space-y-2">
+            <Label htmlFor="lastName">Last Name</Label>
             <Input
-              name="email"
-              type="email"
-              placeholder="Email address"
-              value={formData.email}
-              onChange={handleChange}
+              id="lastName"
               required
-            />
-          </div>
-          <div>
-            <Input
-              name="password"
-              type="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <Input
-              name="confirmPassword"
-              type="password"
-              placeholder="Confirm password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
+              disabled={isLoading}
             />
           </div>
         </div>
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={loading}
-        >
-          {loading ? 'Creating account...' : 'Create account'}
+        <div className="space-y-2">
+          <Label htmlFor="email">Work Email</Label>
+          <Input
+            id="email"
+            type="email"
+            required
+            disabled={isLoading}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="organization">Care Home Name</Label>
+          <Input
+            id="organization"
+            required
+            disabled={isLoading}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="region">Region</Label>
+          <Select>
+            <SelectTrigger>
+              <SelectValue placeholder="Select your region" />
+            </SelectTrigger>
+            <SelectContent>
+              {REGIONS.map((region) => (
+                <SelectItem key={region.value} value={region.value}>
+                  {region.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            required
+            disabled={isLoading}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="confirmPassword">Confirm Password</Label>
+          <Input
+            id="confirmPassword"
+            type="password"
+            required
+            disabled={isLoading}
+          />
+        </div>
+
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? 'Creating account...' : 'Create Account'}
         </Button>
       </form>
+
+      <div className="text-center text-sm">
+        Already have an account?{' '}
+        <Link href="/signin" className="text-primary hover:underline">
+          Sign in
+        </Link>
+      </div>
+
+      <div className="text-xs text-center text-muted-foreground">
+        By creating an account, you agree to our{' '}
+        <Link href="/terms" className="underline">
+          Terms of Service
+        </Link>{' '}
+        and{' '}
+        <Link href="/privacy" className="underline">
+          Privacy Policy
+        </Link>
+      </div>
     </div>
-  );
+  )
 }

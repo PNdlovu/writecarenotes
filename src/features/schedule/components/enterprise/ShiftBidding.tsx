@@ -1,26 +1,16 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-} from '@mui/material';
 import { format } from 'date-fns';
 import { ShiftBid } from '../../types/enterprise';
 import { Shift } from '../../../../types/schedule';
 import { Employee } from '../../../../types/employee';
 import { scheduleAPI } from '../../api/scheduleAPI';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 interface ShiftBiddingProps {
   shifts: Shift[];
@@ -76,86 +66,92 @@ export const ShiftBidding: React.FC<ShiftBiddingProps> = ({ shifts, employees })
     if (shiftBids.length === 0) return null;
     
     return (
-      <Box sx={{ display: 'flex', gap: 1 }}>
-        <Chip
-          size="small"
-          label={`${shiftBids.length} bid(s)`}
-          color="primary"
-          variant="outlined"
-        />
-      </Box>
+      <div className="flex gap-2">
+        <Badge variant="outline">
+          {shiftBids.length} bid(s)
+        </Badge>
+      </div>
     );
   };
 
   return (
-    <Box>
-      <Typography variant="h6" gutterBottom>
-        Available Shifts for Bidding
-      </Typography>
-      
-      <List>
-        {shifts.map((shift) => (
-          <Card key={shift.id} sx={{ mb: 2 }}>
-            <CardContent>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <ListItem>
-                  <ListItemText
-                    primary={format(new Date(shift.startTime), 'PPP')}
-                    secondary={`${format(new Date(shift.startTime), 'p')} - ${format(
-                      new Date(shift.endTime),
-                      'p'
-                    )}`}
-                  />
-                </ListItem>
-                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+    <Card>
+      <CardHeader>
+        <CardTitle>Shift Bidding</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Shift</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Time</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {shifts.map((shift) => (
+              <TableRow key={shift.id}>
+                <TableCell>{shift.name}</TableCell>
+                <TableCell>{format(new Date(shift.date), 'dd MMM yyyy')}</TableCell>
+                <TableCell>{shift.time}</TableCell>
+                <TableCell>
+                  <Badge variant={shift.status === 'Open' ? 'success' : 'secondary'}>
+                    {shift.status}
+                  </Badge>
                   {getBidStatus(shift)}
-                  <Button
-                    variant="contained"
-                    size="small"
+                </TableCell>
+                <TableCell>
+                  <Button 
+                    variant="outline" 
+                    disabled={shift.status !== 'Open'}
                     onClick={() => handleOpenBidDialog(shift)}
                   >
-                    Place Bid
+                    Bid Now
                   </Button>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        ))}
-      </List>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
 
-      <Dialog open={bidDialogOpen} onClose={handleCloseBidDialog}>
-        <DialogTitle>Place Bid for Shift</DialogTitle>
-        <DialogContent>
-          {selectedShift && (
-            <Box sx={{ mt: 2 }}>
-              <Typography variant="subtitle1">
-                {format(new Date(selectedShift.startTime), 'PPP')}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {`${format(new Date(selectedShift.startTime), 'p')} - ${format(
-                  new Date(selectedShift.endTime),
-                  'p'
-                )}`}
-              </Typography>
-              <TextField
-                margin="normal"
-                fullWidth
-                multiline
-                rows={4}
-                label="Bid Notes"
-                value={bidNotes}
-                onChange={(e) => setBidNotes(e.target.value)}
-              />
-            </Box>
-          )}
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseBidDialog}>Cancel</Button>
-          <Button onClick={handleSubmitBid} variant="contained">
-            Submit Bid
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
+        <Dialog open={bidDialogOpen} onOpenChange={handleCloseBidDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Place Bid for Shift</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              {selectedShift && (
+                <div>
+                  <p className="text-sm font-medium">Shift Details</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedShift.name} - {format(new Date(selectedShift.date), 'dd MMM yyyy')} at {selectedShift.time}
+                  </p>
+                </div>
+              )}
+              <div>
+                <label htmlFor="notes" className="text-sm font-medium">Notes</label>
+                <Textarea
+                  id="notes"
+                  value={bidNotes}
+                  onChange={(e) => setBidNotes(e.target.value)}
+                  placeholder="Add any notes about your bid..."
+                  className="mt-1"
+                />
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={handleCloseBidDialog}>
+                Cancel
+              </Button>
+              <Button onClick={handleSubmitBid} disabled={createBidMutation.isLoading}>
+                {createBidMutation.isLoading ? 'Submitting...' : 'Submit Bid'}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </CardContent>
+    </Card>
   );
 };

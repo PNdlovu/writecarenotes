@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Switch UI component
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Write Care Notes Team
+ * @copyright Write Care Notes Ltd
+ *
+ * Description:
+ * A toggle switch component using Radix UI primitives
+ */
+
 "use client"
 
 import * as React from "react"

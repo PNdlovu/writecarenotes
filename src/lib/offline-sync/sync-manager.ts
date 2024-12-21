@@ -84,7 +84,7 @@ export class SyncManager {
 
   private async initializeSyncWorker() {
     try {
-      const registration = await navigator.serviceWorker.register('/sync-worker.js');
+      const registration = await navigator.serviceWorker.register('/workers/sync-worker.js');
       await registration.sync.register('medication-sync');
       this.syncWorker = registration.active as Worker;
     } catch (error) {

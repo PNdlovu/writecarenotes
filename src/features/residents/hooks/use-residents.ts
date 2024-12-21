@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Residents hook for managing resident data
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Write Care Notes Team
+ * @copyright Write Care Notes Ltd
+ *
+ * Description:
+ * Custom hook for managing resident data, search, and filtering
+ */
+
 import { useState, useEffect } from 'react';
 import { residentApi } from '../api/resident-service';
 import type { Resident } from '../types';
@@ -51,4 +62,4 @@ export function useResidents() {
     setSelectedFilter,
     resetFilters,
   };
-}
+} 

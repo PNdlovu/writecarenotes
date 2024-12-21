@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Resident API service
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Write Care Notes Team
+ * @copyright Write Care Notes Ltd
+ *
+ * Description:
+ * API service for resident-related operations
+ */
+
 import type { Resident, CreateResidentData } from '../types';
 
 export const residentApi = {
@@ -57,4 +68,4 @@ export const residentApi = {
       throw new Error('Failed to delete resident');
     }
   },
-};
+}; 

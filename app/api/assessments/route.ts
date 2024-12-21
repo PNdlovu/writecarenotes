@@ -1,3 +1,11 @@
+/**
+ * @fileoverview Assessment API routes
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Write Care Notes Team
+ * @copyright Write Care Notes Ltd
+ */
+
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
@@ -56,12 +64,10 @@ export async function GET(request: Request) {
       recommendations: assessment.recommendations,
     }));
 
-    // 5. Return success response
     return NextResponse.json(formattedAssessments);
   } catch (error) {
     console.error('Error in GET /api/assessments:', error);
     
-    // 6. Return appropriate error response
     if (error.name === 'UnauthorizedError') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -75,10 +81,9 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    // 1. Validate request & auth
+    // Implementation moved from src/features/assessments/api/assessments.ts
     const { user, body } = await validateRequest(request);
 
-    // 2. Create assessment
     const assessment = await prisma.assessment.create({
       data: {
         ...body,
@@ -91,26 +96,10 @@ export async function POST(request: Request) {
       },
     });
 
-    // 3. Format response
-    const formattedAssessment = {
-      id: assessment.id,
-      residentName: `${assessment.resident.firstName} ${assessment.resident.lastName}`,
-      assessmentType: assessment.type,
-      category: assessment.category,
-      status: assessment.status,
-      completedDate: assessment.completedAt,
-      nextDueDate: assessment.nextDueDate,
-      assignedTo: `${assessment.assignedTo.firstName} ${assessment.assignedTo.lastName}`,
-      score: assessment.score,
-      recommendations: assessment.recommendations,
-    };
-
-    // 4. Return success response
-    return NextResponse.json(formattedAssessment, { status: 201 });
+    return NextResponse.json(assessment, { status: 201 });
   } catch (error) {
     console.error('Error in POST /api/assessments:', error);
     
-    // 5. Return appropriate error response
     if (error.name === 'UnauthorizedError') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

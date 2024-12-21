@@ -1,154 +1,132 @@
 import { useState } from 'react';
-import type { PINVerification, BarcodeVerification } from '../types/verification';
-
-interface SafetyCheckParams {
-  medicationId: string;
-  residentId: string;
-  barcode: string;
-  scannedAt: Date;
-}
-
-interface SafetyCheckResult {
-  isValid: boolean;
-  errors: string[];
-  warnings?: string[];
-}
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { verificationService } from '../services/verificationService';
+import { useToast } from '@/components/ui/use-toast';
+import { VerificationStatus, VerificationErrorType } from '../types';
 
 export function useVerification() {
-  const [isVerifying, setIsVerifying] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [isScanning, setIsScanning] = useState(false);
+  const [scanError, setScanError] = useState<string | null>(null);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  const verifyPIN = async (verification: PINVerification): Promise<boolean> => {
-    setIsVerifying(true);
-    setError(null);
-    
-    try {
-      // API call would go here
-      const response = await fetch('/api/medications/verify-pin', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(verification),
+  // Verify medication barcode
+  const verifyMutation = useMutation({
+    mutationFn: ({ administrationId, barcode }: { administrationId: string; barcode: string }) =>
+      verificationService.verifyMedicationBarcode(administrationId, barcode),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['medications']);
+      toast({
+        title: 'Verification Successful',
+        description: 'Medication has been verified successfully',
       });
+    },
+    onError: (error: any) => {
+      setScanError(error.message);
+      toast({
+        title: 'Verification Failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
 
-      if (!response.ok) {
-        throw new Error('PIN verification failed');
-      }
+  // Override verification
+  const overrideMutation = useMutation({
+    mutationFn: ({ administrationId, reason }: { administrationId: string; reason: string }) =>
+      verificationService.overrideVerification(administrationId, reason),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['medications']);
+      toast({
+        title: 'Override Successful',
+        description: 'Verification has been overridden',
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: 'Override Failed',
+        description: error.message,
+        variant: 'destructive',
+      });
+    },
+  });
 
-      return true;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'PIN verification failed');
-      return false;
-    } finally {
-      setIsVerifying(false);
+  // Start barcode scanning
+  const startScanning = () => {
+    setIsScanning(true);
+    setScanError(null);
+  };
+
+  // Stop barcode scanning
+  const stopScanning = () => {
+    setIsScanning(false);
+    setScanError(null);
+  };
+
+  // Handle barcode scan
+  const handleScan = async (administrationId: string, barcode: string) => {
+    try {
+      await verifyMutation.mutateAsync({ administrationId, barcode });
+      stopScanning();
+    } catch (error) {
+      // Error handling is done in mutation
     }
   };
 
-  const verifyBarcode = async (verification: BarcodeVerification): Promise<boolean> => {
-    setIsVerifying(true);
-    setError(null);
-    
+  // Handle manual override
+  const handleOverride = async (administrationId: string, reason: string) => {
     try {
-      // API call would go here
-      const response = await fetch('/api/medications/verify-barcode', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(verification),
-      });
-
-      if (!response.ok) {
-        throw new Error('Barcode verification failed');
-      }
-
-      return true;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Barcode verification failed');
-      return false;
-    } finally {
-      setIsVerifying(false);
+      await overrideMutation.mutateAsync({ administrationId, reason });
+    } catch (error) {
+      // Error handling is done in mutation
     }
   };
 
-  const verifyMedicationSafety = async (params: SafetyCheckParams): Promise<SafetyCheckResult> => {
-    setIsVerifying(true);
-    setError(null);
-    
-    try {
-      const response = await fetch('/api/medications/safety-check', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(params),
-      });
+  // Get verification status text
+  const getStatusText = (status: VerificationStatus): string => {
+    const statusText = {
+      [VerificationStatus.PENDING]: 'Pending Verification',
+      [VerificationStatus.VERIFIED]: 'Verified',
+      [VerificationStatus.FAILED]: 'Verification Failed',
+      [VerificationStatus.OVERRIDE]: 'Manually Verified'
+    };
+    return statusText[status] || 'Unknown Status';
+  };
 
-      if (!response.ok) {
-        throw new Error('Safety check failed');
-      }
-
-      const result = await response.json();
-
-      // Additional safety checks
-      const errors: string[] = [];
-      
-      // Check medication expiry
-      if (result.medication.expiryDate && new Date(result.medication.expiryDate) <= new Date()) {
-        errors.push('Medication has expired');
-      }
-
-      // Check if this is the newest prescription
-      if (!result.medication.isLatestPrescription) {
-        errors.push('This is not the most recent prescription - please check for updates');
-      }
-
-      // Check for any recent adverse reactions
-      if (result.recentAdverseReactions?.length > 0) {
-        errors.push('Warning: Recent adverse reactions recorded - please review medical notes');
-      }
-
-      // Check for any recent medication changes
-      if (result.recentMedicationChanges?.length > 0) {
-        errors.push('Warning: Recent medication changes detected - please verify against latest prescription');
-      }
-
-      // Check timing
-      const scheduledTime = new Date(result.medication.scheduledTime);
-      const currentTime = new Date();
-      const timeDifferenceMinutes = Math.abs(currentTime.getTime() - scheduledTime.getTime()) / (1000 * 60);
-      
-      if (timeDifferenceMinutes > 30) {
-        errors.push(`Warning: Administration time differs from scheduled time by ${Math.round(timeDifferenceMinutes)} minutes`);
-      }
-
-      // Check for interactions with recently administered medications
-      if (result.potentialInteractions?.length > 0) {
-        errors.push('Warning: Potential interactions with recently administered medications detected');
-      }
-
-      return {
-        isValid: errors.length === 0,
-        errors,
-        warnings: result.warnings || [],
-      };
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Safety check failed');
-      return {
-        isValid: false,
-        errors: [err instanceof Error ? err.message : 'Safety check failed'],
-      };
-    } finally {
-      setIsVerifying(false);
-    }
+  // Get error message
+  const getErrorMessage = (type: VerificationErrorType): string => {
+    const errorMessages = {
+      [VerificationErrorType.BARCODE_MISMATCH]: 'Wrong medication - barcode does not match',
+      [VerificationErrorType.INVALID_BARCODE]: 'Invalid barcode format',
+      [VerificationErrorType.EXPIRED_MEDICATION]: 'This medication has expired',
+      [VerificationErrorType.WRONG_RESIDENT]: 'Wrong resident - medication not prescribed',
+      [VerificationErrorType.WRONG_TIME]: 'Wrong time - not scheduled for now',
+      [VerificationErrorType.SYSTEM_ERROR]: 'System error - please try again'
+    };
+    return errorMessages[type] || 'Unknown error occurred';
   };
 
   return {
-    verifyPIN,
-    verifyBarcode,
-    verifyMedicationSafety,
-    isVerifying,
-    error,
+    // State
+    isScanning,
+    scanError,
+    
+    // Mutations
+    verifyBarcode: verifyMutation.mutate,
+    override: overrideMutation.mutate,
+    
+    // Loading states
+    isVerifying: verifyMutation.isLoading,
+    isOverriding: overrideMutation.isLoading,
+    
+    // Actions
+    startScanning,
+    stopScanning,
+    handleScan,
+    handleOverride,
+    
+    // Utility functions
+    getStatusText,
+    getErrorMessage,
   };
 }

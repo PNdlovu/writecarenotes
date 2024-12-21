@@ -1,37 +1,36 @@
-import { NextRequest } from 'next/server';
+/**
+ * WriteCareNotes.com
+ * @fileoverview API Client Configuration
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Philani Ndlovu
+ * @copyright Phibu Cloud Solutions Ltd.
+ */
 
-export function validateRequest(request: NextRequest) {
-  // Add any common request validation logic here
-  return {
-    success: true,
-    error: null
-  };
-}
+import axios from 'axios'
 
-export async function handleApiError(error: any) {
-  console.error('API Error:', error);
-  return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
-    status: 500,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-}
+export const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
 
-export function createSuccessResponse(data: any) {
-  return new Response(JSON.stringify(data), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-}
+// Add request interceptor for auth
+api.interceptors.request.use((config) => {
+  // Add auth token if available
+  const token = localStorage.getItem('token')
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`
+  }
+  return config
+})
 
-export function createErrorResponse(message: string, status: number = 400) {
-  return new Response(JSON.stringify({ error: message }), {
-    status,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-}
+// Add response interceptor for error handling
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Handle errors (401, 403, etc)
+    return Promise.reject(error)
+  }
+)

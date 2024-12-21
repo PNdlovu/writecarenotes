@@ -1,22 +1,18 @@
-/**
- * @fileoverview Prisma client singleton
- * @version 1.0.0
- * @created 2024-03-21
- * @copyright Write Care Notes Ltd
- */
-
 import { PrismaClient } from '@prisma/client'
+import { env } from '../../env.mjs'
 
-declare global {
-  var prisma: PrismaClient | undefined;
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined
 }
 
-export const prisma = global.prisma || new PrismaClient()
+export const prisma = globalForPrisma.prisma ?? 
+  new PrismaClient({
+    log: env.NODE_ENV === 'development' 
+      ? ['query', 'error', 'warn'] 
+      : ['error'],
+  })
 
-if (process.env.NODE_ENV !== 'production') {
-  global.prisma = prisma
-}
+if (env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
-export default prisma
-
-
+// Helpful utility type
+export type Prisma = typeof prisma

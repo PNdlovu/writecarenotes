@@ -1,11 +1,20 @@
-export const mockFacility = {
-  id: 'test-facility-id',
+export const mockCareHome = {
+  id: 'test-carehome-id',
   name: 'Test Care Home',
   address: '123 Test Street',
-  city: 'Test City',
-  postcode: 'TS1 1ST',
-  phone: '01234567890',
-  email: 'facility@test.com',
+  phone: '1234567890',
+  email: 'carehome@test.com',
+  type: 'CARE_HOME',
+  status: 'ACTIVE',
+}
+
+export const mockUser = {
+  id: 'test-user-id',
+  firstName: 'John',
+  lastName: 'Doe',
+  dateOfBirth: '1950-01-01',
+  roomNumber: '101',
+  careHomeId: 'test-carehome-id',
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 }
@@ -16,7 +25,7 @@ export const mockResident = {
   lastName: 'Doe',
   dateOfBirth: '1950-01-01',
   roomNumber: '101',
-  facilityId: 'test-facility-id',
+  careHomeId: 'test-carehome-id',
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 }
@@ -38,7 +47,7 @@ export const mockStaffMember = {
   lastName: 'Smith',
   email: 'jane.smith@test.com',
   role: 'STAFF',
-  facilityId: 'test-facility-id',
+  careHomeId: 'test-carehome-id',
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 }
@@ -46,7 +55,7 @@ export const mockStaffMember = {
 export const mockSchedule = {
   id: 'test-schedule-id',
   staffId: 'test-staff-id',
-  facilityId: 'test-facility-id',
+  careHomeId: 'test-carehome-id',
   startTime: new Date().toISOString(),
   endTime: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(),
   createdAt: new Date().toISOString(),

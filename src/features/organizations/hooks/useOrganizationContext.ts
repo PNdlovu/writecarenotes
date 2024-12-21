@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from 'react'
 import { Organization } from '../types/organization.types'
-import { OrganizationService } from '../services/organizationService'
+import { organizationService } from '../services/organizationService'
 import { OrganizationAnalyticsService } from '../services/analyticsService'
 import { OrganizationMetrics, CareHomeMetricsSummary } from '../repositories/analyticsRepository'
 
@@ -39,7 +39,6 @@ export function useOrganizationContext(organizationId: string) {
   const [metrics, setMetrics] = useState<OrganizationMetrics | null>(null)
   const [careHomeMetrics, setCareHomeMetrics] = useState<CareHomeMetricsSummary[]>([])
 
-  const organizationService = new OrganizationService()
   const analyticsService = new OrganizationAnalyticsService()
 
   const fetchData = async () => {

@@ -1,197 +1,231 @@
-import { openDB, IDBPDatabase } from 'idb'
-import { OfflineConfig } from '@/components/dashboard/visualizations/types'
+/**
+ * WriteCareNotes.com
+ * @fileoverview Offline Sync Management
+ * @version 1.0.0
+ */
 
-interface OfflineStore {
-  id: string
-  data: any
-  timestamp: number
-  version: string
-  type: string
+import { TenantContext } from './tenant';
+import { OfflineError } from './errors';
+
+interface SyncOperation {
+  id: string;
+  type: string;
+  action: string;
+  data: any;
+  context: TenantContext;
+  timestamp: Date;
+  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED';
+  retryCount: number;
+  error?: string;
 }
 
-class OfflineService {
-  private db: IDBPDatabase | null = null
-  private config: OfflineConfig
-  private readonly DB_NAME = 'care-dashboard-offline'
-  private readonly DB_VERSION = 1
-  private readonly STORES = {
-    DATA: 'offline-data',
-    SYNC: 'sync-queue',
-    META: 'metadata'
+interface SyncQueue {
+  operations: SyncOperation[];
+  lastSync: Date;
+  isProcessing: boolean;
+}
+
+class OfflineSyncManager {
+  private static instance: OfflineSyncManager;
+  private queue: SyncQueue;
+  private maxRetries: number = 3;
+  private syncInterval: number = 5000; // 5 seconds
+  private syncTimer?: NodeJS.Timer;
+
+  private constructor() {
+    this.queue = {
+      operations: [],
+      lastSync: new Date(),
+      isProcessing: false,
+    };
   }
 
-  constructor(config: OfflineConfig) {
-    this.config = config
-    this.initDatabase()
+  public static getInstance(): OfflineSyncManager {
+    if (!OfflineSyncManager.instance) {
+      OfflineSyncManager.instance = new OfflineSyncManager();
+    }
+    return OfflineSyncManager.instance;
   }
 
-  private async initDatabase() {
+  async queueSync(operation: {
+    type: string;
+    action: string;
+    data: any;
+    context: TenantContext;
+  }): Promise<void> {
+    const syncOp: SyncOperation = {
+      id: Math.random().toString(36).substring(2, 15),
+      ...operation,
+      timestamp: new Date(),
+      status: 'PENDING',
+      retryCount: 0,
+    };
+
+    this.queue.operations.push(syncOp);
+    await this.persistQueue();
+
+    // Start sync if not already running
+    if (!this.syncTimer) {
+      this.startSync();
+    }
+  }
+
+  async startSync(): Promise<void> {
+    if (this.syncTimer) {
+      return;
+    }
+
+    this.syncTimer = setInterval(async () => {
+      if (!this.queue.isProcessing && this.queue.operations.length > 0) {
+        await this.processQueue();
+      }
+    }, this.syncInterval);
+  }
+
+  async stopSync(): Promise<void> {
+    if (this.syncTimer) {
+      clearInterval(this.syncTimer);
+      this.syncTimer = undefined;
+    }
+  }
+
+  private async processQueue(): Promise<void> {
+    if (this.queue.isProcessing) {
+      return;
+    }
+
+    this.queue.isProcessing = true;
+
     try {
-      this.db = await openDB(this.DB_NAME, this.DB_VERSION, {
-        upgrade(db) {
-          // Create stores if they don't exist
-          if (!db.objectStoreNames.contains('offline-data')) {
-            db.createObjectStore('offline-data', { keyPath: 'id' })
+      const pendingOps = this.queue.operations.filter(op => op.status === 'PENDING');
+
+      for (const op of pendingOps) {
+        try {
+          op.status = 'IN_PROGRESS';
+          await this.persistQueue();
+
+          await this.processSyncOperation(op);
+
+          op.status = 'COMPLETED';
+          await this.persistQueue();
+        } catch (error) {
+          op.retryCount++;
+          op.error = error.message;
+
+          if (op.retryCount >= this.maxRetries) {
+            op.status = 'FAILED';
+          } else {
+            op.status = 'PENDING';
           }
-          if (!db.objectStoreNames.contains('sync-queue')) {
-            db.createObjectStore('sync-queue', { keyPath: 'id', autoIncrement: true })
-          }
-          if (!db.objectStoreNames.contains('metadata')) {
-            db.createObjectStore('metadata', { keyPath: 'key' })
-          }
-        }
-      })
 
-      // Store last sync time
-      await this.updateMetadata('lastSync', new Date().toISOString())
-    } catch (error) {
-      console.error('Failed to initialize offline database:', error)
-      throw new Error('Offline storage initialization failed')
-    }
-  }
-
-  async storeData(key: string, data: any, type: string): Promise<void> {
-    if (!this.db) throw new Error('Database not initialized')
-
-    const store: OfflineStore = {
-      id: key,
-      data,
-      timestamp: Date.now(),
-      version: '1.0',
-      type
-    }
-
-    try {
-      await this.db.put(this.STORES.DATA, store)
-      await this.updateMetadata('lastUpdate', new Date().toISOString())
-    } catch (error) {
-      console.error('Failed to store offline data:', error)
-      throw new Error('Failed to store offline data')
-    }
-  }
-
-  async getData(key: string): Promise<any> {
-    if (!this.db) throw new Error('Database not initialized')
-
-    try {
-      const store = await this.db.get(this.STORES.DATA, key)
-      return store?.data
-    } catch (error) {
-      console.error('Failed to retrieve offline data:', error)
-      throw new Error('Failed to retrieve offline data')
-    }
-  }
-
-  async queueSync(operation: any): Promise<void> {
-    if (!this.db) throw new Error('Database not initialized')
-
-    try {
-      await this.db.add(this.STORES.SYNC, {
-        operation,
-        timestamp: Date.now(),
-        retries: 0
-      })
-
-      await this.updateMetadata('pendingChanges', 
-        (await this.getPendingChangesCount()) + 1
-      )
-    } catch (error) {
-      console.error('Failed to queue sync operation:', error)
-      throw new Error('Failed to queue sync operation')
-    }
-  }
-
-  async processSyncQueue(): Promise<void> {
-    if (!this.db) throw new Error('Database not initialized')
-
-    const tx = this.db.transaction(this.STORES.SYNC, 'readwrite')
-    const store = tx.objectStore(this.STORES.SYNC)
-    const queue = await store.getAll()
-
-    for (const item of queue) {
-      try {
-        // Process sync operation
-        // Implement your sync logic here
-        await store.delete(item.id)
-      } catch (error) {
-        console.error('Failed to process sync item:', error)
-        // Update retry count and delay next attempt
-        item.retries++
-        if (item.retries < 3) {
-          await store.put(item)
-        } else {
-          await store.delete(item.id)
+          await this.persistQueue();
         }
       }
-    }
 
-    await this.updateMetadata('lastSync', new Date().toISOString())
-    await this.updateMetadata('pendingChanges', 0)
+      // Clean up completed operations
+      this.queue.operations = this.queue.operations.filter(op => 
+        op.status !== 'COMPLETED' && 
+        !(op.status === 'FAILED' && op.retryCount >= this.maxRetries)
+      );
+
+      this.queue.lastSync = new Date();
+      await this.persistQueue();
+    } finally {
+      this.queue.isProcessing = false;
+    }
   }
 
-  private async updateMetadata(key: string, value: any): Promise<void> {
-    if (!this.db) throw new Error('Database not initialized')
+  private async processSyncOperation(operation: SyncOperation): Promise<void> {
+    // Check network connectivity
+    if (!navigator.onLine) {
+      throw new OfflineError('No network connection available');
+    }
 
+    // Process based on operation type and action
+    switch (operation.type) {
+      case 'ORGANIZATION':
+        await this.processOrganizationSync(operation);
+        break;
+      // Add other types as needed
+      default:
+        throw new OfflineError(`Unknown sync operation type: ${operation.type}`);
+    }
+  }
+
+  private async processOrganizationSync(operation: SyncOperation): Promise<void> {
+    switch (operation.action) {
+      case 'CREATE':
+        // Implement organization creation sync
+        break;
+      case 'UPDATE':
+        // Implement organization update sync
+        break;
+      case 'DELETE':
+        // Implement organization deletion sync
+        break;
+      case 'ADD_CARE_HOME':
+        // Implement care home addition sync
+        break;
+      case 'REMOVE_CARE_HOME':
+        // Implement care home removal sync
+        break;
+      case 'UPDATE_SETTINGS':
+        // Implement settings update sync
+        break;
+      default:
+        throw new OfflineError(`Unknown organization sync action: ${operation.action}`);
+    }
+  }
+
+  private async persistQueue(): Promise<void> {
     try {
-      await this.db.put(this.STORES.META, { key, value })
+      localStorage.setItem('syncQueue', JSON.stringify(this.queue));
     } catch (error) {
-      console.error('Failed to update metadata:', error)
-      throw new Error('Failed to update metadata')
+      console.error('Failed to persist sync queue:', error);
     }
   }
 
-  async getMetadata(key: string): Promise<any> {
-    if (!this.db) throw new Error('Database not initialized')
-
+  private async loadQueue(): Promise<void> {
     try {
-      const meta = await this.db.get(this.STORES.META, key)
-      return meta?.value
+      const savedQueue = localStorage.getItem('syncQueue');
+      if (savedQueue) {
+        this.queue = JSON.parse(savedQueue);
+      }
     } catch (error) {
-      console.error('Failed to retrieve metadata:', error)
-      throw new Error('Failed to retrieve metadata')
+      console.error('Failed to load sync queue:', error);
     }
   }
 
-  async getPendingChangesCount(): Promise<number> {
-    if (!this.db) throw new Error('Database not initialized')
+  getQueueStatus(): {
+    pendingCount: number;
+    failedCount: number;
+    lastSync: Date;
+    isProcessing: boolean;
+  } {
+    return {
+      pendingCount: this.queue.operations.filter(op => op.status === 'PENDING').length,
+      failedCount: this.queue.operations.filter(op => op.status === 'FAILED').length,
+      lastSync: this.queue.lastSync,
+      isProcessing: this.queue.isProcessing,
+    };
+  }
 
-    try {
-      const count = await this.db.count(this.STORES.SYNC)
-      return count
-    } catch (error) {
-      console.error('Failed to get pending changes count:', error)
-      throw new Error('Failed to get pending changes count')
+  async retryFailedOperations(): Promise<void> {
+    const failedOps = this.queue.operations.filter(op => op.status === 'FAILED');
+    for (const op of failedOps) {
+      op.status = 'PENDING';
+      op.retryCount = 0;
+      op.error = undefined;
     }
+    await this.persistQueue();
   }
 
-  async clearOfflineData(): Promise<void> {
-    if (!this.db) throw new Error('Database not initialized')
-
-    try {
-      await this.db.clear(this.STORES.DATA)
-      await this.updateMetadata('lastClear', new Date().toISOString())
-    } catch (error) {
-      console.error('Failed to clear offline data:', error)
-      throw new Error('Failed to clear offline data')
-    }
-  }
-
-  async isOnline(): Promise<boolean> {
-    return navigator.onLine
-  }
-
-  async getLastSyncTime(): Promise<string | null> {
-    return this.getMetadata('lastSync')
-  }
-
-  destroy(): void {
-    if (this.db) {
-      this.db.close()
-      this.db = null
-    }
+  async clearFailedOperations(): Promise<void> {
+    this.queue.operations = this.queue.operations.filter(op => op.status !== 'FAILED');
+    await this.persistQueue();
   }
 }
 
-export const offlineService = new OfflineService() 
+export const offlineSync = OfflineSyncManager.getInstance(); 
 
 

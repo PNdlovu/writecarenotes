@@ -1,25 +1,34 @@
-import { prisma } from './prisma';
-import { AuditLogAction, AuditLogStatus, AuditLogActorType } from '@/types/audit';
+/**
+ * WriteCareNotes.com
+ * @fileoverview Audit Logging Service
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Philani Ndlovu
+ * @copyright Phibu Cloud Solutions Ltd.
+ */
 
-export interface AuditLogOptions {
-  actorId: string;
-  actorType?: AuditLogActorType;
-  ipAddress?: string;
-  userAgent?: string;
-  details?: Record<string, any>;
+import { prisma } from './prisma'
+import { AuditLog } from '@prisma/client'
+import { ApiError } from './errors'
+
+interface AuditLogInput {
+  userId: string
+  action: string
+  details?: Record<string, any>
+  ipAddress?: string
+  userAgent?: string
 }
 
-export interface AuditLogEntry {
-  entityType: string;
-  entityId: string;
-  action: AuditLogAction;
-  changes?: {
-    before?: Record<string, any>;
-    after?: Record<string, any>;
-  };
+interface AuditQuery {
+  userId?: string
+  action?: string
+  startDate?: Date
+  endDate?: Date
+  page?: number
+  limit?: number
 }
 
-export class AuditService {
+class AuditService {
   private static instance: AuditService;
 
   private constructor() {}
@@ -31,139 +40,184 @@ export class AuditService {
     return AuditService.instance;
   }
 
-  async log(entry: AuditLogEntry, options: AuditLogOptions): Promise<void> {
+  /**
+   * Create an audit log entry
+   */
+  async log(data: AuditLogInput): Promise<AuditLog> {
     try {
-      await prisma.auditLog.create({
+      const auditLog = await prisma.auditLog.create({
         data: {
-          entityType: entry.entityType,
-          entityId: entry.entityId,
-          action: entry.action,
-          actorId: options.actorId,
-          actorType: options.actorType || 'USER',
-          changes: entry.changes,
-          details: options.details,
-          ipAddress: options.ipAddress,
-          userAgent: options.userAgent,
-          status: 'SUCCESS',
+          userId: data.userId,
+          action: data.action,
+          details: data.details || {},
+          ipAddress: data.ipAddress,
+          userAgent: data.userAgent,
         },
       });
+
+      return auditLog;
     } catch (error) {
-      console.error('Failed to create audit log:', error);
-      // Still try to log the error
-      await this.logError(entry, options, error);
+      throw ApiError.internal('Failed to create audit log');
     }
   }
 
-  async logError(
-    entry: AuditLogEntry,
-    options: AuditLogOptions,
-    error: any
-  ): Promise<void> {
+  /**
+   * Query audit logs with filtering and pagination
+   */
+  async queryAuditLogs(query: AuditQuery) {
     try {
-      await prisma.auditLog.create({
-        data: {
-          entityType: entry.entityType,
-          entityId: entry.entityId,
-          action: entry.action,
-          actorId: options.actorId,
-          actorType: options.actorType || 'USER',
-          changes: entry.changes,
-          details: options.details,
-          ipAddress: options.ipAddress,
-          userAgent: options.userAgent,
-          status: 'FAILURE',
-          errorDetails: error.message || JSON.stringify(error),
+      const {
+        userId,
+        action,
+        startDate,
+        endDate,
+        page = 1,
+        limit = 50,
+      } = query;
+
+      const where = {
+        ...(userId && { userId }),
+        ...(action && { action }),
+        ...(startDate && endDate && {
+          createdAt: {
+            gte: startDate,
+            lte: endDate,
+          },
+        }),
+      };
+
+      const [total, logs] = await Promise.all([
+        prisma.auditLog.count({ where }),
+        prisma.auditLog.findMany({
+          where,
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+          skip: (page - 1) * limit,
+          take: limit,
+        }),
+      ]);
+
+      return {
+        logs,
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
         },
-      });
-    } catch (secondaryError) {
-      console.error('Failed to create error audit log:', secondaryError);
+      };
+    } catch (error) {
+      throw ApiError.internal('Failed to query audit logs');
     }
   }
 
-  async getAuditLogs(params: {
-    entityType?: string;
-    entityId?: string;
-    action?: AuditLogAction;
-    actorId?: string;
-    status?: AuditLogStatus;
-    startDate?: Date;
-    endDate?: Date;
-    limit?: number;
-    offset?: number;
-  }) {
-    const where: any = {};
-
-    if (params.entityType) where.entityType = params.entityType;
-    if (params.entityId) where.entityId = params.entityId;
-    if (params.action) where.action = params.action;
-    if (params.actorId) where.actorId = params.actorId;
-    if (params.status) where.status = params.status;
-    if (params.startDate || params.endDate) {
-      where.timestamp = {};
-      if (params.startDate) where.timestamp.gte = params.startDate;
-      if (params.endDate) where.timestamp.lte = params.endDate;
-    }
-
-    return await prisma.auditLog.findMany({
-      where,
-      orderBy: { timestamp: 'desc' },
-      take: params.limit || 50,
-      skip: params.offset || 0,
-    });
-  }
-
-  async archiveOldLogs(daysToKeep: number = 90): Promise<number> {
-    const cutoffDate = new Date();
-    cutoffDate.setDate(cutoffDate.getDate() - daysToKeep);
-
-    const oldLogs = await prisma.auditLog.findMany({
-      where: {
-        timestamp: {
-          lt: cutoffDate,
+  /**
+   * Get audit logs for a specific user
+   */
+  async getUserAuditLogs(userId: string, limit = 50) {
+    try {
+      const logs = await prisma.auditLog.findMany({
+        where: { userId },
+        orderBy: {
+          createdAt: 'desc',
         },
-      },
-    });
-
-    if (oldLogs.length === 0) return 0;
-
-    await prisma.$transaction(async (tx) => {
-      // Move to archive
-      await tx.auditLogArchive.createMany({
-        data: oldLogs.map(log => ({
-          ...log,
-          archivedAt: new Date(),
-        })),
+        take: limit,
       });
 
-      // Delete from main table
-      await tx.auditLog.deleteMany({
+      return logs;
+    } catch (error) {
+      throw ApiError.internal('Failed to fetch user audit logs');
+    }
+  }
+
+  /**
+   * Get audit logs for a specific action type
+   */
+  async getActionAuditLogs(action: string, limit = 50) {
+    try {
+      const logs = await prisma.auditLog.findMany({
+        where: { action },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              role: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        take: limit,
+      });
+
+      return logs;
+    } catch (error) {
+      throw ApiError.internal('Failed to fetch action audit logs');
+    }
+  }
+
+  /**
+   * Export audit logs to JSON
+   */
+  async exportAuditLogs(query: AuditQuery) {
+    try {
+      const { logs } = await this.queryAuditLogs({
+        ...query,
+        limit: 1000, // Increased limit for export
+      });
+
+      return logs.map(log => ({
+        id: log.id,
+        userId: log.userId,
+        action: log.action,
+        details: log.details,
+        ipAddress: log.ipAddress,
+        userAgent: log.userAgent,
+        createdAt: log.createdAt,
+      }));
+    } catch (error) {
+      throw ApiError.internal('Failed to export audit logs');
+    }
+  }
+
+  /**
+   * Clean up old audit logs
+   * Note: This should be run as a scheduled job
+   */
+  async cleanupOldAuditLogs(retentionDays: number) {
+    try {
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - retentionDays);
+
+      const { count } = await prisma.auditLog.deleteMany({
         where: {
-          timestamp: {
+          createdAt: {
             lt: cutoffDate,
           },
         },
       });
-    });
 
-    return oldLogs.length;
-  }
-
-  async getEntityHistory(entityType: string, entityId: string) {
-    const [current, archived] = await Promise.all([
-      prisma.auditLog.findMany({
-        where: { entityType, entityId },
-        orderBy: { timestamp: 'desc' },
-      }),
-      prisma.auditLogArchive.findMany({
-        where: { entityType, entityId },
-        orderBy: { timestamp: 'desc' },
-      }),
-    ]);
-
-    return [...current, ...archived].sort(
-      (a, b) => b.timestamp.getTime() - a.timestamp.getTime()
-    );
+      return { deletedCount: count };
+    } catch (error) {
+      throw ApiError.internal('Failed to cleanup audit logs');
+    }
   }
 }
+
+export const auditService = AuditService.getInstance();
 
 

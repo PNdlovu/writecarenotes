@@ -27,7 +27,7 @@ export function useServiceWorker() {
 
     const registerServiceWorker = async () => {
       try {
-        const registration = await navigator.serviceWorker.register('/sw.js');
+        const registration = await navigator.serviceWorker.register('/workers/sw.js');
         setState(prev => ({ ...prev, registration }));
 
         // Check for updates

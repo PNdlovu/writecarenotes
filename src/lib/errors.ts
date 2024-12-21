@@ -1,101 +1,169 @@
 /**
- * @fileoverview Error Handling
+ * WriteCareNotes.com
+ * @fileoverview Error Handling Module
  * @version 1.0.0
- * @created 2024-12-12
- * @copyright Phibu Cloud Solutions Ltd
- *
- * Description:
- * Custom error types and error handling utilities
  */
 
-export type ErrorType =
-  | 'VALIDATION_ERROR'
-  | 'AUTHENTICATION_ERROR'
-  | 'AUTHORIZATION_ERROR'
-  | 'NOT_FOUND_ERROR'
-  | 'CONFLICT_ERROR'
-  | 'EXTERNAL_SERVICE_ERROR'
-  | 'DATABASE_ERROR'
-  | 'FAMILY_MEMBERS_RETRIEVAL_ERROR'
-  | 'FAMILY_MEMBER_UPDATE_ERROR'
-  | 'CARE_NOTES_RETRIEVAL_ERROR'
-  | 'CARE_NOTE_CREATION_ERROR'
-  | 'VISIT_SCHEDULING_ERROR'
-  | 'VISITS_RETRIEVAL_ERROR'
-  | 'DOCUMENT_UPLOAD_ERROR'
-  | 'DOCUMENTS_RETRIEVAL_ERROR'
-  | 'MEMORY_CREATION_ERROR'
-  | 'MEMORIES_RETRIEVAL_ERROR'
-  | 'EMERGENCY_CONTACTS_RETRIEVAL_ERROR'
-  | 'EMERGENCY_CONTACT_UPDATE_ERROR'
-  | 'CARE_TEAM_RETRIEVAL_ERROR'
-  | 'CARE_TEAM_MEMBER_RETRIEVAL_ERROR'
-  | 'VISIT_METRICS_RETRIEVAL_ERROR'
-  | 'COMMUNICATION_METRICS_RETRIEVAL_ERROR'
-  | 'FAMILY_ENGAGEMENT_METRICS_RETRIEVAL_ERROR';
-
-export class DomainError extends Error {
+export class BaseError extends Error {
   constructor(
     message: string,
-    public type: ErrorType,
-    public cause?: unknown
+    public code: string,
+    public httpStatus: number = 500,
+    public details?: any
   ) {
     super(message);
-    this.name = 'DomainError';
+    this.name = this.constructor.name;
+    Error.captureStackTrace(this, this.constructor);
   }
 
-  public toJSON() {
+  toJSON() {
     return {
-      name: this.name,
-      message: this.message,
-      type: this.type,
-      cause: this.cause,
+      error: {
+        code: this.code,
+        message: this.message,
+        details: this.details,
+      },
     };
   }
 }
 
+export class ValidationError extends BaseError {
+  constructor(message: string, details?: any) {
+    super(message, 'VALIDATION_ERROR', 400, details);
+  }
+}
+
+export class AuthenticationError extends BaseError {
+  constructor(message: string = 'Authentication failed') {
+    super(message, 'AUTHENTICATION_ERROR', 401);
+  }
+}
+
+export class AuthorizationError extends BaseError {
+  constructor(message: string = 'Insufficient permissions') {
+    super(message, 'AUTHORIZATION_ERROR', 403);
+  }
+}
+
+export class NotFoundError extends BaseError {
+  constructor(resource: string) {
+    super(`${resource} not found`, 'NOT_FOUND_ERROR', 404);
+  }
+}
+
+export class ConflictError extends BaseError {
+  constructor(message: string) {
+    super(message, 'CONFLICT_ERROR', 409);
+  }
+}
+
+export class TenantError extends BaseError {
+  constructor(message: string) {
+    super(message, 'TENANT_ERROR', 400);
+  }
+}
+
+export class ComplianceError extends BaseError {
+  constructor(message: string, details?: any) {
+    super(message, 'COMPLIANCE_ERROR', 400, details);
+  }
+}
+
+export class OfflineError extends BaseError {
+  constructor(message: string) {
+    super(message, 'OFFLINE_ERROR', 503);
+  }
+}
+
+export class DatabaseError extends BaseError {
+  constructor(message: string, details?: any) {
+    super(message, 'DATABASE_ERROR', 500, details);
+  }
+}
+
+export class IntegrationError extends BaseError {
+  constructor(service: string, message: string, details?: any) {
+    super(
+      `Integration error with ${service}: ${message}`,
+      'INTEGRATION_ERROR',
+      502,
+      details
+    );
+  }
+}
+
+export class RateLimitError extends BaseError {
+  constructor(message: string = 'Rate limit exceeded') {
+    super(message, 'RATE_LIMIT_ERROR', 429);
+  }
+}
+
+export class ConfigurationError extends BaseError {
+  constructor(message: string) {
+    super(message, 'CONFIGURATION_ERROR', 500);
+  }
+}
+
+export class MaintenanceError extends BaseError {
+  constructor(message: string = 'System is under maintenance') {
+    super(message, 'MAINTENANCE_ERROR', 503);
+  }
+}
+
+export function handleError(error: any): BaseError {
+  if (error instanceof BaseError) {
+    return error;
+  }
+
+  // Handle known error types
+  if (error.name === 'SequelizeValidationError') {
+    return new ValidationError('Database validation failed', error.errors);
+  }
+
+  if (error.name === 'SequelizeUniqueConstraintError') {
+    return new ConflictError('Duplicate entry detected');
+  }
+
+  if (error.code === 'ECONNREFUSED') {
+    return new DatabaseError('Database connection failed');
+  }
+
+  // Default error
+  return new BaseError(
+    error.message || 'An unexpected error occurred',
+    'INTERNAL_SERVER_ERROR',
+    500,
+    process.env.NODE_ENV === 'development' ? error : undefined
+  );
+}
+
 export function isOperationalError(error: Error): boolean {
-  if (error instanceof DomainError) {
-    return [
-      'VALIDATION_ERROR',
-      'AUTHENTICATION_ERROR',
-      'AUTHORIZATION_ERROR',
-      'NOT_FOUND_ERROR',
-      'CONFLICT_ERROR',
-    ].includes(error.type);
+  if (error instanceof BaseError) {
+    return true;
   }
   return false;
 }
 
-export function handleError(error: Error): void {
-  if (isOperationalError(error)) {
-    // Log operational error and continue
-    console.error('Operational error:', error);
-  } else {
-    // Log programming or system error and crash
-    console.error('System error:', error);
-    process.exit(1);
-  }
+export function logError(error: Error): void {
+  console.error('Error:', {
+    name: error.name,
+    message: error.message,
+    stack: error.stack,
+    ...(error instanceof BaseError ? { code: error.code, details: error.details } : {}),
+  });
 }
 
-export function formatErrorResponse(error: Error) {
-  if (error instanceof DomainError) {
-    return {
-      error: {
-        type: error.type,
-        message: error.message,
-        details: error.cause,
-      },
-    };
+export function errorHandler(error: Error, req: any, res: any, next: any): void {
+  logError(error);
+
+  if (error instanceof BaseError) {
+    res.status(error.httpStatus).json(error.toJSON());
+    return;
   }
 
-  // For unknown errors, return a generic error message
-  return {
-    error: {
-      type: 'UNKNOWN_ERROR',
-      message: 'An unexpected error occurred',
-    },
-  };
+  // Handle unknown errors
+  const internalError = handleError(error);
+  res.status(internalError.httpStatus).json(internalError.toJSON());
 }
 
 

@@ -1,331 +1,186 @@
-import React, { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Typography,
-  Grid,
-  Tabs,
-  Tab,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Chip,
-  IconButton,
-  Avatar,
-  AvatarGroup,
-} from '@mui/material';
-import {
-  Add as AddIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Group as TeamIcon,
-  LocationOn as LocationIcon,
-  AccessTime as TimeIcon,
-} from '@mui/icons-material';
-import { TeamCapacity } from '../../types/enterprise';
-import { scheduleAPI } from '../../api/scheduleAPI';
-import { format } from 'date-fns';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Users, UserPlus, Calendar, Settings } from "lucide-react";
 
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+export function TeamManagement() {
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`team-tabpanel-${index}`}
-      {...other}
-    >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
-    </div>
-  );
-}
-
-export const TeamManagement: React.FC = () => {
-  const queryClient = useQueryClient();
-  const [tabValue, setTabValue] = useState(0);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedTeam, setSelectedTeam] = useState<any>(null);
-
-  const { data: teams = [] } = useQuery(['teams'], () => scheduleAPI.getTeams());
-
-  const { data: capacityData = [] } = useQuery<TeamCapacity[]>(
-    ['teamCapacity'],
-    () => scheduleAPI.getTeamCapacity(),
-  );
-
-  const createTeamMutation = useMutation(
-    (newTeam: any) => scheduleAPI.createTeam(newTeam),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(['teams']);
-        handleCloseDialog();
-      },
-    }
-  );
-
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
-
-  const handleOpenDialog = (team?: any) => {
-    setSelectedTeam(team || null);
-    setDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setSelectedTeam(null);
-    setDialogOpen(false);
-  };
-
-  const handleCreateTeam = (formData: any) => {
-    createTeamMutation.mutate(formData);
-  };
-
-  const renderTeamOverview = () => (
-    <Grid container spacing={3}>
-      {teams.map((team) => (
-        <Grid item xs={12} md={6} lg={4} key={team.id}>
-          <Card>
-            <CardContent>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start',
-                }}
-              >
-                <Box>
-                  <Typography variant="h6">{team.name}</Typography>
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ mb: 2 }}
-                  >
-                    {team.description}
-                  </Typography>
-                </Box>
-                <Box>
-                  <IconButton
-                    size="small"
-                    onClick={() => handleOpenDialog(team)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Box>
-              </Box>
-
-              <Box sx={{ mb: 2 }}>
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <LocationIcon sx={{ mr: 1, fontSize: 'small' }} />
-                  <Typography variant="body2">{team.location}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <TimeIcon sx={{ mr: 1, fontSize: 'small' }} />
-                  <Typography variant="body2">{team.timezone}</Typography>
-                </Box>
-              </Box>
-
-              <Box sx={{ mb: 2 }}>
-                <Typography variant="subtitle2" gutterBottom>
-                  Skills
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                  {team.skills.map((skill: string, index: number) => (
-                    <Chip key={index} label={skill} size="small" />
-                  ))}
-                </Box>
-              </Box>
-
-              <Box>
-                <Typography variant="subtitle2" gutterBottom>
-                  Team Members ({team.members.length})
-                </Typography>
-                <AvatarGroup max={5}>
-                  {team.members.map((member: any) => (
-                    <Avatar
-                      key={member.id}
-                      alt={member.name}
-                      src={member.avatar}
-                    />
-                  ))}
-                </AvatarGroup>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      ))}
-    </Grid>
-  );
-
-  const renderCapacityPlanning = () => (
-    <Card>
+    <Card className="w-full">
+      <CardHeader>
+        <div className="flex justify-between items-center">
+          <CardTitle>Team Management</CardTitle>
+          <Button>
+            <UserPlus className="mr-2 h-4 w-4" />
+            Add Team Member
+          </Button>
+        </div>
+      </CardHeader>
       <CardContent>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Team</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Required</TableCell>
-                <TableCell>Actual</TableCell>
-                <TableCell>Coverage</TableCell>
-                <TableCell>Skills Coverage</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {capacityData.map((capacity) => (
-                <TableRow key={capacity.id}>
-                  <TableCell>{capacity.teamId}</TableCell>
-                  <TableCell>
-                    {format(new Date(capacity.date), 'MMM d, yyyy')}
-                  </TableCell>
-                  <TableCell>{capacity.requiredHeadcount}</TableCell>
-                  <TableCell>{capacity.actualHeadcount}</TableCell>
-                  <TableCell>
-                    {(
-                      (capacity.actualHeadcount / capacity.requiredHeadcount) *
-                      100
-                    ).toFixed(1)}
-                    %
-                  </TableCell>
-                  <TableCell>
-                    <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                      {Object.entries(capacity.skills).map(([skill, count]) => (
-                        <Chip
-                          key={skill}
-                          label={`${skill}: ${count}`}
-                          size="small"
-                          variant="outlined"
-                        />
-                      ))}
-                    </Box>
-                  </TableCell>
-                </TableRow>
+        <Tabs defaultValue="team" className="w-full">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="team">
+              <Users className="mr-2 h-4 w-4" />
+              Team Members
+            </TabsTrigger>
+            <TabsTrigger value="schedule">
+              <Calendar className="mr-2 h-4 w-4" />
+              Schedule
+            </TabsTrigger>
+            <TabsTrigger value="settings">
+              <Settings className="mr-2 h-4 w-4" />
+              Settings
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="team">
+            <ScrollArea className="h-[400px]">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Member</TableHead>
+                    <TableHead>Role</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {teamMembers.map((member) => (
+                    <TableRow key={member.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <Avatar>
+                            <AvatarImage src={member.avatar} alt={member.name} />
+                            <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="font-medium">{member.name}</div>
+                            <div className="text-sm text-gray-500">{member.email}</div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>{member.role}</TableCell>
+                      <TableCell>
+                        <Badge variant={member.status === 'Active' ? 'success' : 'secondary'}>
+                          {member.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button variant="outline" size="sm">Edit</Button>
+                          <Button variant="outline" size="sm">View</Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </ScrollArea>
+          </TabsContent>
+
+          <TabsContent value="schedule">
+            <div className="space-y-4">
+              {scheduleItems.map((item) => (
+                <div key={item.id} className="p-4 border rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="flex items-center gap-3">
+                      <Avatar>
+                        <AvatarImage src={item.avatar} alt={item.name} />
+                        <AvatarFallback>{item.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-medium">{item.name}</div>
+                        <div className="text-sm text-gray-500">{item.shift}</div>
+                      </div>
+                    </div>
+                    <Badge>{item.type}</Badge>
+                  </div>
+                  <div className="text-sm text-gray-700">{item.notes}</div>
+                </div>
               ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="settings">
+            <div className="space-y-4">
+              {settings.map((setting) => (
+                <div key={setting.id} className="p-4 border rounded-lg">
+                  <h3 className="font-medium mb-2">{setting.title}</h3>
+                  <p className="text-sm text-gray-600 mb-4">{setting.description}</p>
+                  <Button variant="outline" size="sm">Configure</Button>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );
+}
 
-  return (
-    <Box>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          mb: 3,
-        }}
-      >
-        <Typography variant="h6">Team Management</Typography>
-        <Button
-          variant="contained"
-          startIcon={<AddIcon />}
-          onClick={() => handleOpenDialog()}
-        >
-          Create Team
-        </Button>
-      </Box>
+const teamMembers = [
+  {
+    id: 1,
+    name: 'Sarah Johnson',
+    email: 'sarah.j@writenotes.com',
+    role: 'Team Lead',
+    status: 'Active',
+    avatar: '/avatars/sarah.jpg'
+  },
+  {
+    id: 2,
+    name: 'Michael Chen',
+    email: 'm.chen@writenotes.com',
+    role: 'Care Coordinator',
+    status: 'Active',
+    avatar: '/avatars/michael.jpg'
+  },
+  {
+    id: 3,
+    name: 'Emma Wilson',
+    email: 'e.wilson@writenotes.com',
+    role: 'Care Worker',
+    status: 'On Leave',
+    avatar: '/avatars/emma.jpg'
+  },
+];
 
-      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
-        <Tabs value={tabValue} onChange={handleTabChange}>
-          <Tab label="Teams Overview" />
-          <Tab label="Capacity Planning" />
-        </Tabs>
-      </Box>
+const scheduleItems = [
+  {
+    id: 1,
+    name: 'Sarah Johnson',
+    avatar: '/avatars/sarah.jpg',
+    shift: 'Morning Shift',
+    type: 'Regular',
+    notes: 'Team meeting at 9 AM'
+  },
+  {
+    id: 2,
+    name: 'Michael Chen',
+    avatar: '/avatars/michael.jpg',
+    shift: 'Evening Shift',
+    type: 'Coverage',
+    notes: 'Covering for Emma'
+  },
+];
 
-      <TabPanel value={tabValue} index={0}>
-        {renderTeamOverview()}
-      </TabPanel>
-
-      <TabPanel value={tabValue} index={1}>
-        {renderCapacityPlanning()}
-      </TabPanel>
-
-      <Dialog
-        open={dialogOpen}
-        onClose={handleCloseDialog}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>
-          {selectedTeam ? 'Edit Team' : 'Create New Team'}
-        </DialogTitle>
-        <DialogContent>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            <Grid item xs={12}>
-              <TextField
-                label="Team Name"
-                fullWidth
-                defaultValue={selectedTeam?.name}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                label="Description"
-                fullWidth
-                multiline
-                rows={2}
-                defaultValue={selectedTeam?.description}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                label="Location"
-                fullWidth
-                defaultValue={selectedTeam?.location}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl fullWidth>
-                <InputLabel>Timezone</InputLabel>
-                <Select
-                  label="Timezone"
-                  defaultValue={selectedTeam?.timezone || 'UTC'}
-                >
-                  <MenuItem value="UTC">UTC</MenuItem>
-                  <MenuItem value="EST">EST</MenuItem>
-                  <MenuItem value="PST">PST</MenuItem>
-                  {/* Add more timezone options */}
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button
-            onClick={() => handleCreateTeam({})}
-            variant="contained"
-          >
-            {selectedTeam ? 'Save Changes' : 'Create Team'}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Box>
-  );
-};
+const settings = [
+  {
+    id: 1,
+    title: 'Team Permissions',
+    description: 'Configure access levels and permissions for team members'
+  },
+  {
+    id: 2,
+    title: 'Schedule Rules',
+    description: 'Set up scheduling rules and preferences'
+  },
+  {
+    id: 3,
+    title: 'Notifications',
+    description: 'Manage team notifications and alerts'
+  },
+];

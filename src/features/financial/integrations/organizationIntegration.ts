@@ -1,4 +1,4 @@
-import { OrganizationService } from '@/features/organization/services/organizationService';
+import { OrganizationService } from '@/features/organizations/services/organizationService';
 import { ComplianceService } from '@/features/compliance/services/complianceService';
 import { FamilyPortalService } from '@/features/family-portal/services/familyPortalService';
 import { ActivityService } from '@/features/activities/services/activityService';

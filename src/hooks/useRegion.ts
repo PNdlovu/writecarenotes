@@ -1,9 +1,21 @@
-import { usePathname } from 'next/navigation'
+/**
+ * WriteCareNotes.com
+ * @fileoverview Regional Context Hook
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Philani Ndlovu
+ * @copyright Phibu Cloud Solutions Ltd.
+ */
+
+import { useContext } from 'react'
+import { RegionalContext } from '@/providers/RegionalProvider'
 
 export function useRegion() {
-  const pathname = usePathname()
-  const region = pathname?.split('/')[1] || 'england'
-  return region
+  const context = useContext(RegionalContext)
+  if (!context) {
+    throw new Error('useRegion must be used within RegionalProvider')
+  }
+  return context
 }
 
 
