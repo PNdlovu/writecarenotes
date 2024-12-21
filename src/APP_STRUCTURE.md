@@ -4,88 +4,138 @@
 ```bash
 /
 ├── app/                    # Next.js App Router (Main application code)
-│   ├── (auth)/            # Authentication routes
-│   ├── (dashboard)/       # Dashboard routes
-│   ├── (features)/        # Feature routes
-│   │   ├── residents/     
-│   │   ├── care-plans/    
-│   │   └── bed-management/
-│   ├── api/               # API routes
-│   └── layout.tsx         # Root layout
-├── components/            # Shared React components
-│   ├── ui/               # Base UI components
-│   └── layout/           # Layout components
-├── lib/                  # Core utilities and business logic
-│   ├── api/              # API utilities
-│   ├── db/               # Database utilities
-│   └── utils/            # Helper functions
-├── hooks/                # Shared React hooks
-├── providers/           # React context providers
-├── types/               # TypeScript type definitions
-├── styles/              # Global styles and themes
-├── public/              # Static assets
-├── prisma/              # Database schema and migrations
-├── tests/               # Test files
-│   ├── unit/
-│   ├── integration/
-│   └── e2e/
-└── config/              # Configuration files
+│   ├── (auth)/            # Authentication routes (signin, signup, etc.)
+│   ├── (dashboard)/       # Protected dashboard routes
+│   ├── (marketing)/       # Public marketing pages
+│   │   ├── about/        # About pages
+│   │   ├── demo/         # Demo pages
+│   │   ├── features/     # Features showcase
+│   │   └── pricing/      # Pricing information
+│   ├── api/              # API routes
+│   └── layout.tsx        # Root layout
+├── src/                   # Source code
+│   ├── components/        # React components
+│   │   ├── auth/         # Authentication components
+│   │   ├── marketing/    # Marketing components
+│   │   ├── offline/      # Offline functionality
+│   │   └── ui/           # Base UI components
+│   ├── features/         # Feature modules
+│   │   ├── auth/         # Authentication logic
+│   │   ├── bed-management/
+│   │   ├── care-plans/
+│   │   ├── medications/
+│   │   ├── organizations/
+│   │   ├── residents/
+│   │   └── waitlist/
+│   ├── hooks/            # Shared React hooks
+│   ├── lib/              # Core utilities
+│   │   ├── api/         # API utilities
+│   │   ├── contexts/    # React contexts
+│   │   ├── multi-tenant/# Multi-tenancy support
+│   │   ├── payroll/     # Payroll processing
+│   │   └── utils/       # Helper functions
+│   ├── providers/        # React providers
+│   ├── types/           # TypeScript types
+│   └── utils/           # Utility functions
+├── public/               # Static assets
+│   ├── images/          # Image assets
+│   └── workers/         # Web workers
+└── prisma/              # Database schema
 ```
 
-## Feature Structure (inside app/(features))
-Each feature follows this structure:
+## Feature Module Structure
+Each feature module follows this structure:
 ```bash
-(features)/[feature-name]/
+features/[feature-name]/
+├── api/                 # Feature-specific API
 ├── components/          # Feature-specific components
-├── hooks/               # Feature-specific hooks
-├── types/              # Feature-specific types
-├── utils/              # Feature-specific utilities
-├── constants.ts        # Feature constants
-├── page.tsx            # Main page component
-└── layout.tsx          # Feature layout (if needed)
+├── hooks/              # Feature-specific hooks
+├── repositories/       # Data access layer
+├── services/          # Business logic
+├── types/             # Type definitions
+└── utils/             # Feature utilities
 ```
 
 ## Component Structure
-Each component follows this structure:
+Components follow this structure:
 ```bash
-components/[ComponentName]/
-├── index.tsx           # Component implementation
-├── types.ts           # Component types
-├── styles.module.css  # Component styles
-└── test.tsx           # Component tests
+components/[component-type]/
+├── ComponentName.tsx    # Component implementation
+├── index.ts           # Exports
+└── types.ts          # Component types
 ```
 
 ## API Route Structure
 ```bash
 app/api/[feature-name]/
 ├── route.ts            # Main API handler
-└── [id]/              # Dynamic API routes
-    └── route.ts
+└── [id]/              # Dynamic routes
+    └── route.ts       # Dynamic route handler
 ```
 
-## Core Utilities (lib/)
+## Core Utilities (src/lib/)
 ```bash
 lib/
 ├── api/                # API utilities
-│   ├── client.ts       # API client
-│   └── endpoints.ts    # API endpoints
-├── db/                 # Database utilities
-│   ├── client.ts       # Database client
-│   └── queries.ts      # Common queries
-└── utils/              # Helper functions
-    ├── date.ts
-    ├── validation.ts
-    └── formatting.ts
+├── contexts/           # React contexts
+├── multi-tenant/       # Multi-tenancy
+├── payroll/           # Payroll processing
+└── utils/             # Helpers
 ```
 
+## Marketing Route Structure
+
+```bash
+app/
+├── (marketing)/              # Marketing route group
+│   ├── page.tsx             # Home page
+│   ├── features/            # Features page
+│   │   └── page.tsx
+│   ├── pricing/             # Pricing page
+│   │   └── page.tsx
+│   └── layout.tsx           # Marketing layout
+└── globals.css              # Global styles
+
+src/
+├── components/
+│   └── marketing/           # Marketing components
+│       ├── Features.tsx
+│       ├── PricingPlans.tsx
+│       └── Footer.tsx
+```
+
+### Component Organization
+
+1. **Route Components** (`app/(marketing)/`)
+   - These are Next.js pages and layouts
+   - Each represents a unique route
+   - Contains page-specific logic
+
+2. **Reusable Components** (`src/components/marketing/`)
+   - Shared marketing components
+   - Feature sections
+   - Pricing plans
+   - Common UI elements
+
+### Style Organization
+
+1. **Global Styles** (`app/globals.css`)
+   - Base styles
+   - Tailwind directives
+   - Global variables
+
+2. **Component Styles**
+   - Co-located with components
+   - Tailwind classes
+   - CSS modules if needed
+
 ## Configuration Files
-Essential configuration files at root:
+Essential configuration files:
 - `next.config.js` - Next.js configuration
 - `tailwind.config.ts` - Tailwind CSS configuration
 - `tsconfig.json` - TypeScript configuration
 - `package.json` - Dependencies and scripts
-- `.env` - Environment variables
-- `.env.example` - Example environment variables
+- `env.mjs` - Environment variables schema
 - `middleware.ts` - Next.js middleware
 
 ## Naming Conventions
@@ -101,18 +151,18 @@ Essential configuration files at root:
 ```typescript
 // 1. External imports
 import { useState } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { z } from 'zod'
 
 // 2. Internal absolute imports
-import { Button } from '@/components/ui/button'
-import { useBedManagement } from '@/hooks/use-bed-management'
+import { Button } from '@/components/ui'
+import { useBedManagement } from '@/hooks'
+import { formatDate } from '@/utils'
 
-// 3. Types and constants
-import type { BedStatus } from './types'
-import { BED_STATUSES } from './constants'
+// 3. Types
+import type { BedManagementProps } from './types'
 
-// 4. Styles
-import styles from './styles.module.css'
+// 4. Relative imports
+import { BedStatus } from './BedStatus'
 ```
 
 ## Key Differences from Previous Structure
@@ -134,4 +184,3 @@ import styles from './styles.module.css'
 8. Constants in separate files
 9. Tests alongside their components
 10. Clear import organization
-``` 

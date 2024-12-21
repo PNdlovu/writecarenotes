@@ -3,232 +3,203 @@
 ## Overview
 The Write Care Notes Medication Management module provides a comprehensive, accessible, and easy-to-use solution for care homes. Built with a focus on user experience, safety, and regulatory compliance.
 
+## Architecture
+
+### Directory Structure
+```bash
+src/features/medications/
+├── components/                # UI Components
+│   ├── alerts/               # Medication alerts
+│   │   └── MedicationAlerts.tsx
+│   ├── dashboard/            # Dashboard views
+│   │   └── MedicationDashboard.tsx
+│   ├── schedule/             # Scheduling components
+│   │   └── MedicationSchedule.tsx
+│   ├── stock/                # Stock management
+│   │   └── StockManagement.tsx
+│   └── verification/         # Safety verification
+│       ├── BarcodeScanner.tsx
+│       ├── PredictiveSafetyCheck.tsx
+│       └── SafetyVerification.tsx
+├── hooks/                    # Custom hooks
+│   ├── useAlerts.ts
+│   ├── useMedications.ts
+│   ├── useRecentActivity.ts
+│   └── useVerification.ts
+├── services/                 # Business logic
+│   ├── medicationService.ts
+│   └── verificationService.ts
+└── types/                   # Type definitions
+    └── index.ts
+```
+
 ## Key Features
 
 ### 🌟 Core Features
-- **Simple Administration Interface**
-  - Large, clear buttons and text
-  - Color-coded status indicators
+- **Smart Administration Interface**
+  - Barcode scanning for verification
+  - Real-time alerts and notifications
+  - Predictive safety checks
   - Touch-friendly interface
-  - Voice input support
   - Screen reader optimized
 
-- **Smart Documentation**
-  - Template-based documentation
-  - Auto-save functionality
-  - Offline support
-  - Voice dictation
-  - Quick-access templates
+- **Advanced Documentation**
+  - Automated compliance tracking
+  - Real-time verification
+  - Offline support with sync
+  - Digital signature support
+  - Audit trail
 
-- **Medication Reviews**
-  - Scheduled reminders
-  - Interactive checklists
-  - Side effect tracking
-  - Effectiveness monitoring
-  - Simple approval workflow
+### 🔒 Safety Features
+- **Verification System**
+  - Multi-step verification
+  - Barcode scanning
+  - Photo verification
+  - Time-based checks
+  - Dosage confirmation
 
-### 🔒 Safety & Compliance
-- **Built-in Safety Checks**
+- **Alert System**
   - Drug interaction warnings
   - Allergy alerts
-  - Duplicate prescription prevention
-  - Maximum dose warnings
-  - Real-time validation
+  - Missed dose notifications
+  - Stock level warnings
+  - Expiry date alerts
 
-- **Compliance Features**
-  - CQC compliance built-in
-  - Regional regulation support
-  - Automatic audit trails
-  - Digital signature support
-  - Compliance reporting
+### 📊 Management Features
+- **Stock Control**
+  - Automated inventory
+  - Reorder notifications
+  - Batch tracking
+  - Expiry management
+  - Waste logging
 
-### 📱 Accessibility
-- **Universal Design**
-  - WCAG 2.1 Level AA compliant
-  - High contrast mode
-  - Adjustable text size
-  - Keyboard navigation
-  - Screen reader support
+- **Reporting**
+  - Compliance reports
+  - Administration trends
+  - Error analysis
+  - Stock levels
+  - Audit trails
 
-- **Mobile Optimization**
-  - Responsive design
-  - Touch-friendly interface
-  - Offline capabilities
-  - Quick actions
-  - Mobile notifications
+## API Endpoints
 
-### 🔄 Integration & Sync
-- **Healthcare Integration**
-  - GP system integration
-  - Pharmacy connection
-  - Hospital discharge updates
-  - Emergency services access
-  - NHS Spine integration
-
-- **Real-time Sync**
-  - Automatic background sync
-  - Conflict resolution
-  - Data consistency checks
-  - Version control
-  - Change tracking
-
-## Getting Started
-
-### Quick Setup
-1. Install dependencies:
-   ```bash
-   npm install @writecarenotes/medications
-   ```
-
-2. Initialize the module:
-   ```typescript
-   import { initializeMedications } from '@writecarenotes/medications';
-
-   initializeMedications({
-     careHomeId: 'your-care-home-id',
-     region: 'UK_ENGLAND'
-   });
-   ```
-
-3. Add to your layout:
-   ```typescript
-   import { MedicationProvider } from '@writecarenotes/medications';
-
-   export default function Layout({ children }) {
-     return (
-       <MedicationProvider>
-         {children}
-       </MedicationProvider>
-     );
-   }
-   ```
-
-### Basic Usage
-
+### Medication Management
 ```typescript
-import { useMedications } from '@writecarenotes/medications';
+// Get medications
+GET /api/medications
+GET /api/medications/:id
 
-export function MedicationList() {
-  const { medications, isLoading } = useMedications();
+// Manage medications
+POST /api/medications
+PUT /api/medications/:id
+DELETE /api/medications/:id
 
-  if (isLoading) return <div>Loading...</div>;
+// Verification
+POST /api/medications/verify
+GET /api/medications/verify/:id
 
+// Stock management
+GET /api/medications/stock
+POST /api/medications/stock/adjust
+```
+
+### Alert System
+```typescript
+// Get alerts
+GET /api/medications/alerts
+GET /api/medications/alerts/:id
+
+// Manage alerts
+POST /api/medications/alerts/acknowledge
+PUT /api/medications/alerts/settings
+```
+
+## Usage Examples
+
+### Basic Medication Administration
+```typescript
+import { useMedications } from '@/features/medications/hooks'
+
+function MedicationAdmin() {
+  const { medications, administerMedication } = useMedications()
+  
   return (
-    <ul>
+    <div>
       {medications.map(med => (
-        <li key={med.id}>{med.name}</li>
+        <MedicationCard
+          key={med.id}
+          medication={med}
+          onAdminister={administerMedication}
+        />
       ))}
-    </ul>
-  );
+    </div>
+  )
 }
 ```
 
-## Accessibility Features
+### Safety Verification
+```typescript
+import { useVerification } from '@/features/medications/hooks'
 
-### Keyboard Navigation
-- Full keyboard support
-- Logical tab order
-- Keyboard shortcuts
-- Focus management
-- Skip links
+function SafetyCheck() {
+  const { verify, status } = useVerification()
+  
+  return (
+    <div>
+      <BarcodeScanner onScan={verify} />
+      <SafetyStatus status={status} />
+    </div>
+  )
+}
+```
 
-### Screen Readers
-- ARIA labels
-- Role annotations
-- Live regions
-- Status announcements
-- Descriptive alerts
-
-### Visual Accessibility
-- High contrast themes
-- Large click targets
-- Clear typography
-- Color blind friendly
-- Adjustable text size
-
-## Offline Support
-
-### Automatic Sync
-- Background sync
-- Conflict resolution
-- Data persistence
-- Queue management
-- Error recovery
-
-### Offline Features
-- Full functionality offline
-- Data validation
-- Local storage
-- Sync status indicators
-- Priority queuing
-
-## Security
-
-### Authentication
-- Role-based access
-- Multi-factor auth
-- Session management
-- PIN protection
-- Activity logging
+## Compliance & Security
 
 ### Data Protection
 - End-to-end encryption
+- Role-based access control
+- Audit logging
+- Data retention policies
 - GDPR compliance
-- Data anonymization
-- Secure storage
-- Audit trails
 
-## API Reference
+### Healthcare Standards
+- CQC compliance
+- NHS Digital standards
+- NICE guidelines
+- Clinical safety
+- Pharmacy regulations
 
-### Hooks
-- `useMedications()` - Medication management
-- `useAdministration()` - Administration tracking
-- `useReviews()` - Review management
-- `useStock()` - Stock control
-- `useSync()` - Sync status
+## Testing Requirements
 
-### Components
-- `<MedicationList />` - Medication display
-- `<AdministrationForm />` - Administration recording
-- `<ReviewForm />` - Review management
-- `<StockControl />` - Stock management
-- `<SyncStatus />` - Sync monitoring
+### Unit Tests
+- Component rendering
+- Hook behavior
+- Service functions
+- Utility functions
 
-## Best Practices
+### Integration Tests
+- API endpoints
+- Database operations
+- Verification flow
+- Alert system
 
-### Performance
-- Use offline-first approach
-- Implement caching
-- Batch operations
-- Optimize renders
+### E2E Tests
+- Administration workflow
+- Verification process
+- Stock management
+- Alert handling
+
+## Performance Considerations
+
+### Optimization
+- Efficient data fetching
+- Local storage caching
+- Offline capabilities
 - Lazy loading
+- Image optimization
 
-### Accessibility
-- Test with screen readers
-- Ensure keyboard navigation
-- Provide text alternatives
-- Use semantic HTML
-- Follow WCAG guidelines
-
-### Security
-- Implement role-based access
-- Use secure authentication
-- Encrypt sensitive data
-- Regular security audits
-- Monitor activity logs
-
-## Support
-
-### Documentation
-- API reference
-- Component guides
-- Best practices
-- Security guidelines
-- Accessibility docs
-
-### Help
-- Technical support
-- Training resources
-- Community forum
-- Issue tracking
-- Regular updates 
+### Monitoring
+- Error tracking
+- Performance metrics
+- Usage analytics
+- API monitoring
+- User feedback
