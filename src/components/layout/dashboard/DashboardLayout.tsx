@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
+import UserMenu from './UserMenu';
 
 export default function DashboardLayout({
   children,
@@ -16,7 +17,9 @@ export default function DashboardLayout({
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} />
       
       <div className="flex flex-col w-0 flex-1 overflow-hidden">
-        <Navbar onMenuButtonClick={() => setSidebarOpen(true)} />
+        <Navbar onMenuButtonClick={() => setSidebarOpen(true)}>
+          <UserMenu />
+        </Navbar>
         
         <main className="flex-1 relative overflow-y-auto focus:outline-none">
           <div className="py-6">

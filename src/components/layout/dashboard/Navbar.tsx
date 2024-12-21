@@ -7,9 +7,10 @@ import UserMenu from './UserMenu';
 
 interface NavbarProps {
   onMenuButtonClick: () => void;
+  children?: React.ReactNode;
 }
 
-export default function Navbar({ onMenuButtonClick }: NavbarProps) {
+export default function Navbar({ onMenuButtonClick, children }: NavbarProps) {
   const { data: session } = useSession();
 
   return (
@@ -18,22 +19,23 @@ export default function Navbar({ onMenuButtonClick }: NavbarProps) {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <button
-                type="button"
-                className="px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+              <Button
+                variant="ghost"
+                size="icon"
+                className="lg:hidden"
                 onClick={onMenuButtonClick}
               >
                 <Menu className="h-6 w-6" />
-              </button>
+              </Button>
             </div>
           </div>
-
           <div className="flex items-center">
             {session ? (
               <UserMenu />
             ) : (
               <Button onClick={() => signOut()}>Sign Out</Button>
             )}
+            {children}
           </div>
         </div>
       </div>
