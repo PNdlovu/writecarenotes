@@ -1,3 +1,13 @@
+/**
+ * WriteCareNotes.com
+ * @fileoverview Marketing Navbar Component
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @updated 2024-03-21
+ * @author Phibu Cloud Solutions Ltd
+ * @copyright Phibu Cloud Solutions Ltd
+ */
+
 'use client';
 
 import React from 'react';
@@ -6,50 +16,69 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ErrorBoundary } from '@/error/components/ErrorBoundary';
+import { cn } from "@/lib/utils";
+
+const navigation = [
+  { name: 'Features', href: '/features' },
+  { name: 'Pricing', href: '/pricing' },
+  { name: 'Solutions', href: '/solutions' },
+  { name: 'Resources', href: '/resources' },
+  { name: 'Support', href: '/support' },
+];
 
 export function MarketingNavbar() {
   const pathname = usePathname();
-  const isPublicLanding = pathname === '/';
 
   return (
     <ErrorBoundary componentName="MarketingNavbar">
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-14 items-center">
-          <div className="mr-4 flex">
-            <Link href="/" className="mr-6 flex items-center space-x-2">
+      <header className="sticky top-0 w-full py-4 bg-white/95 backdrop-blur-sm shadow-sm z-50">
+        <div className="container mx-auto px-4">
+          <nav className="flex items-center justify-between" aria-label="Global">
+            {/* Logo */}
+            <Link href="/" className="flex-shrink-0">
+              <span className="sr-only">Write Care Notes</span>
               <Image
-                src="/logo.svg"
-                alt="Write Care Notes"
-                width={32}
-                height={32}
-                className="h-8 w-auto"
+                src="/images/logo.png"
+                alt="Write Care Notes Logo"
+                width={200}
+                height={45}
+                className="h-10 w-auto"
+                priority
               />
-              <span className="font-bold">Write Care Notes</span>
             </Link>
-          </div>
-          {!isPublicLanding && (
-            <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-              <nav className="flex items-center space-x-6">
-                <Link href="/about" className="text-sm font-medium transition-colors hover:text-primary">
-                  About
+
+            {/* Navigation Links */}
+            <div className="flex items-center gap-8">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={cn(
+                    "text-base text-gray-600 hover:text-gray-900",
+                    pathname === item.href && "text-gray-900"
+                  )}
+                >
+                  {item.name}
                 </Link>
-                <Link href="/pricing" className="text-sm font-medium transition-colors hover:text-primary">
-                  Pricing
-                </Link>
-                <Link href="/demo" className="text-sm font-medium transition-colors hover:text-primary">
-                  Request Demo
-                </Link>
-              </nav>
-              <div className="flex items-center space-x-4">
-                <Link href="/auth/signin">
-                  <Button variant="ghost" size="sm">Sign In</Button>
-                </Link>
-                <Link href="/auth/signup">
-                  <Button size="sm">Get Started</Button>
-                </Link>
-              </div>
+              ))}
             </div>
-          )}
+
+            {/* Actions */}
+            <div className="flex items-center gap-4">
+              <Link 
+                href="/login" 
+                className="text-base text-gray-600 hover:text-gray-900"
+              >
+                Sign in
+              </Link>
+              <Button 
+                asChild
+                className="bg-[#2563EB] hover:bg-blue-700 text-white rounded-lg px-6"
+              >
+                <Link href="/demo">Request Demo</Link>
+              </Button>
+            </div>
+          </nav>
         </div>
       </header>
     </ErrorBoundary>

@@ -3,121 +3,142 @@
  * @fileoverview Demo Request Form Component
  * @version 1.0.0
  * @created 2024-03-21
- * @author Write Care Notes Team
- * @copyright Write Care Notes Ltd
+ * @updated 2024-03-21
+ * @author Phibu Cloud Solutions Ltd
+ * @copyright Phibu Cloud Solutions Ltd
  */
 
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Card } from '@/components/ui/card'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ArrowRight } from "lucide-react"
+
+type FormData = {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  organization: string
+  role: string
+  facilityType: string
+  message: string
+}
+
+const initialFormData: FormData = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  organization: '',
+  role: '',
+  facilityType: '',
+  message: ''
+}
 
 export function DemoRequestForm() {
+  const [formData, setFormData] = useState<FormData>(initialFormData)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    // TODO: Implement form submission
-    setIsSubmitting(false)
+    
+    try {
+      // TODO: Implement actual form submission
+      await new Promise(resolve => setTimeout(resolve, 1000)) // Simulated API call
+      setSubmitStatus('success')
+      setFormData(initialFormData)
+    } catch (error) {
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
-    <Card className="p-8 shadow-xl bg-white border-2 border-blue-100 rounded-xl">
-      <div className="mb-8 text-center">
-        <h3 className="text-2xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-green-600">Request Your Free Demo</h3>
-        <p className="text-muted-foreground text-lg">See how Write Care Notes can transform your care home operations</p>
-      </div>
-      
-      <form onSubmit={handleSubmit} className="space-y-8">
-        <div className="space-y-6">
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <Label htmlFor="firstName" className="text-sm font-semibold text-gray-700">First Name</Label>
-              <Input 
-                id="firstName" 
-                required 
-                className="h-12 border-2 border-blue-100 focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all shadow-sm hover:shadow-md rounded-lg"
-                placeholder="John"
-              />
-            </div>
-            <div className="space-y-3">
-              <Label htmlFor="lastName" className="text-sm font-semibold text-gray-700">Last Name</Label>
-              <Input 
-                id="lastName" 
-                required 
-                className="h-12 border-2 border-blue-100 focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all shadow-sm hover:shadow-md rounded-lg"
-                placeholder="Doe"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-3">
-            <Label htmlFor="email" className="text-sm font-semibold text-gray-700">Work Email</Label>
-            <Input 
-              id="email" 
-              type="email" 
-              required 
-              className="h-12 border-2 border-blue-100 focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all shadow-sm hover:shadow-md rounded-lg"
-              placeholder="john.doe@carehome.com"
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Input
+              id="firstName"
+              name="firstName"
+              placeholder="First Name"
+              required
+              className="w-full"
             />
           </div>
-
-          <div className="space-y-3">
-            <Label htmlFor="organization" className="text-sm font-semibold text-gray-700">Organization Name</Label>
-            <Input 
-              id="organization" 
-              required 
-              className="h-12 border-2 border-blue-100 focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all shadow-sm hover:shadow-md rounded-lg"
-              placeholder="Your Care Home Name"
-            />
-          </div>
-
-          <div className="space-y-3">
-            <Label htmlFor="region" className="text-sm font-semibold text-gray-700">Region</Label>
-            <Select required>
-              <SelectTrigger className="h-12 border-2 border-blue-100 focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all shadow-sm hover:shadow-md rounded-lg bg-white">
-                <SelectValue placeholder="Select your region" className="text-muted-foreground" />
-              </SelectTrigger>
-              <SelectContent className="border-2 border-blue-100 shadow-lg rounded-lg">
-                <SelectItem value="england" className="hover:bg-blue-50">England</SelectItem>
-                <SelectItem value="wales" className="hover:bg-blue-50">Wales</SelectItem>
-                <SelectItem value="scotland" className="hover:bg-blue-50">Scotland</SelectItem>
-                <SelectItem value="northern-ireland" className="hover:bg-blue-50">Northern Ireland</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-3">
-            <Label htmlFor="message" className="text-sm font-semibold text-gray-700">Additional Information</Label>
-            <Textarea 
-              id="message" 
-              className="min-h-[120px] border-2 border-blue-100 focus:border-blue-300 focus:ring-2 focus:ring-blue-100 transition-all shadow-sm hover:shadow-md rounded-lg resize-none"
-              placeholder="Tell us about your care home and what you're looking for..."
+          <div className="space-y-2">
+            <Input
+              id="lastName"
+              name="lastName"
+              placeholder="Last Name"
+              required
+              className="w-full"
             />
           </div>
         </div>
-
-        <Button 
-          type="submit" 
-          className="w-full h-12 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 transition-all duration-200 text-lg font-semibold text-white shadow-md hover:shadow-lg"
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <div className="flex items-center justify-center space-x-3">
-              <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-              <span>Submitting...</span>
-            </div>
-          ) : (
-            'Request Your Free Demo'
-          )}
-        </Button>
-      </form>
-    </Card>
+        <div className="space-y-2">
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Work Email"
+            required
+            className="w-full"
+          />
+        </div>
+        <div className="space-y-2">
+          <Input
+            id="phone"
+            name="phone"
+            type="tel"
+            placeholder="Phone Number"
+            required
+            className="w-full"
+          />
+        </div>
+        <div className="space-y-2">
+          <Input
+            id="organization"
+            name="organization"
+            placeholder="Care Home Name"
+            required
+            className="w-full"
+          />
+        </div>
+        <div className="space-y-2">
+          <Input
+            id="jobTitle"
+            name="jobTitle"
+            placeholder="Job Title"
+            required
+            className="w-full"
+          />
+        </div>
+        <div className="space-y-2">
+          <Textarea
+            id="message"
+            name="message"
+            placeholder="Tell us about your care home and what you're looking for..."
+            className="min-h-[100px]"
+          />
+        </div>
+      </div>
+      <Button 
+        type="submit" 
+        size="lg"
+        className="w-full py-6 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-200 group"
+      >
+        Book Your Demo
+        <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform duration-200" />
+      </Button>
+    </form>
   )
 } 

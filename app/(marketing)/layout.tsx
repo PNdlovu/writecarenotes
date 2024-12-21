@@ -3,8 +3,9 @@
  * @fileoverview Marketing Pages Layout
  * @version 1.0.0
  * @created 2024-03-21
- * @author Write Care Notes Team
- * @copyright Write Care Notes Ltd
+ * @updated 2024-03-21
+ * @author Phibu Cloud Solutions Ltd
+ * @copyright Phibu Cloud Solutions Ltd
  */
 
 import { MarketingNavbar } from '@/components/marketing/Navbar'
