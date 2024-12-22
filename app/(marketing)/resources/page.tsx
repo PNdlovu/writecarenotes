@@ -12,6 +12,7 @@ import { Metadata } from "next"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { cn } from "@/lib/utils"
 import { 
   BookOpen, 
   FileText, 
@@ -121,7 +122,7 @@ const quickLinks = [
 
 export default function ResourcesPage() {
   return (
-    <div className="bg-white py-16 sm:py-24">
+    <div className="bg-gradient-to-b from-blue-50/50 via-white to-blue-50/30 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
@@ -140,7 +141,7 @@ export default function ResourcesPage() {
               href={link.href}
               target={link.external ? "_blank" : undefined}
               rel={link.external ? "noopener noreferrer" : undefined}
-              className="inline-flex items-center px-4 py-2 rounded-full bg-gray-50 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors"
+              className="inline-flex items-center px-4 py-2 rounded-full bg-white shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors border border-gray-100"
             >
               {link.title}
               {link.external && (
@@ -155,11 +156,18 @@ export default function ResourcesPage() {
         {/* Main Resources Grid */}
         <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-6 sm:mt-16 lg:mx-0 lg:max-w-none lg:grid-cols-3">
           {resources.map((resource) => (
-            <Card key={resource.title} className="relative overflow-hidden rounded-lg p-8 hover:shadow-lg transition-shadow">
+            <Card 
+              key={resource.title} 
+              className="relative overflow-hidden rounded-xl p-8 hover:shadow-lg transition-all duration-200 bg-white/70 backdrop-blur-sm border border-gray-100 hover:scale-[1.02]"
+            >
               <Link href={resource.href} className="block">
                 <div className="flex items-center justify-between">
-                  <div className={cn("inline-flex rounded-lg p-3 ring-1 ring-gray-900/10", resource.color)}>
-                    <resource.icon className="h-6 w-6" />
+                  <div className={cn(
+                    "inline-flex rounded-lg p-3 ring-1 ring-gray-900/10 bg-gradient-to-br", 
+                    resource.color.replace('text-', 'from-'),
+                    'to-white/80'
+                  )}>
+                    <resource.icon className={cn("h-6 w-6", resource.color)} />
                   </div>
                   {resource.badge && (
                     <span className="inline-flex items-center rounded-full bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-600/10">
@@ -179,7 +187,7 @@ export default function ResourcesPage() {
         </div>
 
         {/* Support Section */}
-        <div className="mt-20 rounded-2xl bg-gray-50 p-8 text-center sm:p-12">
+        <div className="mt-20 rounded-2xl bg-gradient-to-br from-blue-50 to-white p-8 text-center sm:p-12 border border-blue-100/50 shadow-sm">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900">
             Need Personalized Guidance?
           </h2>
