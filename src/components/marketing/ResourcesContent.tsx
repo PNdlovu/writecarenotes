@@ -10,130 +10,74 @@ import {
   FileVideo,
   FileCheck,
   FileQuestion,
-  ClipboardCheck
+  ClipboardCheck,
+  Video,
+  CheckCircle,
+  ArrowRight
 } from 'lucide-react';
 import { LucideIcon } from 'lucide-react';
 
 interface ResourceType {
   title: string;
   description: string;
-  icon: LucideIcon;
-  features: string[];
+  icon: JSX.Element;
   href: string;
 }
 
-const resourceTypes: ResourceType[] = [
+const resourceCards: ResourceType[] = [
   {
     title: 'Documentation',
-    description: 'Access comprehensive documentation for care home management, including templates, forms, and best practices.',
-    icon: FileText,
-    features: [
-      'Care plan templates',
-      'Assessment forms',
-      'Policy documents',
-      'Procedure guides',
-      'Record keeping tools',
-      'Quality assurance checklists'
-    ],
-    href: '/resources/documentation'
+    description: 'Learn how to use Write Care Notes effectively with our comprehensive guides.',
+    icon: <BookOpen className="h-8 w-8 text-brand-teal" />,
+    href: '/resources/documentation',
+  },
+  {
+    title: 'Training Videos',
+    description: 'Watch step-by-step tutorials on how to use various features.',
+    icon: <Video className="h-8 w-8 text-brand-green" />,
+    href: '/resources/videos',
+  },
+  {
+    title: 'Best Practices',
+    description: 'Discover recommended workflows and care documentation standards.',
+    icon: <CheckCircle className="h-8 w-8 text-brand-blue" />,
+    href: '/resources/best-practices',
   },
   {
     title: 'Training Materials',
     description: 'Professional training resources for care staff development and continuous learning.',
-    icon: GraduationCap,
-    features: [
-      'Staff training modules',
-      'Certification courses',
-      'Skills assessments',
-      'Learning materials',
-      'Training videos',
-      'Progress tracking tools'
-    ],
-    href: '/resources/training'
-  },
-  {
-    title: 'Best Practices',
-    description: 'Industry-leading best practices and guidelines for exceptional care delivery.',
-    icon: ClipboardCheck,
-    features: [
-      'Care standards',
-      'Safety protocols',
-      'Quality benchmarks',
-      'Operational guidelines',
-      'Service improvement tips',
-      'Risk management'
-    ],
-    href: '/resources/best-practices'
+    icon: <GraduationCap className="h-8 w-8 text-brand-blue" />,
+    href: '/resources/training',
   },
   {
     title: 'Regulatory Guidance',
     description: 'Stay compliant with up-to-date regulatory information and compliance guides.',
-    icon: FileCheck,
-    features: [
-      'CQC requirements',
-      'Legal updates',
-      'Compliance checklists',
-      'Inspection preparation',
-      'Policy templates',
-      'Regulatory changes'
-    ],
-    href: '/resources/regulatory'
+    icon: <FileCheck className="h-8 w-8 text-brand-teal" />,
+    href: '/resources/regulatory',
   },
   {
     title: 'Case Studies',
     description: 'Real-world examples and success stories from care homes using our platform.',
-    icon: BookOpen,
-    features: [
-      'Success stories',
-      'Implementation examples',
-      'ROI analysis',
-      'User testimonials',
-      'Impact reports',
-      'Best practice examples'
-    ],
-    href: '/resources/case-studies'
+    icon: <BookOpen className="h-8 w-8 text-brand-green" />,
+    href: '/resources/case-studies',
   },
   {
     title: 'Business Tools',
     description: 'Essential tools and resources for efficient care home business management.',
-    icon: Briefcase,
-    features: [
-      'Financial planning',
-      'Staff scheduling',
-      'Resource management',
-      'Performance metrics',
-      'Budget templates',
-      'Business analytics'
-    ],
-    href: '/resources/business-tools'
+    icon: <Briefcase className="h-8 w-8 text-brand-blue" />,
+    href: '/resources/business-tools',
   },
   {
     title: 'Video Tutorials',
     description: 'Visual guides and tutorials for using WriteCareNotes features effectively.',
-    icon: FileVideo,
-    features: [
-      'Platform tutorials',
-      'Feature guides',
-      'Best practice videos',
-      'Training sessions',
-      'Quick tips',
-      'Implementation guides'
-    ],
-    href: '/resources/tutorials'
+    icon: <FileVideo className="h-8 w-8 text-brand-teal" />,
+    href: '/resources/tutorials',
   },
   {
     title: 'FAQs',
     description: 'Comprehensive answers to common questions about care home management and our platform.',
-    icon: FileQuestion,
-    features: [
-      'Platform usage',
-      'Technical support',
-      'Best practices',
-      'Troubleshooting',
-      'Common issues',
-      'Quick solutions'
-    ],
-    href: '/resources/faqs'
+    icon: <FileQuestion className="h-8 w-8 text-brand-green" />,
+    href: '/resources/faqs',
   }
 ];
 
@@ -157,31 +101,21 @@ export default function ResourcesContent() {
       {/* Resources Grid */}
       <section className="pb-20">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {resourceTypes.map((resource, index) => {
-              const Icon = resource.icon;
-              return (
-                <Link key={index} href={resource.href}>
-                  <Card className="p-6 hover:shadow-lg transition-all duration-200 hover:scale-[1.02] cursor-pointer">
-                    <div className="flex items-center mb-4">
-                      <div className="p-2 rounded-lg bg-blue-100">
-                        <Icon className="h-6 w-6 text-blue-600" />
-                      </div>
-                      <h3 className="text-xl font-semibold ml-3">{resource.title}</h3>
-                    </div>
-                    <p className="text-gray-600 mb-4">{resource.description}</p>
-                    <ul className="space-y-2">
-                      {resource.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-center text-sm text-gray-600">
-                          <div className="w-1.5 h-1.5 rounded-full bg-green-500 mr-2" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  </Card>
-                </Link>
-              );
-            })}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {resourceCards.map((card) => (
+              <Link
+                key={card.title}
+                href={card.href}
+                className="group relative rounded-lg border border-form-border p-6 hover:border-brand-teal transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                  {card.icon}
+                  <h3 className="text-xl font-semibold">{card.title}</h3>
+                </div>
+                <p className="mt-2 text-muted-foreground">{card.description}</p>
+                <ArrowRight className="absolute bottom-6 right-6 h-5 w-5 text-brand-teal opacity-0 transition-opacity group-hover:opacity-100" />
+              </Link>
+            ))}
           </div>
         </div>
       </section>

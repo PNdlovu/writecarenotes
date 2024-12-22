@@ -79,7 +79,8 @@ export function MarketingNavbar() {
                   {item.name}
                 </Link>
               ))}
-　　 　 　 　 {/* Solutions Dropdown */}
+
+              {/* Solutions Dropdown */}
               <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
@@ -102,23 +103,17 @@ export function MarketingNavbar() {
                   </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
-            </div>
 
-            {/* Actions */}
-            <div className="flex items-center gap-4">
-              <Link 
-                href="/login" 
-                className="text-base text-gray-600 hover:text-gray-900"
-              >
+              {/* Sign in */}
+              <Link href="/sign-in" className="text-base text-gray-600 hover:text-gray-900">
                 Sign in
               </Link>
-              <Button 
-                asChild
-                className="bg-[#2563EB] hover:bg-blue-700 text-white rounded-lg px-6"
-              >
-                <Link href="/demo">Request Demo</Link>
-              </Button>
             </div>
+
+            {/* Request Demo Button */}
+            <Button asChild className="bg-blue-600 hover:bg-blue-700">
+              <Link href="/demo">Request Demo</Link>
+            </Button>
           </nav>
         </div>
       </header>

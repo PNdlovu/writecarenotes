@@ -168,28 +168,6 @@ const careTypeDetails = {
       'Flexible support',
       'Peace of mind'
     ]
-  },
-  'respite-care': {
-    title: 'Respite Care',
-    icon: Clock,
-    description: "Our respite care services provide temporary relief for primary caregivers while ensuring continuity of care for individuals.",
-    features: [
-      'Short-term care support',
-      'Planned breaks',
-      'Emergency cover',
-      'Activity programs',
-      'Personal care',
-      'Medication management',
-      'Social engagement',
-      'Family support'
-    ],
-    benefits: [
-      'Caregiver relief',
-      'Continuous care quality',
-      'New social interactions',
-      'Maintained routines',
-      'Emergency support'
-    ]
   }
 };
 

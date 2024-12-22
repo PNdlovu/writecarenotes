@@ -12,6 +12,7 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
+import { colors } from '@/styles/colors'
 
 const Form = FormProvider
 
@@ -70,6 +71,12 @@ const FormItemContext = React.createContext<FormItemContextValue>(
   {} as FormItemContextValue
 )
 
+const formClasses = {
+  container: `bg-[${colors.components.form.background}] border border-[${colors.components.form.border}] rounded-lg p-6 shadow-sm`,
+  label: `text-[${colors.components.text.secondary}] text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70`,
+  input: `flex h-10 w-full rounded-md border border-[${colors.components.form.border}] bg-white px-3 py-2 text-sm placeholder:text-[${colors.components.text.light}] focus:outline-none focus:ring-2 focus:ring-[${colors.components.button.primary}] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50`,
+}
+
 const FormItem = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -78,7 +85,7 @@ const FormItem = React.forwardRef<
 
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("space-y-2", className)} {...props} />
+      <div ref={ref} className={cn(formClasses.container, className)} {...props} />
     </FormItemContext.Provider>
   )
 })
@@ -93,7 +100,7 @@ const FormLabel = React.forwardRef<
   return (
     <Label
       ref={ref}
-      className={cn(error && "text-destructive", className)}
+      className={cn(formClasses.label, error && "text-destructive", className)}
       htmlFor={formItemId}
       {...props}
     />
@@ -117,6 +124,7 @@ const FormControl = React.forwardRef<
           : `${formDescriptionId} ${formMessageId}`
       }
       aria-invalid={!!error}
+      className={cn(formClasses.input, props.className)}
       {...props}
     />
   )
@@ -174,5 +182,3 @@ export {
   FormMessage,
   FormField,
 }
-
-

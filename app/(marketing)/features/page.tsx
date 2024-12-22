@@ -52,7 +52,7 @@ export const metadata: Metadata = {
 
 const mainFeatures = [
   {
-    icon: <Bed className="h-12 w-12 text-blue-600" />,
+    icon: <Bed className="h-14 w-14 text-[#7FD02B] transition-transform hover:scale-110" />,
     title: "Bed Management",
     description: "Real-time bed occupancy tracking, admissions management, and capacity planning across multiple facilities.",
     benefits: [
@@ -63,7 +63,7 @@ const mainFeatures = [
     ]
   },
   {
-    icon: <CalendarClock className="h-12 w-12 text-blue-600" />,
+    icon: <CalendarClock className="h-14 w-14 text-[#2B95D0] transition-transform hover:scale-110" />,
     title: "Staff Rota & Scheduling",
     description: "Intelligent staff scheduling system that ensures optimal coverage while managing skills mix and compliance.",
     benefits: [
@@ -74,7 +74,7 @@ const mainFeatures = [
     ]
   },
   {
-    icon: <ClipboardCheck className="h-12 w-12 text-blue-600" />,
+    icon: <ClipboardCheck className="h-14 w-14 text-[#7FD02B] transition-transform hover:scale-110" />,
     title: "Care Planning",
     description: "Person-centered care planning tools that ensure comprehensive and consistent care delivery.",
     benefits: [
@@ -85,7 +85,7 @@ const mainFeatures = [
     ]
   },
   {
-    icon: <Tablets className="h-12 w-12 text-blue-600" />,
+    icon: <Tablets className="h-14 w-14 text-[#2B95D0] transition-transform hover:scale-110" />,
     title: "Medication Management",
     description: "Comprehensive medication administration and tracking system with built-in safety checks and barcode scanning.",
     benefits: [
@@ -101,22 +101,22 @@ const mainFeatures = [
 
 const complianceFeatures = [
   {
-    icon: <Shield className="h-8 w-8 text-blue-600" />,
+    icon: <Shield className="h-12 w-12 text-[#2B95D0] transition-transform hover:scale-110" />,
     title: "Regulatory Compliance",
     description: "Built-in compliance with CQC, HIQA, and regional care standards."
   },
   {
-    icon: <FileText className="h-8 w-8 text-blue-600" />,
+    icon: <FileText className="h-12 w-12 text-[#7FD02B] transition-transform hover:scale-110" />,
     title: "Documentation",
     description: "Automated document management and version control."
   },
   {
-    icon: <Bell className="h-8 w-8 text-blue-600" />,
+    icon: <Bell className="h-12 w-12 text-[#2B95D0] transition-transform hover:scale-110" />,
     title: "Alerts & Notifications",
     description: "Real-time alerts for incidents, tasks, and compliance deadlines."
   },
   {
-    icon: <LineChart className="h-8 w-8 text-blue-600" />,
+    icon: <LineChart className="h-12 w-12 text-[#7FD02B] transition-transform hover:scale-110" />,
     title: "Analytics & Reporting",
     description: "Comprehensive reporting suite with customizable dashboards."
   }
@@ -124,22 +124,22 @@ const complianceFeatures = [
 
 const clinicalFeatures = [
   {
-    icon: <Brain className="h-8 w-8 text-blue-600" />,
+    icon: <Brain className="h-12 w-12 text-[#2B95D0] transition-transform hover:scale-110" />,
     title: "Mental Health",
     description: "Specialized assessments and monitoring tools"
   },
   {
-    icon: <HeartPulse className="h-8 w-8 text-blue-600" />,
+    icon: <HeartPulse className="h-12 w-12 text-[#7FD02B] transition-transform hover:scale-110" />,
     title: "Clinical Observations",
     description: "Vital signs tracking and early warning scores"
   },
   {
-    icon: <Scale className="h-8 w-8 text-blue-600" />,
+    icon: <Scale className="h-12 w-12 text-[#2B95D0] transition-transform hover:scale-110" />,
     title: "Risk Management",
     description: "Comprehensive risk assessment tools"
   },
   {
-    icon: <Activity className="h-8 w-8 text-blue-600" />,
+    icon: <Activity className="h-12 w-12 text-[#7FD02B] transition-transform hover:scale-110" />,
     title: "Health Monitoring",
     description: "Continuous health status tracking"
   }
@@ -147,32 +147,32 @@ const clinicalFeatures = [
 
 const operationalFeatures = [
   {
-    icon: <Wallet className="h-8 w-8 text-blue-600" />,
+    icon: <Wallet className="h-12 w-12 text-[#7FD02B] transition-transform hover:scale-110" />,
     title: "Financial Management",
     description: "Invoicing, payroll, and financial reporting"
   },
   {
-    icon: <UserCog className="h-8 w-8 text-blue-600" />,
+    icon: <UserCog className="h-12 w-12 text-[#2B95D0] transition-transform hover:scale-110" />,
     title: "HR Management",
     description: "Staff records, training, and performance management"
   },
   {
-    icon: <Building2 className="h-8 w-8 text-blue-600" />,
+    icon: <Building2 className="h-12 w-12 text-[#7FD02B] transition-transform hover:scale-110" />,
     title: "Multi-Facility Management",
     description: "Centralized control for multiple locations"
   },
   {
-    icon: <Stethoscope className="h-8 w-8 text-blue-600" />,
+    icon: <Stethoscope className="h-12 w-12 text-[#2B95D0] transition-transform hover:scale-110" />,
     title: "GP Integration",
     description: "Seamless communication with healthcare providers"
   }
 ]
 
 const stats = [
-  { number: "99.9%", label: "Uptime", icon: <Clock className="h-6 w-6 text-blue-600" /> },
-  { number: "256-bit", label: "Encryption", icon: <Shield className="h-6 w-6 text-blue-600" /> },
-  { number: "24/7", label: "Support", icon: <MessageSquare className="h-6 w-6 text-blue-600" /> },
-  { number: "GDPR", label: "Certified", icon: <CheckCircle2 className="h-6 w-6 text-blue-600" /> }
+  { number: "99.9%", label: "Uptime", icon: <Clock className="h-6 w-6 text-[#2B95D0] transition-transform hover:scale-110" /> },
+  { number: "256-bit", label: "Encryption", icon: <Shield className="h-6 w-6 text-[#7FD02B] transition-transform hover:scale-110" /> },
+  { number: "24/7", label: "Support", icon: <MessageSquare className="h-6 w-6 text-[#2B95D0] transition-transform hover:scale-110" /> },
+  { number: "GDPR", label: "Certified", icon: <CheckCircle2 className="h-6 w-6 text-[#7FD02B] transition-transform hover:scale-110" /> }
 ]
 
 export default function FeaturesPage() {
