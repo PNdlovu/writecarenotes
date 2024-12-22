@@ -27,13 +27,13 @@ import {
 } from "@/components/ui/navigation-menu";
 
 const solutions = [
-  { name: 'Elderly Care', href: '/solutions/elderly-care' },
-  { name: 'Mental Health', href: '/solutions/mental-health' },
-  { name: 'Learning Disabilities', href: '/solutions/learning-disabilities' },
-  { name: 'Physical Disabilities', href: '/solutions/physical-disabilities' },
-  { name: 'Children\'s Services', href: '/solutions/childrens-services' },
-  { name: 'Autism Support', href: '/solutions/autism-support' },
-  { name: 'Domiciliary Care', href: '/solutions/domiciliary-care' },
+  { name: 'Elderly Care', href: '/support/elderly-care' },
+  { name: 'Mental Health', href: '/support/mental-health' },
+  { name: 'Learning Disabilities', href: '/support/learning-disabilities' },
+  { name: 'Physical Disabilities', href: '/support/physical-disabilities' },
+  { name: "Children's Services", href: '/support/childrens-services' },
+  { name: 'Autism Support', href: '/support/autism-support' },
+  { name: 'Domiciliary Care', href: '/support/domiciliary-care' },
 ];
 
 const navigation = [
@@ -79,8 +79,7 @@ export function MarketingNavbar() {
                   {item.name}
                 </Link>
               ))}
-              
-              {/* Solutions Dropdown */}
+　　 　 　 　 {/* Solutions Dropdown */}
               <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
