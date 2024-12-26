@@ -14,7 +14,20 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Check, Minus } from "lucide-react"
+import { 
+  Check, 
+  Minus, 
+  Users, 
+  ClipboardCheck, 
+  Calendar, 
+  AlertTriangle, 
+  PiggyBank, 
+  FileText, 
+  Bed, 
+  Mail, 
+  Headphones, 
+  BarChart 
+} from "lucide-react"
 import React from "react"
 import { Badge } from "@/components/ui/badge"
 
@@ -26,16 +39,16 @@ const plans = [
     description: "Perfect for small care homes",
     color: "bg-gradient-to-br from-blue-500 to-blue-600",
     features: [
-      "Up to 20 residents",
-      "Basic care planning",
-      "Staff rota management",
-      "Incident reporting",
-      "Basic financial management",
-      "Core assessments",
-      "Bed management",
-      "Email support",
-      "Implementation support",
-      "Basic reporting"
+      { text: "Up to 20 residents", icon: Users },
+      { text: "Basic care planning", icon: ClipboardCheck },
+      { text: "Staff rota management", icon: Calendar },
+      { text: "Incident reporting", icon: AlertTriangle },
+      { text: "Basic financial management", icon: PiggyBank },
+      { text: "Core assessments", icon: FileText },
+      { text: "Bed management", icon: Bed },
+      { text: "Email support", icon: Mail },
+      { text: "Implementation support", icon: Headphones },
+      { text: "Basic reporting", icon: BarChart }
     ]
   },
   {
@@ -46,17 +59,17 @@ const plans = [
     color: "bg-gradient-to-br from-green-500 to-green-600",
     popular: true,
     features: [
-      "Up to 50 residents",
-      "Advanced care planning",
-      "Full financial suite",
-      "Payroll processing",
-      "GP Connect integration",
-      "Custom assessments",
-      "Medication management",
-      "24/7 phone support",
-      "Family portal",
-      "Quality assurance tools",
-      "Advanced reporting"
+      { text: "Up to 50 residents", icon: Users },
+      { text: "Advanced care planning", icon: ClipboardCheck },
+      { text: "Full financial suite", icon: PiggyBank },
+      { text: "Payroll processing", icon: Calendar },
+      { text: "GP Connect integration", icon: AlertTriangle },
+      { text: "Custom assessments", icon: FileText },
+      { text: "Medication management", icon: Bed },
+      { text: "24/7 phone support", icon: Mail },
+      { text: "Family portal", icon: Headphones },
+      { text: "Quality assurance tools", icon: BarChart },
+      { text: "Advanced reporting", icon: BarChart }
     ]
   },
   {
@@ -66,17 +79,17 @@ const plans = [
     description: "For large care organizations",
     color: "bg-gradient-to-br from-purple-500 to-purple-600",
     features: [
-      "Unlimited residents",
-      "Multi-facility management",
-      "Advanced financial controls",
-      "Custom integrations",
-      "Full healthcare connectivity",
-      "Advanced analytics",
-      "White-label options",
-      "Dedicated support",
-      "Custom development",
-      "Business intelligence",
-      "Onsite training"
+      { text: "Unlimited residents", icon: Users },
+      { text: "Multi-facility management", icon: ClipboardCheck },
+      { text: "Advanced financial controls", icon: PiggyBank },
+      { text: "Custom integrations", icon: Calendar },
+      { text: "Full healthcare connectivity", icon: AlertTriangle },
+      { text: "Advanced analytics", icon: FileText },
+      { text: "White-label options", icon: Bed },
+      { text: "Dedicated support", icon: Mail },
+      { text: "Custom development", icon: Headphones },
+      { text: "Business intelligence", icon: BarChart },
+      { text: "Onsite training", icon: BarChart }
     ]
   }
 ]
@@ -307,47 +320,31 @@ export function Pricing() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="isolate mx-auto mt-16 grid max-w-6xl grid-cols-1 gap-8 sm:mt-20 lg:mx-0 lg:max-w-none lg:grid-cols-3">
           {plans.map((plan) => (
-            <Card
-              key={plan.name}
-              className={`relative flex flex-col justify-between rounded-3xl p-8 ring-1 ring-gray-200 xl:p-10 ${
-                plan.popular ? 'ring-2 ring-blue-600 scale-105' : ''
-              }`}
-            >
+            <Card key={plan.name} className={`relative overflow-hidden transition-all duration-300 hover:scale-105 ${plan.popular ? 'ring-2 ring-blue-500 shadow-lg' : ''}`}>
               {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <div className="rounded-full bg-blue-600 px-4 py-1 text-xs font-semibold text-white">
-                    Most Popular
-                  </div>
+                <div className="absolute -right-20 top-8 rotate-45">
+                  <Badge className="bg-blue-500 text-white px-8 py-1">Most Popular</Badge>
                 </div>
               )}
-              <div>
-                <div className="flex items-center justify-between gap-x-4">
-                  <h3 className="text-xl font-semibold leading-8 text-gray-900">{plan.name}</h3>
-                </div>
-                <p className="mt-4 text-sm leading-6 text-gray-600">{plan.description}</p>
-                <p className="mt-6 flex items-baseline gap-x-1">
-                  <span className="text-4xl font-bold tracking-tight text-gray-900">{plan.price}</span>
+              <div className="p-8">
+                <h3 className="text-xl font-semibold leading-7">{plan.name}</h3>
+                <p className="mt-4 flex items-baseline gap-x-2">
+                  <span className={`text-4xl font-bold tracking-tight ${plan.price === "Custom" ? "text-gray-900" : "text-blue-600"}`}>{plan.price}</span>
                   <span className="text-sm font-semibold leading-6 text-gray-600">{plan.period}</span>
                 </p>
+                <p className="mt-2 text-sm text-gray-600">{plan.description}</p>
+                <Button asChild className={`mt-6 w-full rounded-full ${plan.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}>
+                  <Link href="/demo">Get Started</Link>
+                </Button>
                 <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-gray-600">
                   {plan.features.map((feature) => (
-                    <li key={feature} className="flex gap-x-3 items-center">
-                      <svg className="h-5 w-5 flex-none text-blue-600" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
-                      </svg>
-                      {feature}
+                    <li key={feature.text} className="flex gap-x-3">
+                      <feature.icon className="h-5 w-5 flex-none text-blue-600" aria-hidden="true" />
+                      {feature.text}
                     </li>
                   ))}
                 </ul>
               </div>
-              <Link href="/demo" className="mt-8">
-                <Button 
-                  variant={plan.popular ? "default" : "outline"} 
-                  className={`w-full ${plan.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
-                >
-                  {plan.price === 'Custom' ? 'Contact Sales' : 'Get Started'}
-                </Button>
-              </Link>
             </Card>
           ))}
         </div>

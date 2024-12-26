@@ -17,31 +17,13 @@ import { usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { ErrorBoundary } from '@/error/components/ErrorBoundary';
 import { cn } from "@/lib/utils";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
-
-const solutions = [
-  { name: 'Elderly Care', href: '/support/elderly-care' },
-  { name: 'Mental Health', href: '/support/mental-health' },
-  { name: 'Learning Disabilities', href: '/support/learning-disabilities' },
-  { name: 'Physical Disabilities', href: '/support/physical-disabilities' },
-  { name: "Children's Services", href: '/support/childrens-services' },
-  { name: 'Autism Support', href: '/support/autism-support' },
-  { name: 'Domiciliary Care', href: '/support/domiciliary-care' },
-];
 
 const navigation = [
   { name: 'Features', href: '/features' },
   { name: 'Pricing', href: '/pricing' },
   { name: 'Resources', href: '/resources' },
   { name: 'Support', href: '/support' },
-  { name: 'Branding', href: '/assets/brand/guidelines/write-care-notes-brand-guidelines-v1.pdf' },
+  { name: 'Branding', href: '/assets/brand/guidelines' },
 ];
 
 export function MarketingNavbar() {
@@ -80,40 +62,11 @@ export function MarketingNavbar() {
                 </Link>
               ))}
 
-              {/* Solutions Dropdown */}
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger className="text-base text-gray-600 hover:text-gray-900">
-                      Solutions
-                    </NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                      <div className="grid w-[400px] gap-2 p-4">
-                        {solutions.map((solution) => (
-                          <Link
-                            key={solution.name}
-                            href={solution.href}
-                            className="block select-none rounded-md p-2 text-sm leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          >
-                            {solution.name}
-                          </Link>
-                        ))}
-                      </div>
-                    </NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
-
-              {/* Sign in */}
-              <Link href="/sign-in" className="text-base text-gray-600 hover:text-gray-900">
-                Sign in
-              </Link>
+              {/* Sign In Button */}
+              <Button asChild variant="outline">
+                <Link href="/login">Sign in</Link>
+              </Button>
             </div>
-
-            {/* Request Demo Button */}
-            <Button asChild className="bg-blue-600 hover:bg-blue-700">
-              <Link href="/demo">Request Demo</Link>
-            </Button>
           </nav>
         </div>
       </header>

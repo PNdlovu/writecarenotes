@@ -56,10 +56,10 @@ export function PricingPageContent({ complianceFeatures, faqs, trustSignals }: P
                 </svg>
               </span>
             </div>
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+            <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
               Pricing that grows with your care home
             </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
+            <p className="mt-4 text-base leading-7 text-gray-600">
               Choose a plan that's right for you. All plans include core features, regular updates, and enterprise-grade security.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
@@ -87,15 +87,15 @@ export function PricingPageContent({ complianceFeatures, faqs, trustSignals }: P
           {trustSignals.map((signal) => (
             <Card 
               key={signal.label} 
-              className="p-8 text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-blue-50/50 hover:scale-105"
+              className="group p-8 text-center border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-white to-blue-50/50 hover:scale-105"
             >
               <div className="flex flex-col items-center gap-4">
-                {signal.label === "Uptime SLA" && <Clock className="h-8 w-8 text-blue-600" />}
-                {signal.label === "Support" && <CheckCircle2 className="h-8 w-8 text-blue-600" />}
-                {signal.label === "Encryption" && <Shield className="h-8 w-8 text-blue-600" />}
-                {signal.label === "Data Centers" && <Building2 className="h-8 w-8 text-blue-600" />}
+                {signal.label === "Uptime SLA" && <Clock className="h-8 w-8 text-blue-600 group-hover:scale-110 transition-transform" />}
+                {signal.label === "Support" && <CheckCircle2 className="h-8 w-8 text-green-600 group-hover:scale-110 transition-transform" />}
+                {signal.label === "Encryption" && <Shield className="h-8 w-8 text-purple-600 group-hover:scale-110 transition-transform" />}
+                {signal.label === "Data Centers" && <Building2 className="h-8 w-8 text-orange-600 group-hover:scale-110 transition-transform" />}
                 <div>
-                  <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
+                  <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
                     {signal.number}
                   </div>
                   <div className="mt-2 text-sm font-medium text-gray-600">{signal.label}</div>
@@ -108,27 +108,27 @@ export function PricingPageContent({ complianceFeatures, faqs, trustSignals }: P
 
       {/* Compliance Features */}
       <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8 py-16">
-        <h2 className="text-3xl font-bold text-center mb-4">Compliance & Security</h2>
-        <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+        <h2 className="text-2xl font-bold text-center mb-4">Compliance & Security</h2>
+        <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto text-sm">
           Enterprise-grade security and compliance features to keep your care home data safe and meet regulatory requirements.
         </p>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           {complianceFeatures.map((feature) => (
             <Card 
               key={feature.title} 
-              className="p-8 shadow-lg hover:shadow-2xl transition-all duration-300 bg-gradient-to-br from-white to-blue-50/30 hover:scale-[1.02] border-0"
+              className="p-6 shadow-lg hover:shadow-2xl transition-all duration-300 bg-gradient-to-br from-white to-blue-50/30 hover:scale-[1.02] border-0"
             >
               <div className="flex items-start gap-4">
-                <div className="p-3 rounded-2xl bg-blue-100/50">
-                  {feature.title.includes("CQC") && <ShieldCheck className="h-6 w-6 text-blue-600" />}
-                  {feature.title.includes("GDPR") && <Lock className="h-6 w-6 text-blue-600" />}
-                  {feature.title.includes("NHS") && <Server className="h-6 w-6 text-blue-600" />}
-                  {feature.title.includes("Regional") && <Globe className="h-6 w-6 text-blue-600" />}
+                <div className="p-2.5 rounded-xl bg-gradient-to-br from-white to-blue-50">
+                  {feature.title.includes("CQC") && <ShieldCheck className="h-5 w-5 text-indigo-600" />}
+                  {feature.title.includes("GDPR") && <Lock className="h-5 w-5 text-purple-600" />}
+                  {feature.title.includes("NHS") && <Server className="h-5 w-5 text-green-600" />}
+                  {feature.title.includes("Regional") && <Globe className="h-5 w-5 text-orange-600" />}
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
-                  <p className="mt-2 text-gray-600">{feature.description}</p>
-                  <Badge variant="secondary" className="mt-4 bg-blue-100/50 text-blue-700 hover:bg-blue-100">
+                  <h3 className="text-base font-semibold text-gray-900">{feature.title}</h3>
+                  <p className="mt-1.5 text-sm text-gray-600">{feature.description}</p>
+                  <Badge variant="secondary" className="mt-3 bg-blue-50 text-blue-700 hover:bg-blue-100 text-xs">
                     {feature.included}
                   </Badge>
                 </div>
