@@ -9,8 +9,7 @@
  */
 
 import { Metadata } from "next"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import { Button } from "@/src/components/ui/button"
 import Link from "next/link"
 import { 
   Users,
@@ -21,7 +20,6 @@ import {
   FileText,
   Clock,
   ChartBar,
-  Download,
   UserPlus,
   BookOpen,
   Medal
@@ -78,27 +76,6 @@ const trainingResources = [
     description: "Management and leadership training resources",
     category: "Management",
     icon: Award
-  }
-]
-
-const downloadableTemplates = [
-  {
-    title: "Staff Handbook Template",
-    description: "Customizable handbook for care home policies and procedures",
-    format: "DOCX",
-    size: "425 KB"
-  },
-  {
-    title: "Interview Question Bank",
-    description: "Comprehensive list of care-specific interview questions",
-    format: "PDF",
-    size: "186 KB"
-  },
-  {
-    title: "Training Record Templates",
-    description: "Forms for tracking staff training and development",
-    format: "XLSX",
-    size: "245 KB"
   }
 ]
 
@@ -206,89 +183,40 @@ export default function StaffManagementPage() {
             Compliance Guides
           </h2>
           <p className="mt-4 text-lg text-gray-600">
-            Essential guidance for meeting regulatory requirements
+            Essential guidance for regulatory compliance
           </p>
           
           <div className="mt-8 grid gap-6 sm:grid-cols-3">
             {complianceGuides.map((guide) => (
-              <Card key={guide.title} className="p-6">
-                <div className="rounded-lg bg-blue-50 p-3 w-fit">
-                  <guide.icon className="h-6 w-6 text-blue-600" />
-                </div>
-                <div className="mt-4">
-                  <h3 className="font-semibold text-gray-900">
-                    {guide.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-gray-600">
-                    {guide.description}
-                  </p>
-                  <Button variant="link" asChild className="mt-4 p-0">
-                    <Link href={guide.link}>View guide →</Link>
-                  </Button>
-                </div>
-              </Card>
+              <Link key={`${guide.title}-${guide.link}`} href={guide.link}>
+                <Card className="p-6 hover:shadow-lg transition-shadow">
+                  <div className="rounded-lg bg-blue-50 p-3 w-fit">
+                    <guide.icon className="h-6 w-6 text-blue-600" />
+                  </div>
+                  <div className="mt-4">
+                    <h3 className="font-semibold text-gray-900">
+                      {guide.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-gray-600">
+                      {guide.description}
+                    </p>
+                  </div>
+                </Card>
+              </Link>
             ))}
           </div>
         </div>
 
-        {/* Downloadable Templates */}
-        <div className="mt-20">
-          <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-            Downloadable Templates
-          </h2>
-          <p className="mt-4 text-lg text-gray-600">
-            Ready-to-use templates for staff management
-          </p>
-          
-          <div className="mt-8 space-y-4">
-            {downloadableTemplates.map((template) => (
-              <Card key={template.title} className="p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-start gap-4">
-                    <div className="rounded-lg bg-gray-100 p-2">
-                      <Download className="h-5 w-5 text-gray-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-gray-900">
-                        {template.title}
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        {template.description}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-sm text-gray-500">
-                      {template.format} • {template.size}
-                    </span>
-                    <Button variant="outline" size="sm">
-                      Download
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className="mt-20 rounded-2xl bg-blue-600 px-8 py-12 text-center sm:px-12">
-          <h2 className="text-3xl font-bold tracking-tight text-white">
+        {/* Help Section */}
+        <div className="mt-16 text-center">
+          <p className="text-gray-600">
             Need help with staff management?
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-blue-100">
-            Book a consultation with our HR specialists to discuss your staff management needs
           </p>
-          <div className="mt-8 flex justify-center gap-4">
-            <Button variant="secondary" size="lg" asChild>
-              <Link href="/demo">Book Consultation</Link>
-            </Button>
-            <Button variant="outline" size="lg" className="bg-transparent text-white hover:bg-blue-500" asChild>
-              <Link href="/resources/staff-management/consultation">Learn More</Link>
-            </Button>
-          </div>
+          <Button variant="link" asChild className="text-blue-500 hover:text-blue-600">
+            <Link href="/support">Contact our support team</Link>
+          </Button>
         </div>
       </div>
     </div>
   )
-} 
+}

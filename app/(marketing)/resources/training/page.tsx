@@ -150,35 +150,38 @@ export default function TrainingLibraryPage() {
           </p>
           
           <div className="mx-auto mt-8 grid gap-8 sm:mt-10 lg:mx-0 lg:grid-cols-2">
-            {mandatoryCourses.map((course) => (
-              <Card key={course.title} className="p-6 hover:shadow-lg transition-shadow">
-                <div className="flex items-start gap-4">
-                  <div className="rounded-lg bg-blue-50 p-3">
-                    <course.icon className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-gray-900">
-                        {course.title}
-                      </h3>
-                      <Badge variant="secondary">{course.level}</Badge>
+            {mandatoryCourses.map((course) => {
+              const IconComponent = course.icon;
+              return (
+                <Card key={course.title} className="p-6 hover:shadow-lg transition-shadow">
+                  <div className="flex items-start gap-4">
+                    <div className="rounded-lg bg-blue-50 p-3">
+                      <IconComponent className="h-6 w-6 text-blue-600" />
                     </div>
-                    <p className="mt-2 text-gray-600">
-                      {course.description}
-                    </p>
-                    <div className="mt-4 flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <Clock className="h-4 w-4" />
-                        {course.duration}
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-gray-900">
+                          {course.title}
+                        </h3>
+                        <Badge variant="secondary">{course.level}</Badge>
                       </div>
-                      <Button variant="link" asChild className="p-0">
-                        <Link href={course.href}>Start course →</Link>
-                      </Button>
+                      <p className="mt-2 text-gray-600">
+                        {course.description}
+                      </p>
+                      <div className="mt-4 flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-sm text-gray-500">
+                          <Clock className="h-4 w-4" />
+                          {course.duration}
+                        </div>
+                        <Button variant="link" asChild className="p-0">
+                          <Link href={course.href}>Start course →</Link>
+                        </Button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              );
+            })}
           </div>
         </div>
 
@@ -192,28 +195,27 @@ export default function TrainingLibraryPage() {
           </p>
           
           <div className="mt-8 grid gap-6 sm:grid-cols-3">
-            {specialistCourses.map((course) => (
-              <Card key={course.title} className="p-6">
-                <div className="rounded-lg bg-blue-50 p-3 w-fit">
-                  <course.icon className="h-6 w-6 text-blue-600" />
-                </div>
-                <div className="mt-4">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-gray-900">
-                      {course.title}
-                    </h3>
-                    <Badge variant="outline">{course.level}</Badge>
+            {specialistCourses.map((course) => {
+              const IconComponent = course.icon;
+              return (
+                <Card key={course.title} className="p-6">
+                  <div className="rounded-lg bg-blue-50 p-3 w-fit">
+                    <IconComponent className="h-6 w-6 text-blue-600" />
                   </div>
-                  <p className="mt-2 text-sm text-gray-600">
-                    {course.description}
-                  </p>
-                  <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
-                    <Clock className="h-4 w-4" />
-                    {course.duration}
+                  <div className="mt-4">
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-semibold text-gray-900">{course.title}</h3>
+                      <Badge variant="secondary">{course.level}</Badge>
+                    </div>
+                    <p className="mt-2 text-gray-600">{course.description}</p>
+                    <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                      <Clock className="h-4 w-4" />
+                      {course.duration}
+                    </div>
                   </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              );
+            })}
           </div>
         </div>
 
@@ -223,52 +225,31 @@ export default function TrainingLibraryPage() {
             Additional Resources
           </h2>
           <p className="mt-4 text-lg text-gray-600">
-            Supplementary learning materials and quick reference guides
+            Supplementary learning materials and guides
           </p>
           
           <div className="mt-8 grid gap-6 sm:grid-cols-3">
-            {learningResources.map((resource) => (
-              <Card key={resource.title} className="p-6">
-                <div className="rounded-lg bg-blue-50 p-3 w-fit">
-                  <resource.icon className="h-6 w-6 text-blue-600" />
-                </div>
-                <div className="mt-4">
-                  <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-gray-900">
-                      {resource.title}
-                    </h3>
-                    <Badge variant="secondary">{resource.format}</Badge>
+            {learningResources.map((resource) => {
+              const IconComponent = resource.icon;
+              return (
+                <Card key={resource.title} className="p-6">
+                  <div className="rounded-lg bg-blue-50 p-3 w-fit">
+                    <IconComponent className="h-6 w-6 text-blue-600" />
                   </div>
-                  <p className="mt-2 text-sm text-gray-600">
-                    {resource.description}
-                  </p>
-                  <p className="mt-2 text-sm text-blue-600 font-medium">
-                    {resource.count}
-                  </p>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* CTA Section */}
-        <div className="mt-20 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 px-8 py-12 text-center sm:px-12">
-          <h2 className="text-3xl font-bold tracking-tight text-white">
-            Ready to start training?
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-blue-100">
-            Get unlimited access to all training resources and track your team's progress
-          </p>
-          <div className="mt-8 flex justify-center gap-4">
-            <Button variant="secondary" size="lg" asChild>
-              <Link href="/demo">Start Free Trial</Link>
-            </Button>
-            <Button variant="outline" size="lg" className="bg-transparent text-white hover:bg-blue-500" asChild>
-              <Link href="/pricing">View Plans</Link>
-            </Button>
+                  <div className="mt-4">
+                    <h3 className="font-semibold text-gray-900">{resource.title}</h3>
+                    <p className="mt-2 text-gray-600">{resource.description}</p>
+                    <div className="mt-4 flex items-center gap-2 text-sm text-gray-500">
+                      <Badge>{resource.format}</Badge>
+                      <span>{resource.count}</span>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}
