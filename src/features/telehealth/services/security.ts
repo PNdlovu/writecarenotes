@@ -1,274 +1,118 @@
 /**
- * @fileoverview Security Service for Telehealth
+ * @fileoverview Telehealth Security Service
  * @version 1.0.0
- * @created 2024-12-14
+ * @created 2024-03-21
+ * @author Philani Ndlovu
+ * @copyright Write Care Notes Ltd
  */
 
-import { v4 as uuidv4 } from 'uuid';
-import { db } from '@/lib/db';
-import { TelehealthServiceError } from './enhancedTelehealth';
-import { createHash, createCipheriv, createDecipheriv, randomBytes } from 'crypto';
+import { AccessManagementService } from '@/features/access-management/services/AccessManagementService';
+import { SecurityConfig } from '@/features/access-management/types';
 
-interface SecurityConfig {
-  encryptionKey: Buffer;
-  algorithm: string;
-  ivLength: number;
-}
+export class TelehealthSecurityService {
+  private static instance: TelehealthSecurityService;
+  private accessService: AccessManagementService;
 
-interface AccessLog {
-  id: string;
-  userId: string;
-  userRole: string;
-  action: string;
-  resource: string;
-  timestamp: string;
-  ip: string;
-  userAgent: string;
-  status: 'SUCCESS' | 'FAILURE';
-  failureReason?: string;
-}
+  private constructor() {
+    const config: SecurityConfig = {
+      algorithm: 'aes-256-gcm',
+      ivLength: 16,
+      encryptionKey: Buffer.from(process.env.ENCRYPTION_KEY || '', 'base64'),
+      tokenSecret: process.env.JWT_SECRET || '',
+      tokenExpiry: 24 * 60 * 60,
+      mfaEnabled: true,
+      passwordPolicy: {
+        minLength: 12,
+        requireNumbers: true,
+        requireSpecialChars: true,
+        requireUppercase: true,
+        requireLowercase: true,
+        expiryDays: 90,
+        preventReuse: 5
+      }
+    };
 
-interface ComplianceReport {
-  id: string;
-  type: 'ACCESS_AUDIT' | 'SECURITY_AUDIT' | 'COMPLIANCE_CHECK';
-  startDate: string;
-  endDate: string;
-  findings: {
-    severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-    category: string;
-    description: string;
-    recommendation?: string;
-  }[];
-  status: 'GENERATED' | 'REVIEWED' | 'ADDRESSED';
-  generatedAt: string;
-  reviewedBy?: string;
-  reviewedAt?: string;
-}
+    this.accessService = new AccessManagementService(config);
+  }
 
-export class SecurityService {
-  private config: SecurityConfig = {
-    encryptionKey: Buffer.from(process.env.ENCRYPTION_KEY || '', 'hex'),
-    algorithm: 'aes-256-gcm',
-    ivLength: 16,
-  };
-
-  async logAccess(data: Omit<AccessLog, 'id' | 'timestamp'>): Promise<void> {
-    try {
-      await db.accessLog.create({
-        data: {
-          id: uuidv4(),
-          ...data,
-          timestamp: new Date().toISOString(),
-        },
-      });
-    } catch (error) {
-      console.error('Failed to log access:', error);
-      // Don't throw here to prevent blocking the main operation
+  public static getInstance(): TelehealthSecurityService {
+    if (!TelehealthSecurityService.instance) {
+      TelehealthSecurityService.instance = new TelehealthSecurityService();
     }
+    return TelehealthSecurityService.instance;
+  }
+
+  async initialize() {
+    await this.accessService.initialize();
   }
 
   async validateAccess(
     userId: string,
-    userRole: string,
-    resource: string,
+    sessionId: string,
     action: string
-  ): Promise<boolean> {
+  ): Promise<{
+    status: 'SUCCESS' | 'FAILURE';
+    failureReason?: string;
+  }> {
     try {
-      // Check role-based permissions
-      const hasPermission = await this.checkPermissions(userRole, resource, action);
-      
-      // Log the access attempt
-      await this.logAccess({
+      const decision = await this.accessService.checkAccess({
         userId,
-        userRole,
-        resource,
-        action,
-        ip: 'IP_ADDRESS', // Should be obtained from request
-        userAgent: 'USER_AGENT', // Should be obtained from request
-        status: hasPermission ? 'SUCCESS' : 'FAILURE',
-        failureReason: hasPermission ? undefined : 'Insufficient permissions',
+        resourceType: 'telehealth_session',
+        resourceId: sessionId,
+        action
       });
 
-      return hasPermission;
-    } catch (error) {
-      throw new TelehealthServiceError(
-        'Failed to validate access',
-        'ACCESS_VALIDATION_FAILED',
-        error
-      );
-    }
-  }
-
-  private async checkPermissions(
-    role: string,
-    resource: string,
-    action: string
-  ): Promise<boolean> {
-    try {
-      const permission = await db.permission.findFirst({
-        where: {
-          role,
-          resource,
+      await this.accessService.auditLog({
+        action: 'TELEHEALTH_ACCESS_CHECK',
+        description: `Telehealth access check for session ${sessionId}`,
+        userId,
+        tenantId: 'current-tenant-id', // Replace with actual tenant ID
+        timestamp: new Date(),
+        metadata: {
+          sessionId,
           action,
-        },
+          allowed: decision.allowed
+        }
       });
 
-      return !!permission;
-    } catch (error) {
-      throw new TelehealthServiceError(
-        'Failed to check permissions',
-        'PERMISSION_CHECK_FAILED',
-        error
-      );
-    }
-  }
-
-  async encryptData(data: Buffer): Promise<{ encrypted: Buffer; iv: Buffer }> {
-    try {
-      const iv = randomBytes(this.config.ivLength);
-      const cipher = createCipheriv(
-        this.config.algorithm,
-        this.config.encryptionKey,
-        iv
-      );
-      
-      const encrypted = Buffer.concat([
-        cipher.update(data),
-        cipher.final(),
-      ]);
-
-      return { encrypted, iv };
-    } catch (error) {
-      throw new TelehealthServiceError(
-        'Failed to encrypt data',
-        'ENCRYPTION_FAILED',
-        error
-      );
-    }
-  }
-
-  async decryptData(encrypted: Buffer, iv: Buffer): Promise<Buffer> {
-    try {
-      const decipher = createDecipheriv(
-        this.config.algorithm,
-        this.config.encryptionKey,
-        iv
-      );
-      
-      return Buffer.concat([
-        decipher.update(encrypted),
-        decipher.final(),
-      ]);
-    } catch (error) {
-      throw new TelehealthServiceError(
-        'Failed to decrypt data',
-        'DECRYPTION_FAILED',
-        error
-      );
-    }
-  }
-
-  async generateComplianceReport(
-    type: ComplianceReport['type'],
-    startDate: string,
-    endDate: string
-  ): Promise<ComplianceReport> {
-    try {
-      const findings = await this.auditCompliance(type, startDate, endDate);
-
-      const report: ComplianceReport = {
-        id: uuidv4(),
-        type,
-        startDate,
-        endDate,
-        findings,
-        status: 'GENERATED',
-        generatedAt: new Date().toISOString(),
+      return {
+        status: decision.allowed ? 'SUCCESS' : 'FAILURE',
+        failureReason: decision.allowed ? undefined : decision.reason
       };
-
-      await db.complianceReport.create({
-        data: report,
-      });
-
-      return report;
     } catch (error) {
-      throw new TelehealthServiceError(
-        'Failed to generate compliance report',
-        'REPORT_GENERATION_FAILED',
-        error
-      );
-    }
-  }
-
-  private async auditCompliance(
-    type: ComplianceReport['type'],
-    startDate: string,
-    endDate: string
-  ): Promise<ComplianceReport['findings']> {
-    const findings: ComplianceReport['findings'] = [];
-
-    try {
-      switch (type) {
-        case 'ACCESS_AUDIT':
-          await this.auditAccessLogs(startDate, endDate, findings);
-          break;
-        case 'SECURITY_AUDIT':
-          await this.auditSecuritySettings(findings);
-          break;
-        case 'COMPLIANCE_CHECK':
-          await this.checkHIPAACompliance(findings);
-          break;
-      }
-    } catch (error) {
-      console.error('Error during compliance audit:', error);
-      findings.push({
-        severity: 'HIGH',
-        category: 'AUDIT_ERROR',
-        description: 'Error occurred during compliance audit',
-        recommendation: 'Review system logs and retry audit',
-      });
-    }
-
-    return findings;
-  }
-
-  private async auditAccessLogs(
-    startDate: string,
-    endDate: string,
-    findings: ComplianceReport['findings']
-  ): Promise<void> {
-    const failedAttempts = await db.accessLog.count({
-      where: {
+      console.error('Error validating telehealth access:', error);
+      return {
         status: 'FAILURE',
-        timestamp: {
-          gte: startDate,
-          lte: endDate,
-        },
-      },
-    });
-
-    if (failedAttempts > 100) {
-      findings.push({
-        severity: 'HIGH',
-        category: 'SECURITY',
-        description: `High number of failed access attempts: ${failedAttempts}`,
-        recommendation: 'Review security logs and implement additional protections',
-      });
+        failureReason: 'Internal security check failed'
+      };
     }
   }
 
-  private async auditSecuritySettings(
-    findings: ComplianceReport['findings']
-  ): Promise<void> {
-    // Implementation would check security configurations
-    // This is a placeholder for the actual implementation
+  async encryptSessionData(data: Buffer): Promise<{ encrypted: Buffer; iv: Buffer }> {
+    return this.accessService.encryptData(data);
   }
 
-  private async checkHIPAACompliance(
-    findings: ComplianceReport['findings']
+  async decryptSessionData(encrypted: Buffer, iv: Buffer): Promise<Buffer> {
+    return this.accessService.decryptData(encrypted, iv);
+  }
+
+  async logSessionActivity(
+    userId: string,
+    sessionId: string,
+    action: string,
+    metadata: Record<string, any>
   ): Promise<void> {
-    // Implementation would check HIPAA compliance requirements
-    // This is a placeholder for the actual implementation
+    await this.accessService.auditLog({
+      action: `TELEHEALTH_${action.toUpperCase()}`,
+      description: `Telehealth session activity: ${action}`,
+      userId,
+      tenantId: 'current-tenant-id', // Replace with actual tenant ID
+      timestamp: new Date(),
+      metadata: {
+        sessionId,
+        ...metadata
+      }
+    });
   }
 }
 

@@ -1,4 +1,3 @@
-import { OrganizationService } from '@/features/organizations/services/organizationService';
 import { ComplianceService } from '@/features/compliance/services/complianceService';
 import { FamilyPortalService } from '@/features/family-portal/services/familyPortalService';
 import { ActivityService } from '@/features/activities/services/activityService';
@@ -8,14 +7,54 @@ import { PaymentResponse } from '../providers/types';
 
 export class OrganizationIntegration {
   private logger: Logger;
+  private complianceService: ComplianceService;
 
-  constructor(
-    private organizationService: OrganizationService,
-    private complianceService: ComplianceService,
-    private familyPortalService: FamilyPortalService,
-    private activityService: ActivityService
-  ) {
-    this.logger = new Logger('org-integration');
+  constructor() {
+    this.logger = new Logger('OrganizationIntegration');
+    this.complianceService = new ComplianceService();
+  }
+
+  async syncOrganizationConfig(
+    organizationId: string
+  ): Promise<TenantConfig> {
+    try {
+      // Get organization configuration
+      const [organizationResponse, complianceConfig] = await Promise.all([
+        fetch(`/api/organizations/${organizationId}`).then(res => res.json()),
+        this.complianceService.getComplianceConfig(organizationId)
+      ]);
+
+      // Map organization settings to tenant config
+      return {
+        id: organizationId,
+        name: organizationResponse.name,
+        tier: this.mapOrganizationTier(organizationResponse.type),
+        limits: {
+          maxTransactions: organizationResponse.paymentLimits.maxTransactions,
+          maxUsers: organizationResponse.userLimits.maxUsers,
+          maxStorage: organizationResponse.storageLimits.maxBytes,
+          maxConcurrentRequests: organizationResponse.apiLimits.maxConcurrent
+        },
+        features: {
+          providers: this.getEnabledProviders(organizationResponse),
+          reporting: organizationResponse.features.includes('reporting'),
+          audit: organizationResponse.features.includes('audit'),
+          api: organizationResponse.features.includes('api')
+        },
+        security: {
+          ipWhitelist: organizationResponse.security.ipWhitelist,
+          mfaRequired: complianceConfig.requireMFA,
+          sessionTimeout: organizationResponse.security.sessionTimeout,
+          passwordPolicy: complianceConfig.passwordPolicy
+        }
+      };
+    } catch (error) {
+      this.logger.error('Failed to sync organization config', {
+        organizationId,
+        error
+      });
+      throw error;
+    }
   }
 
   async validateOrganizationPayment(
@@ -57,47 +96,6 @@ export class OrganizationIntegration {
       this.logger.error('Failed to validate organization payment', {
         organizationId,
         paymentId: payment.id,
-        error
-      });
-      throw error;
-    }
-  }
-
-  async syncOrganizationConfig(
-    organizationId: string
-  ): Promise<TenantConfig> {
-    try {
-      // Get organization configuration
-      const organization = await this.organizationService.getOrganization(organizationId);
-      const complianceConfig = await this.complianceService.getComplianceConfig(organizationId);
-
-      // Map organization settings to tenant config
-      return {
-        id: organizationId,
-        name: organization.name,
-        tier: this.mapOrganizationTier(organization.type),
-        limits: {
-          maxTransactions: organization.paymentLimits.maxTransactions,
-          maxUsers: organization.userLimits.maxUsers,
-          maxStorage: organization.storageLimits.maxBytes,
-          maxConcurrentRequests: organization.apiLimits.maxConcurrent
-        },
-        features: {
-          providers: this.getEnabledProviders(organization),
-          reporting: organization.features.includes('reporting'),
-          audit: organization.features.includes('audit'),
-          api: organization.features.includes('api')
-        },
-        security: {
-          ipWhitelist: organization.security.ipWhitelist,
-          mfaRequired: complianceConfig.requireMFA,
-          sessionTimeout: organization.security.sessionTimeout,
-          passwordPolicy: complianceConfig.passwordPolicy
-        }
-      };
-    } catch (error) {
-      this.logger.error('Failed to sync organization config', {
-        organizationId,
         error
       });
       throw error;

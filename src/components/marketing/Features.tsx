@@ -18,7 +18,7 @@ export function Features() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center mb-20">
             <h1 className="text-4xl font-bold mb-4">Enterprise Care Home Management Platform</h1>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-black">
               A comprehensive solution designed for multi-site care organizations across UK & Ireland,
               empowering caregivers with self-service tools and full offline capabilities.
             </p>
@@ -33,31 +33,31 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Advanced Scheduling</h3>
-              <p className="text-gray-600 mb-4">Intelligent staff rota and scheduling system</p>
+              <p className="text-black mb-4">Intelligent staff rota and scheduling system</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Auto rota generation</span>
+                  <span className="text-black">Auto rota generation</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Dynamic shift patterns</span>
+                  <span className="text-black">Dynamic shift patterns</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Holiday planning</span>
+                  <span className="text-black">Holiday planning</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Gap detection</span>
+                  <span className="text-black">Gap detection</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Coverage optimization</span>
+                  <span className="text-black">Coverage optimization</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Shift swapping</span>
+                  <span className="text-black">Shift swapping</span>
                 </li>
               </ul>
             </div>
@@ -70,31 +70,31 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Workforce Planning</h3>
-              <p className="text-gray-600 mb-4">Strategic staff allocation and planning</p>
+              <p className="text-black mb-4">Strategic staff allocation and planning</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Demand forecasting</span>
+                  <span className="text-black">Demand forecasting</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Skill mix optimization</span>
+                  <span className="text-black">Skill mix optimization</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Agency coordination</span>
+                  <span className="text-black">Agency coordination</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Resource allocation</span>
+                  <span className="text-black">Resource allocation</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Capacity planning</span>
+                  <span className="text-black">Capacity planning</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Workload balancing</span>
+                  <span className="text-black">Workload balancing</span>
                 </li>
               </ul>
             </div>
@@ -107,27 +107,27 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Real-time Alerts</h3>
-              <p className="text-gray-600 mb-4">Instant scheduling notifications</p>
+              <p className="text-black mb-4">Instant scheduling notifications</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Shift notifications</span>
+                  <span className="text-black">Shift notifications</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Coverage warnings</span>
+                  <span className="text-black">Coverage warnings</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Schedule changes</span>
+                  <span className="text-black">Schedule changes</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Mobile reminders</span>
+                  <span className="text-black">Mobile reminders</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Urgent requests</span>
+                  <span className="text-black">Urgent requests</span>
                 </li>
               </ul>
             </div>
@@ -140,7 +140,7 @@ export function Features() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center mb-20">
             <h2 className="text-3xl font-bold mb-4">Enterprise Financial Management</h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-black">
               Comprehensive financial, accounting, and payroll management for care organizations
             </p>
           </div>
@@ -154,31 +154,31 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Financial Module</h3>
-              <p className="text-gray-600 mb-4">Advanced financial management system</p>
+              <p className="text-black mb-4">Advanced financial management system</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Multi-currency support</span>
+                  <span className="text-black">Multi-currency support</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Budgeting & forecasting</span>
+                  <span className="text-black">Budgeting & forecasting</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Cost center management</span>
+                  <span className="text-black">Cost center management</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Financial reporting</span>
+                  <span className="text-black">Financial reporting</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Expense tracking</span>
+                  <span className="text-black">Expense tracking</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Revenue management</span>
+                  <span className="text-black">Revenue management</span>
                 </li>
               </ul>
             </div>
@@ -191,31 +191,31 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Accounting Module</h3>
-              <p className="text-gray-600 mb-4">Integrated accounting solutions</p>
+              <p className="text-black mb-4">Integrated accounting solutions</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>General ledger</span>
+                  <span className="text-black">General ledger</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Accounts payable</span>
+                  <span className="text-black">Accounts payable</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Accounts receivable</span>
+                  <span className="text-black">Accounts receivable</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Bank reconciliation</span>
+                  <span className="text-black">Bank reconciliation</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Tax management</span>
+                  <span className="text-black">Tax management</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Audit trails</span>
+                  <span className="text-black">Audit trails</span>
                 </li>
               </ul>
             </div>
@@ -228,31 +228,31 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Payroll Module</h3>
-              <p className="text-gray-600 mb-4">Comprehensive payroll management</p>
+              <p className="text-black mb-4">Comprehensive payroll management</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Automated calculations</span>
+                  <span className="text-black">Automated calculations</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Tax compliance</span>
+                  <span className="text-black">Tax compliance</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Benefits management</span>
+                  <span className="text-black">Benefits management</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Overtime tracking</span>
+                  <span className="text-black">Overtime tracking</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Statutory payments</span>
+                  <span className="text-black">Statutory payments</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>HMRC integration</span>
+                  <span className="text-black">HMRC integration</span>
                 </li>
               </ul>
             </div>
@@ -265,7 +265,7 @@ export function Features() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center mb-20">
             <h2 className="text-3xl font-bold mb-4">Clinical Care Management</h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-black">
               Advanced clinical tools for comprehensive resident care management
             </p>
           </div>
@@ -279,31 +279,31 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Care Planning</h3>
-              <p className="text-gray-600 mb-4">Person-centered care planning</p>
+              <p className="text-black mb-4">Person-centered care planning</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Personalized care plans</span>
+                  <span className="text-black">Personalized care plans</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Risk assessments</span>
+                  <span className="text-black">Risk assessments</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Care reviews</span>
+                  <span className="text-black">Care reviews</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Family collaboration</span>
+                  <span className="text-black">Family collaboration</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Progress tracking</span>
+                  <span className="text-black">Progress tracking</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Care history</span>
+                  <span className="text-black">Care history</span>
                 </li>
               </ul>
             </div>
@@ -316,31 +316,31 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Clinical Assessment</h3>
-              <p className="text-gray-600 mb-4">Comprehensive health monitoring</p>
+              <p className="text-black mb-4">Comprehensive health monitoring</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Health assessments</span>
+                  <span className="text-black">Health assessments</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Vital signs tracking</span>
+                  <span className="text-black">Vital signs tracking</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Wound management</span>
+                  <span className="text-black">Wound management</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Clinical alerts</span>
+                  <span className="text-black">Clinical alerts</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Health trends</span>
+                  <span className="text-black">Health trends</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Medical history</span>
+                  <span className="text-black">Medical history</span>
                 </li>
               </ul>
             </div>
@@ -353,31 +353,31 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Wellness Management</h3>
-              <p className="text-gray-600 mb-4">Holistic wellness tracking</p>
+              <p className="text-black mb-4">Holistic wellness tracking</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Activity planning</span>
+                  <span className="text-black">Activity planning</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Nutrition tracking</span>
+                  <span className="text-black">Nutrition tracking</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Hydration monitoring</span>
+                  <span className="text-black">Hydration monitoring</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Sleep patterns</span>
+                  <span className="text-black">Sleep patterns</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Mood tracking</span>
+                  <span className="text-black">Mood tracking</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Wellness reports</span>
+                  <span className="text-black">Wellness reports</span>
                 </li>
               </ul>
             </div>
@@ -390,7 +390,7 @@ export function Features() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center mb-20">
             <h2 className="text-3xl font-bold mb-4">Compliance & Quality Assurance</h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-black">
               Comprehensive compliance management and quality monitoring
             </p>
           </div>
@@ -404,31 +404,31 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Compliance Management</h3>
-              <p className="text-gray-600 mb-4">Regulatory compliance tracking</p>
+              <p className="text-black mb-4">Regulatory compliance tracking</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>CQC & Regional Standards</span>
+                  <span className="text-black">CQC & Regional Standards</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Policy & Procedure Library</span>
+                  <span className="text-black">Policy & Procedure Library</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Regulatory Updates</span>
+                  <span className="text-black">Regulatory Updates</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Inspection Management</span>
+                  <span className="text-black">Inspection Management</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Compliance Dashboard</span>
+                  <span className="text-black">Compliance Dashboard</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Risk Register</span>
+                  <span className="text-black">Risk Register</span>
                 </li>
               </ul>
             </div>
@@ -441,31 +441,31 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Audit Management</h3>
-              <p className="text-gray-600 mb-4">Quality assurance & auditing</p>
+              <p className="text-black mb-4">Quality assurance & auditing</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Audit Calendar</span>
+                  <span className="text-black">Audit Calendar</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Custom Audit Templates</span>
+                  <span className="text-black">Custom Audit Templates</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Action Plans</span>
+                  <span className="text-black">Action Plans</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Evidence Repository</span>
+                  <span className="text-black">Evidence Repository</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Improvement Tracking</span>
+                  <span className="text-black">Improvement Tracking</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Audit Analytics</span>
+                  <span className="text-black">Audit Analytics</span>
                 </li>
               </ul>
             </div>
@@ -475,34 +475,34 @@ export function Features() {
               <div className="mb-6">
                 <div className="w-12 h-12 bg-indigo-50 rounded-lg flex items-center justify-center">
                   <Scale className="w-6 h-6 text-indigo-500" />
-                </div>
+                  </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Quality Assurance</h3>
-              <p className="text-gray-600 mb-4">Quality monitoring system</p>
+              <p className="text-black mb-4">Quality monitoring system</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Quality metrics</span>
+                  <span className="text-black">Quality metrics</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Performance KPIs</span>
+                  <span className="text-black">Performance KPIs</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Feedback management</span>
+                  <span className="text-black">Feedback management</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Incident analysis</span>
+                  <span className="text-black">Incident analysis</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Quality reporting</span>
+                  <span className="text-black">Quality reporting</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Best practice sharing</span>
+                  <span className="text-black">Best practice sharing</span>
                 </li>
               </ul>
             </div>
@@ -515,7 +515,7 @@ export function Features() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center mb-20">
             <h2 className="text-3xl font-bold mb-4">Asset & Facility Management</h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-black">
               Comprehensive facility and asset management tools
             </p>
           </div>
@@ -529,31 +529,31 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Bed Management</h3>
-              <p className="text-gray-600 mb-4">Advanced bed allocation system</p>
+              <p className="text-black mb-4">Advanced bed allocation system</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Occupancy tracking</span>
+                  <span className="text-black">Occupancy tracking</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Bed allocation</span>
+                  <span className="text-black">Bed allocation</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Room planning</span>
+                  <span className="text-black">Room planning</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Admission management</span>
+                  <span className="text-black">Admission management</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Capacity forecasting</span>
+                  <span className="text-black">Capacity forecasting</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Occupancy reports</span>
+                  <span className="text-black">Occupancy reports</span>
                 </li>
               </ul>
             </div>
@@ -566,31 +566,31 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Maintenance Management</h3>
-              <p className="text-gray-600 mb-4">Facility & equipment maintenance</p>
+              <p className="text-black mb-4">Facility & equipment maintenance</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Preventive Maintenance</span>
+                  <span className="text-black">Preventive Maintenance</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Work Order System</span>
+                  <span className="text-black">Work Order System</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Contractor Directory</span>
+                  <span className="text-black">Contractor Directory</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Safety Compliance</span>
+                  <span className="text-black">Safety Compliance</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Service History</span>
+                  <span className="text-black">Service History</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Maintenance KPIs</span>
+                  <span className="text-black">Maintenance KPIs</span>
                 </li>
               </ul>
             </div>
@@ -603,36 +603,36 @@ export function Features() {
                 </div>
               </div>
               <h3 className="text-xl font-semibold mb-4">Asset Management</h3>
-              <p className="text-gray-600 mb-4">Equipment & inventory control</p>
+              <p className="text-black mb-4">Equipment & inventory control</p>
               <ul className="space-y-3">
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Asset Registry</span>
+                  <span className="text-black">Asset Registry</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Stock Management</span>
+                  <span className="text-black">Stock Management</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Equipment Tracking</span>
+                  <span className="text-black">Equipment Tracking</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Supplier Management</span>
+                  <span className="text-black">Supplier Management</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Procurement Tools</span>
+                  <span className="text-black">Procurement Tools</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-500" />
-                  <span>Asset Reports</span>
+                  <span className="text-black">Asset Reports</span>
                 </li>
               </ul>
-            </div>
-          </div>
         </div>
+      </div>
+    </div>
       </section>
     </>
   )

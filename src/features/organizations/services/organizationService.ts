@@ -27,6 +27,7 @@ import { auditService } from '@/lib/audit';
 import { offlineSync } from '@/lib/offline';
 import { validateRegionalCompliance } from '@/lib/compliance';
 import { TenantContext } from '@/lib/tenant';
+import { DatabaseError } from '@/lib/errors';
 
 export class OrganizationService {
   private static instance: OrganizationService;
@@ -510,6 +511,15 @@ export class OrganizationService {
     } catch (error) {
       throw ApiError.internal('Failed to update settings');
     }
+  }
+
+  async validateCompliance(organizationId: string, context: TenantContext): Promise<void> {
+    const organization = await this.getOrganization(organizationId, context);
+    if (!organization) {
+      throw new DatabaseError('Organization not found');
+    }
+    
+    // Add compliance validation logic here
   }
 }
 

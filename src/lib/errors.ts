@@ -166,4 +166,23 @@ export function errorHandler(error: Error, req: any, res: any, next: any): void 
   res.status(internalError.httpStatus).json(internalError.toJSON());
 }
 
+export class AppError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AppError';
+  }
+}
+
+export class ApiError extends Error {
+  public statusCode: number;
+  public data?: any;
+
+  constructor(message: string, statusCode: number = 400, data?: any) {
+    super(message);
+    this.name = 'ApiError';
+    this.statusCode = statusCode;
+    this.data = data;
+  }
+}
+
 

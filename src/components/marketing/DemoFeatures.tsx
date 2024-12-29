@@ -13,71 +13,76 @@ import { Check } from 'lucide-react'
 
 const features = [
   {
-    title: 'Comprehensive Care Planning',
-    description: "Digital care plans that adapt to each resident's needs with real-time updates.",
-    icon: '📋',
+    title: 'Care & Children\'s Home Management',
+    description: 'Unified platform supporting both care homes and children\'s homes with specialized features for each setting.',
+    icon: '🏥',
   },
   {
-    title: 'Medication Management',
-    description: 'Secure medication tracking with MAR charts and automated alerts.',
+    title: 'Clinical & Health Management',
+    description: 'Health tracking, medication management (eMAR), appointments, and specialized children\'s health monitoring.',
     icon: '💊',
   },
   {
-    title: 'Staff Management',
-    description: 'Efficient rota planning and staff allocation with skill matching.',
+    title: 'Staff & Safeguarding',
+    description: 'Advanced staff management, DBS tracking, safeguarding procedures, and specialized children\'s home training records.',
     icon: '👥',
   },
   {
-    title: 'Compliance & Reporting',
-    description: 'Built-in compliance checks and automated reporting for CQC, CIW, and more.',
-    icon: '✅',
+    title: 'Comprehensive Compliance',
+    description: 'Built-in compliance with CQC, Ofsted, CIW, Care Inspectorate, RQIA & HIQA standards. Automated audit trails.',
+    icon: '✓',
   },
   {
-    title: 'Family Portal',
-    description: 'Keep families connected with secure access to updates and communications.',
-    icon: '👨‍👩‍👧‍👦',
+    title: 'Education & Development',
+    description: 'Track educational progress, activities, achievements, and development goals for children\'s homes.',
+    icon: '📚',
   },
   {
-    title: 'Offline Support',
-    description: 'Continue working even without internet connection.',
-    icon: '🔄',
+    title: 'Family & Social Worker Portal',
+    description: 'Secure access for families, social workers, and other authorized professionals with role-based permissions.',
+    icon: '👨‍👩‍👦',
   },
+  {
+    title: 'Enterprise Features',
+    description: 'Multi-site management, custom reporting, API integration, and regional data centers across UK & Ireland.',
+    icon: '🏢',
+  },
+  {
+    title: '24/7 Expert Support',
+    description: 'UK-based support team with expertise in both care home and children\'s home regulations.',
+    icon: '🎓',
+  }
 ]
 
 export function DemoFeatures() {
   return (
-    <div className="space-y-8 p-6 bg-gradient-to-br from-blue-50 to-green-50 rounded-xl shadow-lg">
+    <div className="space-y-12">
       <div>
-        <h2 className="text-3xl font-bold mb-3 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-green-600">
-          Why Choose Write Care Notes?
+        <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+          Enterprise-Grade Care & Children\'s Home Platform
         </h2>
-        <p className="text-muted-foreground text-lg">
-          Experience how our platform streamlines care home management while improving resident care quality.
+        <p className="mt-4 text-base text-gray-600">
+          A comprehensive solution trusted by over 500 care homes and children\'s homes across the UK and Ireland.
         </p>
       </div>
-
-      <div className="grid gap-4">
-        {features.map((feature, index) => (
-          <div
-            key={index}
-            className="flex items-start space-x-4 p-4 rounded-lg bg-white shadow-sm hover:shadow-md transition-all duration-200"
-          >
-            <div className="text-2xl">{feature.icon}</div>
+      <div className="grid grid-cols-1 gap-8">
+        {features.map((feature) => (
+          <div key={feature.title} className="flex gap-4 items-start">
+            <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-blue-50">
+              <span className="text-2xl" role="img" aria-label={feature.title}>
+                {feature.icon}
+              </span>
+            </div>
             <div>
-              <h3 className="font-semibold text-lg mb-1">{feature.title}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
+              <h3 className="text-lg font-semibold text-gray-900">
+                {feature.title}
+              </h3>
+              <p className="mt-2 text-sm text-gray-600">
+                {feature.description}
+              </p>
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="rounded-lg bg-muted p-4">
-        <p className="text-sm">
-          "Write Care Notes has transformed how we manage our care home. The system is intuitive and has significantly reduced our administrative workload."
-        </p>
-        <div className="mt-2 text-sm font-medium">
-          - Sarah Johnson, Care Home Manager
-        </div>
       </div>
     </div>
   )

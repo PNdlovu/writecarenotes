@@ -24,9 +24,51 @@ interface Task {
   dueDate?: Date;
 }
 
+interface HandoverSession {
+  id: string;
+  shiftId: string;
+  startTime: Date;
+  endTime?: Date;
+  outgoingStaff: {
+    id: string;
+    name: string;
+    role: string;
+    signature?: string;
+  }[];
+  incomingStaff: {
+    id: string;
+    name: string;
+    role: string;
+    signature?: string;
+  }[];
+  status: 'draft' | 'in-progress' | 'completed' | 'verified';
+  qualityScore?: number;
+  complianceStatus: 'compliant' | 'partial' | 'non-compliant';
+  systemIntegration: {
+    ehrStatus: 'synced' | 'pending' | 'failed';
+    carePlanStatus: 'synced' | 'pending' | 'failed';
+    medicationStatus: 'synced' | 'pending' | 'failed';
+    riskAlertsStatus: 'synced' | 'pending' | 'failed';
+  };
+  attachments: {
+    voiceNotes: { id: string; url: string; duration: number }[];
+    photos: { id: string; url: string; caption?: string }[];
+    documents: { id: string; url: string; type: string }[];
+  };
+  auditTrail: {
+    version: number;
+    lastModified: Date;
+    modifiedBy: string;
+    changes: { field: string; oldValue: any; newValue: any }[];
+  };
+}
+
 export const ShiftHandover: React.FC = () => {
   const [newNote, setNewNote] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<HandoverNote['category']>('general');
+  const [session, setSession] = useState<HandoverSession | null>(null);
+  const [recordingVoiceNote, setRecordingVoiceNote] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
   const { data: handoverNotes } = useQuery<HandoverNote[]>(
     ['handover', 'notes', 'current'],
@@ -36,6 +78,11 @@ export const ShiftHandover: React.FC = () => {
   const { data: tasks } = useQuery<Task[]>(
     ['handover', 'tasks', 'current'],
     () => scheduleAPI.getCurrentShiftTasks(),
+  );
+
+  const { data: handoverSession } = useQuery<HandoverSession>(
+    ['handover', 'session', 'current'],
+    () => scheduleAPI.getCurrentHandoverSession(),
   );
 
   const addNoteMutation = useMutation(
@@ -51,6 +98,37 @@ export const ShiftHandover: React.FC = () => {
 
   const updateTaskMutation = useMutation(
     (task: Partial<Task> & { id: string }) => scheduleAPI.updateTask(task),
+  );
+
+  const startHandoverMutation = useMutation(
+    () => scheduleAPI.startHandoverSession(),
+    {
+      onSuccess: (newSession) => {
+        setSession(newSession);
+      },
+    }
+  );
+
+  const completeHandoverMutation = useMutation(
+    (sessionData: Partial<HandoverSession>) =>
+      scheduleAPI.completeHandoverSession(sessionData),
+    {
+      onSuccess: () => {
+        // Handle successful completion
+      },
+    }
+  );
+
+  const attachVoiceNoteMutation = useMutation(
+    (voiceNote: Blob) => scheduleAPI.attachVoiceNote(session?.id ?? '', voiceNote),
+  );
+
+  const attachPhotoMutation = useMutation(
+    (photo: File) => scheduleAPI.attachPhoto(session?.id ?? '', photo),
+  );
+
+  const verifyHandoverMutation = useMutation(
+    (signature: string) => scheduleAPI.verifyHandover(session?.id ?? '', signature),
   );
 
   const getCategoryStyle = (category: HandoverNote['category']) => {
@@ -191,6 +269,58 @@ export const ShiftHandover: React.FC = () => {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg shadow p-6">
+        <h3 className="text-lg font-semibold mb-4">Handover Session</h3>
+        <div className="space-y-4">
+          {handoverSession && (
+            <div>
+              <h4 className="font-medium">Session ID: {handoverSession.id}</h4>
+              <p className="text-sm text-gray-600 mt-1">
+                Start Time: {new Date(handoverSession.startTime).toLocaleString()}
+              </p>
+              {handoverSession.endTime && (
+                <p className="text-sm text-gray-600 mt-1">
+                  End Time: {new Date(handoverSession.endTime).toLocaleString()}
+                </p>
+              )}
+              <div className="mt-2 text-sm text-gray-500">
+                Status: {handoverSession.status}
+              </div>
+            </div>
+          )}
+          <button
+            onClick={() => startHandoverMutation.mutate()}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Start Handover Session
+          </button>
+          <button
+            onClick={() => completeHandoverMutation.mutate({ status: 'completed' })}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Complete Handover Session
+          </button>
+          <button
+            onClick={() => attachVoiceNoteMutation.mutate(new Blob())}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Attach Voice Note
+          </button>
+          <button
+            onClick={() => attachPhotoMutation.mutate(new File([], ''))}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Attach Photo
+          </button>
+          <button
+            onClick={() => verifyHandoverMutation.mutate('signature')}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Verify Handover
+          </button>
         </div>
       </div>
     </div>

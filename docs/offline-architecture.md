@@ -1,17 +1,17 @@
-# Write Care Notes - Offline Scheduling Architecture
+# Write Care Notes - Offline Module Architecture
 
 ## Overview
 
-The offline scheduling module ensures continuous access to critical scheduling functionality in Write Care Notes, even without internet connectivity. This enterprise-grade solution is designed for UK and Ireland care homes, focusing on staff scheduling, shift management, and compliance requirements.
+The offline module provides comprehensive offline capabilities for Write Care Notes, ensuring continuous access to critical functionality without internet connectivity. This enterprise-grade solution is designed for UK and Ireland care homes, focusing on data persistence, synchronization, and compliance requirements.
 
 ## Core Principles
 
-- **Care Continuity**: Uninterrupted access to critical schedules
-- **Compliance**: CQC and HIQA standards adherence
-- **Data Integrity**: Guaranteed schedule consistency
-- **Multi-Region**: UK & Ireland time zone support
-- **Enterprise Security**: Role-based offline access
-- **Mobile-First**: Optimized for care staff devices
+- **Data Continuity**: Uninterrupted access to critical care data
+- **Compliance**: Adherence to CQC, HIQA, and GDPR standards
+- **Data Integrity**: Guaranteed consistency across online/offline states
+- **Multi-Region**: UK & Ireland regulatory compliance
+- **Enterprise Security**: Role-based access control and data encryption
+- **Mobile-First**: Optimized for care staff mobile devices
 
 ## Directory Structure
 
@@ -19,273 +19,238 @@ The offline scheduling module ensures continuous access to critical scheduling f
 src/
 ├── features/
 │   └── offline/
-│       ├── api/
-│       │   ├── sync.ts                 # Sync endpoints
-│       │   └── index.ts                # API exports
-│       ├── components/
-│       │   ├── OfflineIndicator.tsx    # Online/offline status UI
-│       │   └── OfflineErrorBoundary.tsx # Error handling
-│       ├── hooks/
-│       │   └── useOffline.ts           # Offline state management
-│       ├── utils/
-│       │   └── storage.ts              # IndexedDB wrapper
-│       ├── types/
-│       │   ├── index.ts                # Core types
-│       │   └── errors.ts               # Error classes
-│       ├── config/
-│       │   └── constants.ts            # Configuration
-│       ├── CHANGELOG.md                # Version history
-│       ├── FEATURES.md                 # Feature documentation
-│       ├── types.ts                    # Type definitions
-│       └── index.ts                    # Module exports
-└── __tests__/
-    └── offline/
-        ├── components.test.ts          # Component tests
-        ├── hooks.test.ts              # Hook tests
-        └── storage.test.ts            # Storage tests
+│       ├── api/                      # API integration
+│       │   ├── sync.ts              # Sync management
+│       │   └── index.ts             # API exports
+│       ├── components/              # React components
+│       │   ├── OfflineIndicator.tsx # Status display
+│       │   └── ErrorBoundary.tsx    # Error handling
+│       ├── hooks/                   # React hooks
+│       │   └── useOffline.ts        # State management
+│       ├── network/                 # Network handling
+│       │   └── status.ts           # Connection monitoring
+│       ├── services/               # Core services
+│       │   ├── sync.ts            # Sync orchestration
+│       │   └── validation.ts      # Data validation
+│       ├── storage/               # Data persistence
+│       │   └── indexedDB.ts       # IndexedDB wrapper
+│       ├── sw/                    # Service Worker
+│       │   ├── register.ts        # SW registration
+│       │   └── serviceWorker.ts   # SW implementation
+│       ├── sync/                  # Sync logic
+│       │   ├── queue.ts          # Change queue
+│       │   └── strategy.ts       # Sync strategies
+│       ├── types/                # TypeScript types
+│       │   ├── index.ts         # Core types
+│       │   └── errors.ts        # Error definitions
+│       └── utils/               # Utilities
+           ├── crypto.ts        # Encryption
+           └── validation.ts    # Data validation
+
+app/
+└── api/
+    └── offline/                # Backend API
+        ├── sync/              # Sync endpoint
+        ├── status/           # Status checks
+        └── validate/         # Data validation
 ```
 
 ## Core Components
 
-### 1. API Layer
-- **Purpose**: Backend communication
+### 1. Service Worker
+- **Purpose**: Offline capability management
 - **Features**:
-  - Change synchronization with retry
-  - Data validation with timeouts
-  - Timestamp management
-  - Error handling with custom types
-  - Exponential backoff retry
+  - Cache management with versioning
+  - Request interception
+  - Background sync
+  - Push notifications
+  - Cache size monitoring
+  - Security patterns
 
-### 2. Error System
-- **Purpose**: Robust error handling
+### 2. Sync Service
+- **Purpose**: Data synchronization
 - **Features**:
-  - Custom error classes
-  - Type-safe error handling
-  - Error recovery mechanisms
-  - User-friendly messages
-  - Debug information
-
-### 3. Configuration
-- **Purpose**: Centralized settings
-- **Features**:
-  - Environment-specific config
-  - Timeout settings
-  - Retry parameters
-  - Storage limits
-  - API endpoints
-
-### 4. OfflineIndicator
-- **Purpose**: Visual status indicator
-- **Features**:
-  - Online/offline status display
-  - Sync status monitoring
-  - Storage usage tracking
-  - Pending changes counter
-  - Manual sync trigger
-
-### 5. OfflineErrorBoundary
-- **Purpose**: Error handling wrapper
-- **Features**:
-  - Graceful degradation
-  - Network error handling
-  - Offline-specific errors
-  - User-friendly messages
+  - Bidirectional sync
+  - Conflict resolution
+  - Change tracking
+  - Batch processing
   - Retry mechanisms
+  - Progress tracking
 
-### 6. Storage Manager
-- **Purpose**: Local data persistence
+### 3. Storage Service
+- **Purpose**: Offline data persistence
 - **Features**:
   - IndexedDB management
-  - Change tracking
-  - Sync operations
-  - Storage monitoring
-  - Data cleanup
+  - Data encryption
+  - Storage quotas
+  - Cleanup strategies
+  - Version migration
+  - Data compression
 
-## React Integration
+### 4. Network Service
+- **Purpose**: Connection management
+- **Features**:
+  - Online/offline detection
+  - Connection quality
+  - Auto-reconnection
+  - Timeout handling
+  - Error recovery
 
-### 1. Hooks and Components
+### 5. API Layer
+- **Purpose**: Backend integration
+- **Features**:
+  - Rate limiting
+  - Request validation
+  - Error handling
+  - Authentication
+  - Audit logging
+
+## Security Measures
+
+### 1. Data Protection
+- End-to-end encryption
+- Secure storage
+- Data sanitization
+- Access logging
+- GDPR compliance
+
+### 2. Access Control
+- Role-based permissions
+- Token validation
+- Session management
+- Device registration
+- Audit trails
+
+### 3. Error Handling
+- Custom error types
+- Error recovery
+- User notifications
+- Debug logging
+- Error tracking
+
+## Integration Guidelines
+
+### 1. Component Usage
 ```typescript
-import {
-  OfflineIndicator,
-  OfflineErrorBoundary,
-  useOffline,
-  SyncError,
-  OFFLINE_CONFIG
-} from '@features/offline';
+import { useOffline } from '@/features/offline';
 
-function ScheduleComponent() {
-  const {
-    isOnline,
-    isSyncing,
+function YourComponent() {
+  const { 
+    isOnline, 
+    isSyncing, 
     pendingChanges,
-    storageUsage,
-    forceSync
+    lastSyncTime,
+    forceSync 
   } = useOffline();
 
-  const handleSync = async () => {
-    try {
-      await forceSync();
-    } catch (error) {
-      if (error instanceof SyncError) {
-        // Handle sync error
-      }
-    }
-  };
-
   return (
-    <OfflineErrorBoundary>
+    <div>
       <OfflineIndicator />
-      <Schedule />
-      {storageUsage.percentage > OFFLINE_CONFIG.STORAGE.WARNING_THRESHOLD && (
-        <StorageWarning usage={storageUsage} />
-      )}
-    </OfflineErrorBoundary>
+      <OfflineErrorBoundary>
+        {/* Your component content */}
+      </OfflineErrorBoundary>
+    </div>
   );
 }
 ```
 
-## Data Flow
+### 2. Data Operations
+```typescript
+import { offlineStorage } from '@/features/offline';
 
-1. **Offline State Management**
-```mermaid
-graph LR
-    Component -- "useOffline()" --> NetworkState
-    NetworkState -- "monitor" --> Changes
-    NetworkState -- "track" --> Storage
-    NetworkState -- "trigger" --> Sync
+// Store data
+await offlineStorage.set('key', data);
+
+// Retrieve data
+const data = await offlineStorage.get('key');
+
+// Sync changes
+await offlineStorage.sync();
 ```
 
-2. **Data Storage**
-```mermaid
-graph LR
-    Storage -- "store" --> IndexedDB
-    Storage -- "track" --> Changes
-    Storage -- "monitor" --> Usage
-    Storage -- "cleanup" --> Old
+### 3. Error Handling
+```typescript
+import { OfflineError } from '@/features/offline/types';
+
+try {
+  await operation();
+} catch (error) {
+  if (error instanceof OfflineError) {
+    // Handle offline-specific error
+  }
+}
 ```
 
-3. **Error Handling**
-```mermaid
-graph LR
-    ErrorBoundary -- "catch" --> Errors
-    Errors -- "handle" --> UI
-    UI -- "retry" --> Operation
-    Operation -- "recover" --> Normal
-```
+## Performance Considerations
 
-## Security & Compliance
+1. **Storage Optimization**
+   - Efficient data structures
+   - Compression strategies
+   - Cache management
+   - Storage limits
 
-1. **Data Protection**
-   - Schedule encryption at rest
-   - Staff PII protection
-   - GDPR-compliant storage
-   - Secure credential handling
-
-2. **Access Control**
-   - Role-based schedule access
-   - Department-level isolation
-   - Time-based restrictions
-   - Device registration
-
-3. **Compliance Requirements**
-   - Working Time Directive
-   - CQC scheduling standards
-   - HIQA staff requirements
-   - Audit trail maintenance
-
-## Error Handling
-
-1. **Schedule Conflicts**
-   - Double-booking prevention
-   - Staff availability checks
-   - Shift overlap detection
-   - Resolution workflows
-
-2. **Sync Issues**
-   - Roster consistency
-   - Time record accuracy
-   - Change validation
-   - Version control
-
-3. **Compliance Violations**
-   - Working hours limits
-   - Required break times
-   - Qualification checks
-   - Alert mechanisms
-
-## Testing
-
-### Unit Tests
-```bash
-# Run schedule tests
-pnpm test schedule/offline
-
-# Test specific features
-pnpm test schedule/time-attendance
-```
-
-### Test Coverage
-- Shift management
-- Time recording
-- Staff notifications
-- Compliance rules
-
-## Performance Optimization
-
-1. **Mobile Performance**
-   - Compressed schedule data
-   - Incremental sync
-   - Battery-aware updates
-   - Efficient rendering
-
-2. **Storage Management**
-   - Schedule prioritization
-   - Historical data archival
-   - Cache optimization
-   - Resource cleanup
-
-3. **Network Usage**
+2. **Network Efficiency**
+   - Batch operations
    - Delta updates
-   - Batch synchronization
-   - Bandwidth monitoring
-   - Connectivity detection
+   - Request prioritization
+   - Background sync
 
-## Best Practices
+3. **Resource Management**
+   - Memory usage
+   - Battery impact
+   - CPU utilization
+   - Storage quotas
 
-1. **Schedule Management**
-   - Regular sync intervals
-   - Conflict prevention
-   - Staff notification timing
-   - Emergency procedures
+## Testing Strategy
 
-2. **Data Handling**
-   - Schedule validation
-   - Time zone conversion
-   - Break calculation
-   - Overtime tracking
+1. **Unit Tests**
+   - Component testing
+   - Hook testing
+   - Utility testing
+   - Error handling
 
-3. **Compliance**
-   - Regular audits
-   - Policy enforcement
-   - Documentation
-   - Training records
+2. **Integration Tests**
+   - Sync workflows
+   - Offline scenarios
+   - Error conditions
+   - Edge cases
 
-## Troubleshooting
+3. **E2E Tests**
+   - Offline workflows
+   - Data persistence
+   - Sync recovery
+   - Performance
 
-1. **Common Issues**
-   - Shift sync failures
-   - Time record discrepancies
-   - Staff notification delays
-   - Compliance alerts
+## Monitoring
 
-2. **Debugging Tools**
-   - Schedule inspector
-   - Sync monitor
-   - Compliance checker
-   - Audit viewer
+1. **Metrics**
+   - Sync success rate
+   - Storage usage
+   - Error frequency
+   - Performance stats
 
-3. **Support Procedures**
-   - Issue escalation
-   - Data recovery
-   - Emergency support
-   - Staff assistance
+2. **Logging**
+   - Error tracking
+   - Sync events
+   - User actions
+   - Debug info
+
+## Future Enhancements
+
+1. **Functionality**
+   - Enhanced conflict resolution
+   - Multi-device sync
+   - Real-time collaboration
+   - Offline analytics
+
+2. **Performance**
+   - Improved compression
+   - Smarter caching
+   - Better battery usage
+   - Faster sync
+
+3. **Security**
+   - Enhanced encryption
+   - Better access control
+   - Improved auditing
+   - Threat detection

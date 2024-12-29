@@ -45,7 +45,7 @@ export function useOrganizationContext(organizationId: string) {
     try {
       setIsLoading(true)
       const [org, orgMetrics, careHomes] = await Promise.all([
-        organizationService.getOrganization(organizationId),
+        fetch(`/api/organizations/${organizationId}`).then(res => res.json()),
         analyticsService.getOrganizationMetrics(organizationId),
         analyticsService.getCareHomeMetrics(organizationId),
       ])
@@ -71,7 +71,14 @@ export function useOrganizationContext(organizationId: string) {
 
   const updateOrganization = async (data: Partial<Organization>) => {
     try {
-      const updated = await organizationService.updateOrganization(organizationId, data)
+      const response = await fetch(`/api/organizations/${organizationId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      const updated = await response.json()
       setOrganization(updated)
     } catch (err) {
       setError(err as Error)
@@ -81,7 +88,14 @@ export function useOrganizationContext(organizationId: string) {
 
   const updateSettings = async (settings: Organization['settings']) => {
     try {
-      const updated = await organizationService.updateSettings(organizationId, settings)
+      const response = await fetch(`/api/organizations/${organizationId}/settings`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(settings),
+      })
+      const updated = await response.json()
       setOrganization(updated)
     } catch (err) {
       setError(err as Error)
@@ -91,7 +105,14 @@ export function useOrganizationContext(organizationId: string) {
 
   const addCareHome = async (careHomeId: string) => {
     try {
-      const updated = await organizationService.addCareHome(organizationId, careHomeId)
+      const response = await fetch(`/api/organizations/${organizationId}/care-homes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ careHomeId }),
+      })
+      const updated = await response.json()
       setOrganization(updated)
       await fetchData() // Refresh metrics
     } catch (err) {
@@ -102,7 +123,10 @@ export function useOrganizationContext(organizationId: string) {
 
   const removeCareHome = async (careHomeId: string) => {
     try {
-      const updated = await organizationService.removeCareHome(organizationId, careHomeId)
+      const response = await fetch(`/api/organizations/${organizationId}/care-homes/${careHomeId}`, {
+        method: 'DELETE',
+      })
+      const updated = await response.json()
       setOrganization(updated)
       await fetchData() // Refresh metrics
     } catch (err) {

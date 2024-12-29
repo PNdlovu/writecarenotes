@@ -65,3 +65,9 @@ export interface TenantContext {
     permissions: string[];
   };
 }
+
+export interface TenantContextType {
+  tenantId: string;
+  userId: string;
+  region: string;
+}

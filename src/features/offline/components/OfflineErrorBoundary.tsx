@@ -1,63 +1,141 @@
-// src/features/offline/components/OfflineErrorBoundary.tsx
+/**
+ * @fileoverview Offline error boundary component
+ * @version 1.0.0
+ * @created 2024-03-21
+ */
+
 'use client';
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertCircle } from 'lucide-react';
-import { useOffline } from '../hooks/useOffline';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import React from 'react';
+import { OfflineError } from '../types/errors';
 
-interface Props {
-  children: ReactNode;
-  fallback?: ReactNode;
+export interface OfflineErrorBoundaryProps {
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
+  onError?: (error: OfflineError) => void;
 }
 
 interface State {
   hasError: boolean;
-  error: Error | null;
+  error: OfflineError | null;
 }
 
-export class OfflineErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false,
-    error: null,
-  };
-
-  public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+export class OfflineErrorBoundary extends React.Component<OfflineErrorBoundaryProps, State> {
+  constructor(props: OfflineErrorBoundaryProps) {
+    super(props);
+    this.state = {
+      hasError: false,
+      error: null
+    };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Offline error caught:', error, errorInfo);
+  static getDerivedStateFromError(error: Error): State {
+    return {
+      hasError: true,
+      error: error instanceof OfflineError ? error : new OfflineError(error.message, {
+        cause: error
+      })
+    };
   }
 
-  public render() {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+    // Log error
+    console.error('Offline Error:', error);
+    console.error('Error Info:', errorInfo);
+
+    // Notify parent
+    if (this.props.onError && error instanceof OfflineError) {
+      this.props.onError(error);
+    }
+  }
+
+  render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
         return this.props.fallback;
       }
 
       return (
-        <Card className="max-w-md mx-auto mt-8">
-          <CardHeader>
-            <CardTitle className="flex items-center text-destructive">
-              <AlertCircle className="mr-2 h-5 w-5" />
-              Something went wrong
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground mb-4">
-              {this.state.error?.message || 'An unexpected error occurred'}
+        <div className="offline-error">
+          <div className="offline-error__content">
+            <div className="offline-error__icon">⚠️</div>
+            <h2 className="offline-error__title">Offline Error</h2>
+            <p className="offline-error__message">
+              {this.state.error?.message || 'An error occurred while processing offline data.'}
             </p>
-            <Button
+            {this.state.error?.options.details && (
+              <pre className="offline-error__details">
+                {JSON.stringify(this.state.error.options.details, null, 2)}
+              </pre>
+            )}
+            <button
+              className="offline-error__button"
               onClick={() => window.location.reload()}
-              variant="destructive"
-              className="w-full"
             >
               Reload Page
-            </Button>
-          </CardContent>
-        </Card>
+            </button>
+          </div>
+
+          <style jsx>{`
+            .offline-error {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              min-height: 400px;
+              padding: 2rem;
+              background: var(--background-secondary);
+              border-radius: 0.5rem;
+            }
+
+            .offline-error__content {
+              text-align: center;
+              max-width: 32rem;
+            }
+
+            .offline-error__icon {
+              font-size: 3rem;
+              margin-bottom: 1rem;
+            }
+
+            .offline-error__title {
+              font-size: 1.5rem;
+              font-weight: 600;
+              color: var(--text-primary);
+              margin-bottom: 0.5rem;
+            }
+
+            .offline-error__message {
+              color: var(--text-secondary);
+              margin-bottom: 1rem;
+            }
+
+            .offline-error__details {
+              background: var(--background-tertiary);
+              padding: 1rem;
+              border-radius: 0.25rem;
+              font-size: 0.875rem;
+              color: var(--text-secondary);
+              text-align: left;
+              overflow-x: auto;
+              margin-bottom: 1rem;
+            }
+
+            .offline-error__button {
+              padding: 0.5rem 1rem;
+              border-radius: 0.25rem;
+              background: var(--primary);
+              color: white;
+              border: none;
+              font-size: 0.875rem;
+              cursor: pointer;
+              transition: background 0.2s ease;
+            }
+
+            .offline-error__button:hover {
+              background: var(--primary-dark);
+            }
+          `}</style>
+        </div>
       );
     }
 
@@ -65,33 +143,121 @@ export class OfflineErrorBoundary extends Component<Props, State> {
   }
 }
 
-export function OfflineErrorHandler({ children }: { children: ReactNode }) {
-  const { isOnline } = useOffline();
+export function OfflineErrorHandler({
+  error,
+  reset
+}: {
+  error: Error;
+  reset: () => void;
+}) {
+  const offlineError = error instanceof OfflineError
+    ? error
+    : new OfflineError(error.message, { cause: error });
 
-  if (!isOnline) {
-    return (
-      <Card className="max-w-md mx-auto mt-8">
-        <CardHeader>
-          <CardTitle className="flex items-center text-warning">
-            <AlertCircle className="mr-2 h-5 w-5" />
-            You're offline
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">
-            Please check your internet connection and try again
-          </p>
-          <Button
-            onClick={() => window.location.reload()}
-            variant="outline"
-            className="w-full"
+  return (
+    <div className="offline-error-handler">
+      <div className="offline-error-handler__content">
+        <div className="offline-error-handler__icon">⚠️</div>
+        <h2 className="offline-error-handler__title">Offline Error</h2>
+        <p className="offline-error-handler__message">
+          {offlineError.message}
+        </p>
+        {offlineError.options.details && (
+          <pre className="offline-error-handler__details">
+            {JSON.stringify(offlineError.options.details, null, 2)}
+          </pre>
+        )}
+        <div className="offline-error-handler__actions">
+          <button
+            className="offline-error-handler__button offline-error-handler__button--primary"
+            onClick={reset}
           >
-            Retry Connection
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
+            Try Again
+          </button>
+          <button
+            className="offline-error-handler__button"
+            onClick={() => window.location.reload()}
+          >
+            Reload Page
+          </button>
+        </div>
+      </div>
 
-  return <OfflineErrorBoundary>{children}</OfflineErrorBoundary>;
+      <style jsx>{`
+        .offline-error-handler {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 400px;
+          padding: 2rem;
+          background: var(--background-secondary);
+          border-radius: 0.5rem;
+        }
+
+        .offline-error-handler__content {
+          text-align: center;
+          max-width: 32rem;
+        }
+
+        .offline-error-handler__icon {
+          font-size: 3rem;
+          margin-bottom: 1rem;
+        }
+
+        .offline-error-handler__title {
+          font-size: 1.5rem;
+          font-weight: 600;
+          color: var(--text-primary);
+          margin-bottom: 0.5rem;
+        }
+
+        .offline-error-handler__message {
+          color: var(--text-secondary);
+          margin-bottom: 1rem;
+        }
+
+        .offline-error-handler__details {
+          background: var(--background-tertiary);
+          padding: 1rem;
+          border-radius: 0.25rem;
+          font-size: 0.875rem;
+          color: var(--text-secondary);
+          text-align: left;
+          overflow-x: auto;
+          margin-bottom: 1rem;
+        }
+
+        .offline-error-handler__actions {
+          display: flex;
+          gap: 0.5rem;
+          justify-content: center;
+        }
+
+        .offline-error-handler__button {
+          padding: 0.5rem 1rem;
+          border-radius: 0.25rem;
+          background: var(--background-primary);
+          color: var(--text-primary);
+          border: 1px solid var(--border-color);
+          font-size: 0.875rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .offline-error-handler__button:hover {
+          background: var(--background-secondary);
+        }
+
+        .offline-error-handler__button--primary {
+          background: var(--primary);
+          color: white;
+          border: none;
+        }
+
+        .offline-error-handler__button--primary:hover {
+          background: var(--primary-dark);
+        }
+      `}</style>
+    </div>
+  );
 }

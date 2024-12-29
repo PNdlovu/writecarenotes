@@ -1,257 +1,318 @@
-# Assessment Module Documentation
+# Assessment Module
 
 ## Overview
-The Assessment Module is a comprehensive system designed for care homes to manage, schedule, and track resident assessments. It provides tools for creating assessment templates, scheduling assessments, tracking completion, and analyzing assessment data.
+The Assessment Module provides comprehensive assessment capabilities across all care settings. It enables holistic evaluation, risk management, outcome measurement, and progress tracking while ensuring regulatory compliance and evidence-based practice across all regions and care types.
 
-## Core Components
+## Care Types Support
 
-### 1. Assessment Dashboard
-The main interface for managing assessments, providing:
-- Overview of all assessments
-- Filtering by status, priority, and timeframe
-- Quick access to assessment details
-- Visual status indicators
+### 1. Elderly Care
+- Pre-admission assessment
+- Initial needs assessment
+- Mental capacity assessment
+- Physical health assessment
+- Mental health screening
+- Nutrition/MUST assessment
+- Falls risk assessment
+- Pressure care risk
+- Continence assessment
+- Pain assessment
+- Mobility assessment
+- Cognitive assessment
+- Social needs assessment
+- End of life preferences
+- Cultural assessment
+- Religious needs
+- Communication needs
+- Environmental assessment
 
-### 2. Assessment Forms
-#### Creation Form
-- Title and type selection
-- Dynamic section and question creation
-- Multiple question types support
-- Validation rules
-- Optional requirements (witnessing, attachments)
+### 2. Children's Services (Ofsted Regulated)
+- Pre-placement assessment
+- Educational assessment
+- Developmental assessment
+- Behavioral assessment
+- Emotional assessment
+- Safeguarding assessment
+- Risk assessment
+- Health assessment
+- Social needs assessment
+- Family assessment
+- Cultural assessment
+- Identity needs
+- Communication assessment
+- Life skills assessment
+- Independence assessment
+- Educational needs
+- Therapeutic needs
+- Placement suitability
 
-#### Completion Form
-- Dynamic form generation
-- Support for various question types:
-  - Text input
-  - Checkboxes
-  - Select options
-  - Scale ratings
-- File attachment handling
-- Witness signature support
-- Completion notes
+### 3. Specialist Care
+- Clinical assessments
+- Specialist evaluations
+- Mental health assessment
+- Behavioral assessment
+- Risk assessment
+- Treatment needs
+- Therapy requirements
+- Equipment needs
+- Environmental assessment
+- Communication needs
+- Sensory assessment
+- Physical assessment
+- Psychological assessment
+- Social assessment
+- Cultural assessment
+- Support requirements
+- Crisis management
+- Transition planning
 
-### 3. Template Management
-- Create and manage assessment templates
-- Template categories and types
-- Question bank
-- Template versioning
-- Active/Inactive status
-- Usage tracking
+### 4. Additional Services
+- Day care assessment
+- Community support needs
+- Transport requirements
+- Activity assessment
+- Social needs
+- Support requirements
+- Environmental access
+- Equipment needs
+- Risk assessment
+- Cultural needs
+- Communication needs
+- Resource requirements
+- Access requirements
+- Support planning
+- Review schedules
+- Progress monitoring
 
-### 4. Assessment Scheduler
-- Calendar view
-- List view
-- Recurring assessment setup
-- Staff assignment
-- Due date management
-- Priority settings
+## Regional Compliance
 
-### 5. Analytics Dashboard
-- Completion rates
-- Overdue assessments
-- Staff performance
-- Assessment trends
-- Custom date ranges
-- Exportable reports
+### 1. England
+- CQC assessment standards
+- Ofsted assessment frameworks
+- NICE guidelines
+- Mental Capacity Act
+- DoLS requirements
+- Safeguarding protocols
+- Quality measures
+- Evidence requirements
+- Assessment timeframes
+- Review periods
 
-## Technical Implementation
+### 2. Wales
+- CIW assessment standards
+- Welsh assessment frameworks
+- Mental Capacity Act
+- DoLS requirements
+- Safeguarding protocols
+- Welsh language requirements
+- Quality measures
+- Evidence standards
+- Assessment periods
+- Review timeframes
 
-### API Endpoints
+### 3. Scotland
+- Care Inspectorate standards
+- Scottish frameworks
+- Adults with Incapacity
+- Protection frameworks
+- Quality standards
+- Evidence requirements
+- Assessment timeframes
+- Review periods
+- Local requirements
+- National standards
 
-#### Assessments
-```typescript
-GET    /api/assessments
-POST   /api/assessments
-PUT    /api/assessments?id={id}
-DELETE /api/assessments?id={id}
-```
+### 4. Northern Ireland
+- RQIA assessment standards
+- Regional frameworks
+- Mental Capacity Act
+- Safeguarding requirements
+- Quality measures
+- Evidence standards
+- Assessment timeframes
+- Review periods
+- Cross-border considerations
+- Regional requirements
 
-#### Templates
-```typescript
-GET    /api/assessments/templates
-POST   /api/assessments/templates
-PUT    /api/assessments/templates?id={id}
-DELETE /api/assessments/templates?id={id}
-```
+### 5. Republic of Ireland
+- HIQA assessment standards
+- National frameworks
+- Capacity legislation
+- Safeguarding protocols
+- Quality measures
+- Evidence requirements
+- Assessment timeframes
+- Review periods
+- National standards
+- Local requirements
 
-#### Schedule
-```typescript
-GET    /api/assessments/schedule
-POST   /api/assessments/schedule
-PUT    /api/assessments/schedule?id={id}
-DELETE /api/assessments/schedule?id={id}
-```
+## Core Features
 
-### Database Schema
+### 1. Basic Features
+- Assessment templates
+- Risk assessment tools
+- Outcome measures
+- Progress tracking
+- Document management
+- Review scheduling
+- Basic reporting
+- Task allocation
+- Evidence collection
+- Photo capture
+- Notes recording
+- Action planning
+- Referral management
+- Review tracking
 
-#### Assessment
-```prisma
-model Assessment {
-  id                 String      @id @default(cuid())
-  title             String
-  type              String
-  residentId        String
-  dueDate           DateTime
-  status            String
-  priority          String
-  description       String?
-  sections          Json
-  requiresWitnessing Boolean
-  attachmentsRequired Boolean
-  completedById     String?
-  completedAt       DateTime?
-  witnessId         String?
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+### 2. Advanced Features
+- Outcome analytics
+- Trend analysis
+- Predictive assessment
+- Advanced reporting
+- Assessment mapping
+- Impact measurement
+- Quality monitoring
+- KPI tracking
+- Benchmarking
+- Performance metrics
+- Risk prediction
+- Progress analytics
+- Outcome forecasting
+- Service optimization
 
-  resident          Resident    @relation(fields: [residentId], references: [id])
-  completedBy       User?       @relation("CompletedBy", fields: [completedById], references: [id])
-  witness           User?       @relation("Witness", fields: [witnessId], references: [id])
-}
-```
+### 3. Care-Type Specific Features
+- Specialized assessments
+- Custom templates
+- Service-specific tools
+- Outcome measures
+- Progress indicators
+- Special requirements
+- Custom reporting
+- Service standards
+- Risk frameworks
+- Quality measures
+- Evidence collection
+- Professional standards
 
-#### AssessmentTemplate
-```prisma
-model AssessmentTemplate {
-  id               String    @id @default(cuid())
-  title            String
-  type             String
-  category         String
-  frequency        String
-  sections         Json
-  isActive         Boolean   @default(true)
-  createdById      String
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+### 4. Regional-Specific Features
+- Local requirements
+- Regional reporting
+- Language compliance
+- Cultural adaptation
+- Authority liaison
+- Regional analytics
+- Local protocols
+- Cross-border management
+- National standards
+- Local frameworks
 
-  createdBy        User      @relation(fields: [createdById], references: [id])
-}
-```
+## Technical Requirements
 
-#### ScheduledAssessment
-```prisma
-model ScheduledAssessment {
-  id               String    @id @default(cuid())
-  templateId       String
-  residentId       String
-  dueDate          DateTime
-  status           String
-  priority         String
-  assignedToId     String?
-  createdById      String
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+### 1. Offline Capabilities
+- Assessment completion
+- Risk assessment tools
+- Evidence collection
+- Photo capture
+- Basic reporting
+- Document access
+- Progress notes
+- Action planning
+- Contact information
+- Emergency protocols
 
-  template         AssessmentTemplate @relation(fields: [templateId], references: [id])
-  resident         Resident    @relation(fields: [residentId], references: [id])
-  assignedTo       User?       @relation("AssignedTo", fields: [assignedToId], references: [id])
-  createdBy        User        @relation(fields: [createdById], references: [id])
-  recurringPattern RecurringPattern?
-}
-```
+### 2. Multi-Language Support
+- English (Default)
+- Welsh (Full support)
+- Irish
+- Scottish Gaelic
+- Assessment tools
+- Documentation
+- Reports
+- Communications
+- User interfaces
+- Support materials
 
-## Features
+### 3. Security & Compliance
+- Role-based access
+- Data encryption
+- Audit trails
+- Evidence security
+- Document control
+- Version control
+- Access logging
+- Data protection
+- GDPR compliance
+- Information governance
 
-### Core Features
-1. **Assessment Management**
-   - Create, edit, and delete assessments
-   - Track assessment status
-   - Attach files and documents
-   - Record completion details
+### 4. Integration Points
+- Care planning
+- Risk management
+- Staff management
+- Medical records
+- Medication management
+- Activity planning
+- Family portal
+- External agencies
+- Healthcare systems
+- Professional bodies
 
-2. **Template System**
-   - Reusable assessment templates
-   - Multiple question types
-   - Section organization
-   - Template versioning
+## Implementation Phases
 
-3. **Scheduling**
-   - Calendar-based scheduling
-   - Recurring assessments
-   - Staff assignment
-   - Due date tracking
+### Phase 1: Core Implementation
+1. Basic assessments
+2. Risk assessments
+3. Evidence collection
+4. Review scheduling
+5. Action planning
+6. Basic reporting
 
-4. **Completion Workflow**
-   - Step-by-step completion
-   - Required field validation
-   - Witness signatures
-   - File attachments
+### Phase 2: Enhanced Features
+1. Advanced analytics
+2. Outcome tracking
+3. Quality monitoring
+4. Trend analysis
+5. Integration expansion
+6. Advanced reporting
 
-5. **Analytics**
-   - Completion rates
-   - Staff performance
-   - Assessment trends
-   - Custom reporting
+### Phase 3: Advanced Features
+1. AI-powered insights
+2. Predictive assessment
+3. Advanced automation
+4. Machine learning
+5. Clinical support
+6. Strategic planning
 
-### Additional Features
-1. **Automation**
-   - Automatic scheduling
-   - Due date reminders
-   - Status updates
-   - Email notifications
+## Maintenance & Support
 
-2. **Integration**
-   - Care plan integration
-   - Document management
-   - Staff scheduling
-   - Resident records
+### 1. Regular Maintenance
+- Template updates
+- Assessment updates
+- Compliance updates
+- Security patches
+- Performance optimization
+- Feature enhancements
+- Content updates
+- Framework revisions
 
-3. **Compliance**
-   - Audit trails
-   - Version history
-   - Electronic signatures
-   - Data retention
+### 2. Support Requirements
+- Clinical support
+- Technical support
+- Training support
+- Assessment support
+- User support
+- Emergency support
+- Quality assurance
+- Compliance guidance
 
-## Best Practices
-
-### Assessment Creation
-1. Use clear, concise titles
-2. Organize questions logically
-3. Include relevant instructions
-4. Set appropriate due dates
-5. Assign correct priorities
-
-### Template Management
-1. Standardize question formats
-2. Review templates regularly
-3. Archive unused templates
-4. Maintain version control
-5. Document template changes
-
-### Scheduling
-1. Consider staff workload
-2. Set realistic deadlines
-3. Account for holidays
-4. Plan for contingencies
-5. Monitor completion rates
-
-### Data Security
-1. Enforce access controls
-2. Maintain audit trails
-3. Secure file storage
-4. Regular backups
-5. Data encryption
-
-## Support and Maintenance
-
-### Regular Tasks
-1. Template reviews
-2. Data cleanup
-3. Performance monitoring
-4. User training
-5. System updates
-
-### Troubleshooting
-1. Check permissions
-2. Verify data integrity
-3. Monitor error logs
-4. Test integrations
-5. Update documentation
-
-## Future Enhancements
-1. Mobile app support
-2. Advanced analytics
-3. AI-powered insights
-4. Integration expansion
-5. Workflow automation
+## Future Considerations
+- AI-powered assessments
+- Machine learning insights
+- Automated analysis
+- Real-time monitoring
+- Predictive analytics
+- Virtual assessments
+- Remote evaluations
+- Blockchain security
+- Advanced automation
+- Continuous improvement
+- Biometric integration
+- Environmental monitoring

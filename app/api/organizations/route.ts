@@ -1,97 +1,73 @@
-import { NextResponse } from 'next/server';
+/**
+ * @fileoverview Organizations API Routes
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Write Care Notes Team
+ * @copyright Write Care Notes Ltd
+ */
+
+import { NextRequest, NextResponse } from 'next/server';
 import { organizationService } from '@/features/organizations/services/organizationService';
-import { OrganizationAnalyticsService } from '@/features/organizations/services/analyticsService';
-import { auth } from '@/lib/auth';
+import { validateRequest } from '@/lib/validation';
+import { CreateOrganizationInput } from '@/features/organizations/types/organization.types';
+import { getTenantContext } from '@/lib/tenant';
 
-const analyticsService = new OrganizationAnalyticsService();
-
-export async function GET(req: Request) {
+/**
+ * GET /api/organizations
+ * List organizations with pagination and filtering
+ */
+export async function GET(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session) {
-      return new NextResponse('Unauthorized', { status: 401 });
-    }
+    const searchParams = request.nextUrl.searchParams;
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '10');
+    const status = searchParams.get('status');
+    const region = searchParams.get('region');
+    const type = searchParams.get('type');
+    const search = searchParams.get('search');
+    const sortBy = searchParams.get('sortBy');
+    const sortOrder = searchParams.get('sortOrder') as 'asc' | 'desc';
 
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get('id');
-    const page = searchParams.get('page');
-    const limit = searchParams.get('limit');
+    const context = await getTenantContext(request);
+    const result = await organizationService.listOrganizations({
+      page,
+      limit,
+      status,
+      region,
+      type,
+      search,
+      sortBy,
+      sortOrder
+    }, context);
 
-    if (id) {
-      const organization = await organizationService.getOrganization(id);
-      if (!organization) {
-        return new NextResponse('Organization not found', { status: 404 });
-      }
-      return NextResponse.json(organization);
-    }
-
-    const organizations = await organizationService.listOrganizations({
-      page: page ? parseInt(page) : undefined,
-      limit: limit ? parseInt(limit) : undefined,
-    });
-
-    return NextResponse.json(organizations);
+    return NextResponse.json(result);
   } catch (error) {
-    console.error('Error in GET /api/organizations:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    console.error('Failed to fetch organizations:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch organizations' },
+      { status: 500 }
+    );
   }
 }
 
-export async function POST(req: Request) {
+/**
+ * POST /api/organizations
+ * Create a new organization
+ */
+export async function POST(request: NextRequest) {
   try {
-    const session = await auth();
-    if (!session) {
-      return new NextResponse('Unauthorized', { status: 401 });
-    }
+    const data = await request.json();
+    await validateRequest<CreateOrganizationInput>(data);
+    
+    const context = await getTenantContext(request);
+    const organization = await organizationService.createOrganization(data, context);
 
-    const body = await req.json();
-    const organization = await organizationService.createOrganization(body);
-    return NextResponse.json(organization);
+    return NextResponse.json(organization, { status: 201 });
   } catch (error) {
-    console.error('Error in POST /api/organizations:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
-  }
-}
-
-export async function PUT(req: Request) {
-  try {
-    const session = await auth();
-    if (!session) {
-      return new NextResponse('Unauthorized', { status: 401 });
-    }
-
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get('id');
-    if (!id) {
-      return new NextResponse('Organization ID is required', { status: 400 });
-    }
-
-    const body = await req.json();
-    const organization = await organizationService.updateOrganization(id, body);
-    return NextResponse.json(organization);
-  } catch (error) {
-    console.error('Error in PUT /api/organizations:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
-  }
-}
-
-export async function DELETE(req: Request) {
-  try {
-    const session = await auth();
-    if (!session) {
-      return new NextResponse('Unauthorized', { status: 401 });
-    }
-
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get('id');
-    if (!id) {
-      return new NextResponse('Organization ID is required', { status: 400 });
-    }
-
-    await organizationService.deleteOrganization(id);
-    return new NextResponse(null, { status: 204 });
-  } catch (error) {
-    console.error('Error in DELETE /api/organizations:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    console.error('Failed to create organization:', error);
+    return NextResponse.json(
+      { error: 'Failed to create organization' },
+      { status: 500 }
+    );
   }
 } 

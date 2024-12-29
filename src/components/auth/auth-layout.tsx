@@ -3,7 +3,13 @@
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+interface AuthLayoutProps {
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}
+
+export function AuthLayout({ title, description, children }: AuthLayoutProps) {
   const { data: session, status } = useSession();
 
   if (status === 'loading') {
@@ -24,10 +30,18 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           src="/logo.svg"
           alt="Care Home Management"
         />
+        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          {title}
+        </h2>
+        <p className="mt-2 text-center text-sm text-gray-600">
+          {description}
+        </p>
       </div>
-      {children}
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+          {children}
+        </div>
+      </div>
     </div>
   );
 }
-
-

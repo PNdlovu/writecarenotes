@@ -6,10 +6,14 @@ import { useRouter, usePathname } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { CalendarPlusIcon } from '@heroicons/react/24/outline';
 import { AppProviders } from '@/components/providers/AppProviders';
+import { useActivities } from '../hooks/useActivities';
+import { ActivityCalendar } from './ActivityCalendar';
+import { ActivityFilter } from '../types';
 
 export function ActivitiesManagement() {
   const { data: session } = useSession();
   const [showAddActivity, setShowAddActivity] = useState(false);
+  const [filter, setFilter] = useState<ActivityFilter>({});
   const pathname = usePathname();
   const router = useRouter();
 
@@ -19,6 +23,30 @@ export function ActivitiesManagement() {
         <div className="text-center">
           <h2 className="text-2xl font-semibold text-gray-900">No Organization Found</h2>
           <p className="mt-2 text-gray-600">Please contact your administrator.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const { 
+    activities, 
+    loading, 
+    error,
+    createActivity,
+    updateActivity,
+    deleteActivity 
+  } = useActivities({
+    autoSync: true,
+    filter,
+    careHomeId: session?.user?.careHomeId
+  });
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold text-red-600">Error Loading Activities</h2>
+          <p className="mt-2 text-gray-600">{error.message}</p>
         </div>
       </div>
     );
@@ -65,12 +93,18 @@ export function ActivitiesManagement() {
         </nav>
 
         <div className="mt-6">
-          {/* Calendar/Activities will go here */}
-          <div className="bg-white shadow-sm ring-1 ring-gray-900/5 rounded-lg">
-            <div className="p-6">
-              <p className="text-gray-500 text-center">Loading activities calendar...</p>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
             </div>
-          </div>
+          ) : (
+            <ActivityCalendar
+              activities={activities}
+              onActivityClick={(activity) => {
+                router.push(`${pathname}/${activity.id}`);
+              }}
+            />
+          )}
         </div>
 
         {/* Add Activity Modal will go here */}
@@ -78,5 +112,3 @@ export function ActivitiesManagement() {
     </AppProviders>
   );
 } 
-
-

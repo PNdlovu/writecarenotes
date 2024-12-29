@@ -10,9 +10,12 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { User } from '@supabase/supabase-js'
-import { AuthService } from '../services/authService'
 import { useRouter } from 'next/navigation'
+
+interface User {
+  id: string
+  email: string
+}
 
 interface AuthContextType {
   user: User | null
@@ -32,78 +35,45 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [profile, setProfile] = useState<any | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const authService = new AuthService()
 
   useEffect(() => {
-    checkUser()
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) {
-        setUser(session.user)
-        fetchProfile(session.user.id)
-      } else {
-        setUser(null)
-        setProfile(null)
+    // Check if user is logged in
+    const checkAuth = async () => {
+      try {
+        // Add your auth check logic here
+        setLoading(false)
+      } catch (error) {
+        console.error('Auth check failed:', error)
+        setLoading(false)
       }
-      setLoading(false)
-    })
-
-    return () => {
-      subscription.unsubscribe()
     }
+
+    checkAuth()
   }, [])
 
-  async function checkUser() {
+  const signIn = async (email: string, password: string, region: string) => {
     try {
-      const session = await authService.getSession()
-      if (session?.user) {
-        setUser(session.user)
-        await fetchProfile(session.user.id)
-      }
-    } catch (error) {
-      console.error('Error checking user session:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  async function fetchProfile(userId: string) {
-    try {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single()
-      setProfile(profile)
-    } catch (error) {
-      console.error('Error fetching user profile:', error)
-    }
-  }
-
-  async function signIn(email: string, password: string, region: string) {
-    try {
-      const { user: authUser, profile: userProfile } = await authService.signIn({ email, password, region })
-      setUser(authUser)
-      setProfile(userProfile)
+      // Add your sign in logic here
       router.push('/dashboard')
     } catch (error) {
       throw error
     }
   }
 
-  async function signUp(formData: any) {
+  const signUp = async (formData: any) => {
     try {
-      await authService.signUp(formData)
-      router.push('/verify-email')
+      // Add your sign up logic here
+      router.push('/dashboard')
     } catch (error) {
       throw error
     }
   }
 
-  async function signOut() {
+  const signOut = async () => {
     try {
-      await authService.signOut()
+      // Add your sign out logic here
       setUser(null)
       setProfile(null)
       router.push('/')
@@ -112,54 +82,56 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  async function sendMagicLink(email: string, region: string) {
+  const sendMagicLink = async (email: string, region: string) => {
     try {
-      await authService.sendMagicLink({ email, region })
+      // Add your magic link logic here
     } catch (error) {
       throw error
     }
   }
 
-  async function verifyMagicLink(token: string) {
+  const verifyMagicLink = async (token: string) => {
     try {
-      await authService.verifyMagicLink(token)
-      router.push('/dashboard')
+      // Add your verify magic link logic here
     } catch (error) {
       throw error
     }
   }
 
-  async function resetPassword(email: string) {
+  const resetPassword = async (email: string) => {
     try {
-      await authService.resetPassword(email)
+      // Add your reset password logic here
     } catch (error) {
       throw error
     }
   }
 
-  async function updatePassword(password: string) {
+  const updatePassword = async (password: string) => {
     try {
-      await authService.updatePassword(password)
-      router.push('/dashboard')
+      // Add your update password logic here
     } catch (error) {
       throw error
     }
   }
 
-  const value = {
-    user,
-    profile,
-    loading,
-    signIn,
-    signUp,
-    signOut,
-    sendMagicLink,
-    verifyMagicLink,
-    resetPassword,
-    updatePassword,
-  }
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        profile,
+        loading,
+        signIn,
+        signUp,
+        signOut,
+        sendMagicLink,
+        verifyMagicLink,
+        resetPassword,
+        updatePassword,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export function useAuth() {
@@ -168,4 +140,4 @@ export function useAuth() {
     throw new Error('useAuth must be used within an AuthProvider')
   }
   return context
-} 
+}

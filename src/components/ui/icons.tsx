@@ -7,6 +7,8 @@ import {
   BarChart,
   ArrowRight,
   ExternalLink,
+  Eye,
+  EyeOff,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -21,6 +23,6 @@ export const Icons = {
   chartBar: BarChart,
   arrowRight: ArrowRight,
   externalLink: ExternalLink,
+  eye: Eye,
+  eyeOff: EyeOff,
 } as const;
-
-

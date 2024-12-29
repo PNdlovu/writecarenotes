@@ -11,33 +11,66 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 import { Button } from '@/components/ui/button'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { useToast } from '@/components/ui/use-toast'
+import { Icons } from '@/components/icons'
+
+const formSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+})
+
+type FormData = z.infer<typeof formSchema>
 
 export function MagicLinkForm() {
   const router = useRouter()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
-  const [email, setEmail] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: '',
+    },
+  })
+
+  async function onSubmit(data: FormData) {
     setIsLoading(true)
-
     try {
-      // TODO: Implement magic link logic
-      toast({
-        title: 'Success',
-        description: 'Check your email for the magic link.',
+      const response = await fetch('/api/auth/magic-link', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
       })
-      router.push('/check-email')
+
+      if (!response.ok) {
+        throw new Error('Failed to send magic link')
+      }
+
+      toast({
+        title: 'Check your email',
+        description: 'We have sent you a magic link to sign in.',
+      })
+
+      // Redirect to a confirmation page
+      router.push('/auth/magic-link/confirmation')
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Something went wrong. Please try again.',
+        description: 'Failed to send magic link. Please try again.',
         variant: 'destructive',
       })
     } finally {
@@ -46,31 +79,37 @@ export function MagicLinkForm() {
   }
 
   return (
-    <div className="space-y-6">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="name@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            disabled={isLoading}
-          />
-        </div>
-
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? 'Sending...' : 'Send Magic Link'}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="name@organization.com"
+                  {...field}
+                  type="email"
+                  disabled={isLoading}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button
+          type="submit"
+          className="w-full bg-[#34B5B5] hover:opacity-90"
+          disabled={isLoading}
+        >
+          {isLoading && (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+          )}
+          Send Magic Link
         </Button>
       </form>
-
-      <div className="text-center text-sm">
-        <Link href="/signin" className="text-primary hover:underline">
-          Back to Sign In
-        </Link>
-      </div>
-    </div>
+    </Form>
   )
-} 
+}

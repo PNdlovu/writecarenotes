@@ -7,8 +7,8 @@
 // Types
 export * from './types/organization.types';
 
-// API Client
-export * from './api/client';
+// API Routes
+export * from './api/routes';
 
 // Services
 export { OrganizationService } from './services/organizationService';

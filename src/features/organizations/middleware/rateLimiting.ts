@@ -1,78 +1,130 @@
 /**
- * WriteCareNotes.com
- * @fileoverview Rate Limiting Middleware
+ * @fileoverview Rate limiting middleware for organization endpoints
  * @version 1.0.0
+ * @created 2024-03-21
  */
 
-import { NextResponse } from 'next/server';
-import { RateLimitError } from '@/lib/errors';
-import { tenantContext } from '@/lib/tenant';
+import { NextRequest, NextResponse } from 'next/server';
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
+import { TenantContext } from '@/lib/tenant';
 
-const RATE_LIMITS = {
-  'BASIC': {
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
-  },
-  'PROFESSIONAL': {
-    windowMs: 15 * 60 * 1000,
-    max: 300
-  },
-  'ENTERPRISE': {
-    windowMs: 15 * 60 * 1000,
-    max: 1000
-  }
+// Create Redis instance
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
+
+// Create rate limiter instances for different endpoints
+const rateLimiters = {
+  // General API endpoints: 100 requests per minute
+  default: new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(100, '1 m'),
+    analytics: true,
+    prefix: 'ratelimit:org:default',
+  }),
+
+  // Create/Update operations: 20 requests per minute
+  write: new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(20, '1 m'),
+    analytics: true,
+    prefix: 'ratelimit:org:write',
+  }),
+
+  // Analytics endpoints: 30 requests per minute
+  analytics: new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(30, '1 m'),
+    analytics: true,
+    prefix: 'ratelimit:org:analytics',
+  }),
 };
 
-// In-memory store for rate limiting
-// In production, use Redis or similar
-const store = new Map<string, { count: number; resetTime: number }>();
-
-export async function rateLimiter(req: Request) {
+/**
+ * Rate limiting middleware for organization endpoints
+ */
+export async function organizationRateLimiting(
+  request: NextRequest,
+  context: TenantContext
+) {
   try {
-    const context = tenantContext.getContext();
-    const ip = req.headers.get('x-forwarded-for') || 'unknown';
-    const key = `${context.tenantId}:${ip}`;
-    
-    // Get rate limit based on subscription plan
-    const plan = context.subscription.plan.toUpperCase();
-    const limit = RATE_LIMITS[plan] || RATE_LIMITS.BASIC;
-    
-    const now = Date.now();
-    const windowStart = now - limit.windowMs;
-    
-    // Clean up old entries
-    for (const [storedKey, data] of store.entries()) {
-      if (data.resetTime < windowStart) {
-        store.delete(storedKey);
-      }
+    const identifier = `${context.tenantId}:${context.userId}`;
+    const path = request.nextUrl.pathname;
+    const method = request.method;
+
+    // Select appropriate rate limiter based on endpoint
+    let rateLimiter = rateLimiters.default;
+
+    if (path.includes('/analytics')) {
+      rateLimiter = rateLimiters.analytics;
+    } else if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+      rateLimiter = rateLimiters.write;
     }
-    
-    // Get or create rate limit entry
-    const entry = store.get(key) || { count: 0, resetTime: now + limit.windowMs };
-    
-    // Check if limit exceeded
-    if (entry.count >= limit.max) {
-      throw new RateLimitError('Rate limit exceeded');
-    }
-    
-    // Update count
-    entry.count++;
-    store.set(key, entry);
-    
-    // Set rate limit headers
-    const headers = new Headers();
-    headers.set('X-RateLimit-Limit', limit.max.toString());
-    headers.set('X-RateLimit-Remaining', (limit.max - entry.count).toString());
-    headers.set('X-RateLimit-Reset', entry.resetTime.toString());
-    
-    return { headers };
-  } catch (error) {
-    if (error instanceof RateLimitError) {
+
+    // Check rate limit
+    const { success, limit, reset, remaining } = await rateLimiter.limit(identifier);
+
+    if (!success) {
       return NextResponse.json(
-        { error: error.message },
-        { status: 429, headers: { 'Retry-After': '900' } } // 15 minutes
+        {
+          error: 'Rate limit exceeded',
+          limit,
+          reset,
+          remaining,
+        },
+        {
+          status: 429,
+          headers: {
+            'X-RateLimit-Limit': limit.toString(),
+            'X-RateLimit-Remaining': remaining.toString(),
+            'X-RateLimit-Reset': reset.toString(),
+          },
+        }
       );
     }
-    throw error;
+
+    // Add rate limit headers to successful responses
+    const response = NextResponse.next();
+    response.headers.set('X-RateLimit-Limit', limit.toString());
+    response.headers.set('X-RateLimit-Remaining', remaining.toString());
+    response.headers.set('X-RateLimit-Reset', reset.toString());
+
+    return response;
+  } catch (error) {
+    console.error('Rate limiting error:', error);
+    // Allow request to proceed if rate limiting fails
+    return NextResponse.next();
   }
+}
+
+/**
+ * Get current rate limit status for a tenant/user
+ */
+export async function getRateLimitStatus(context: TenantContext) {
+  const identifier = `${context.tenantId}:${context.userId}`;
+  const status = {
+    default: await rateLimiters.default.pending(identifier),
+    write: await rateLimiters.write.pending(identifier),
+    analytics: await rateLimiters.analytics.pending(identifier),
+  };
+
+  return {
+    default: {
+      remaining: status.default.remaining,
+      reset: status.default.reset,
+      limit: status.default.limit,
+    },
+    write: {
+      remaining: status.write.remaining,
+      reset: status.write.reset,
+      limit: status.write.limit,
+    },
+    analytics: {
+      remaining: status.analytics.remaining,
+      reset: status.analytics.reset,
+      limit: status.analytics.limit,
+    },
+  };
 } 

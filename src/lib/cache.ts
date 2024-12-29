@@ -1,64 +1,56 @@
-import Redis from 'ioredis';
-import { CacheConfig } from '@/features/carehome/types/carehome.types';
+/**
+ * @fileoverview Cache utility for server-side caching
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Philani Ndlovu
+ * @copyright Write Care Notes Ltd
+ */
 
-const redis = new Redis({
-  host: process.env.REDIS_HOST || 'localhost',
-  port: parseInt(process.env.REDIS_PORT || '6379'),
-  password: process.env.REDIS_PASSWORD,
-});
+interface CacheItem<T> {
+  value: T;
+  expiry: number;
+}
 
-export class CacheService {
-  private static instance: CacheService;
-  private client: Redis;
+class Cache {
+  private store: Map<string, CacheItem<any>>;
+  private defaultTTL: number;
 
-  private constructor() {
-    this.client = redis;
+  constructor(defaultTTL = 5 * 60 * 1000) { // 5 minutes default TTL
+    this.store = new Map();
+    this.defaultTTL = defaultTTL;
   }
 
-  public static getInstance(): CacheService {
-    if (!CacheService.instance) {
-      CacheService.instance = new CacheService();
-    }
-    return CacheService.instance;
+  set<T>(key: string, value: T, ttl = this.defaultTTL): void {
+    this.store.set(key, {
+      value,
+      expiry: Date.now() + ttl
+    });
   }
 
-  async get<T>(key: string): Promise<T | null> {
-    try {
-      const data = await this.client.get(key);
-      return data ? JSON.parse(data) : null;
-    } catch (error) {
-      console.error('Cache get error:', error);
+  get<T>(key: string): T | null {
+    const item = this.store.get(key);
+    
+    if (!item) return null;
+    
+    if (Date.now() > item.expiry) {
+      this.store.delete(key);
       return null;
     }
+    
+    return item.value;
   }
 
-  async set(key: string, value: any, config: Partial<CacheConfig> = {}): Promise<void> {
-    try {
-      const ttl = config.ttl || 3600; // Default 1 hour
-      await this.client.setex(key, ttl, JSON.stringify(value));
-    } catch (error) {
-      console.error('Cache set error:', error);
-    }
+  delete(key: string): void {
+    this.store.delete(key);
   }
 
-  async delete(key: string): Promise<void> {
-    try {
-      await this.client.del(key);
-    } catch (error) {
-      console.error('Cache delete error:', error);
-    }
+  clear(): void {
+    this.store.clear();
   }
+}
 
-  async invalidatePattern(pattern: string): Promise<void> {
-    try {
-      const keys = await this.client.keys(pattern);
-      if (keys.length > 0) {
-        await this.client.del(...keys);
-      }
-    } catch (error) {
-      console.error('Cache invalidate pattern error:', error);
-    }
-  }
-} 
+export const cache = new Cache();
+export default cache; 
+
 
 

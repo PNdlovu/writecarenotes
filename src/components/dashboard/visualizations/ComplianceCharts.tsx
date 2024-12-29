@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { ChartConfig, ComplianceMetrics } from './types';
 import { Progress, ProgressProps } from '@/components/ui/progress';
@@ -30,13 +32,26 @@ const ComplianceBar = ({ label, value, animationState, ...props }: ComplianceBar
 
 export const ComplianceCharts = ({
   config,
-  metrics,
+  metrics = [],
+  locale,
 }: {
   config: ChartConfig;
-  metrics: ComplianceMetrics;
+  metrics: any[];
+  locale?: {
+    language: string;
+    region: string;
+    currency: string;
+    timezone: string;
+  };
 }) => {
   const [animationState, setAnimationState] = useState('idle');
-  const [localMetrics, setLocalMetrics] = useState<ComplianceMetrics>(metrics);
+  const [localMetrics, setLocalMetrics] = useState<ComplianceMetrics>({
+    cqc: 0,
+    ciw: 0,
+    rqia: 0,
+    careInspectorate: 0,
+    hiqa: 0
+  });
 
   useEffect(() => {
     // Handle offline support
@@ -46,8 +61,10 @@ export const ComplianceCharts = ({
         setLocalMetrics(JSON.parse(cached));
       }
     } else {
-      setLocalMetrics(metrics);
-      localStorage.setItem('compliance-metrics', JSON.stringify(metrics));
+      // If metrics array is empty, use default values
+      const metricsData = metrics.length > 0 ? metrics[0] : localMetrics;
+      setLocalMetrics(metricsData);
+      localStorage.setItem('compliance-metrics', JSON.stringify(metricsData));
     }
 
     // Animation sequence
@@ -58,13 +75,14 @@ export const ComplianceCharts = ({
     return () => clearTimeout(timer);
   }, [metrics]);
 
+  // Filter compliance data based on region
   const complianceData = [
-    { key: 'cqc', label: 'CQC Compliance', value: metrics.cqc },
-    { key: 'ciw', label: 'CIW Compliance', value: metrics.ciw },
-    { key: 'rqia', label: 'RQIA Compliance', value: metrics.rqia },
-    { key: 'careInspectorate', label: 'Care Inspectorate', value: metrics.careInspectorate },
-    { key: 'hiqa', label: 'HIQA Compliance', value: metrics.hiqa },
-  ];
+    { key: 'cqc', label: 'CQC Compliance', value: localMetrics.cqc ?? 0, regions: ['ENGLAND'] },
+    { key: 'ciw', label: 'CIW Compliance', value: localMetrics.ciw ?? 0, regions: ['WALES'] },
+    { key: 'rqia', label: 'RQIA Compliance', value: localMetrics.rqia ?? 0, regions: ['NIRELAND'] },
+    { key: 'careInspectorate', label: 'Care Inspectorate', value: localMetrics.careInspectorate ?? 0, regions: ['SCOTLAND'] },
+    { key: 'hiqa', label: 'HIQA Compliance', value: localMetrics.hiqa ?? 0, regions: ['IRELAND'] },
+  ].filter(item => !locale?.region || item.regions.includes(locale.region));
 
   return (
     <div 
@@ -75,19 +93,15 @@ export const ComplianceCharts = ({
       role="region"
       aria-label="Compliance Metrics"
     >
-      {complianceData.map(({ key, label, value }) => 
-        value !== undefined && (
-          <ComplianceBar
-            key={key}
-            label={label}
-            value={value}
-            animationState={animationState}
-            aria-label={`${label} progress indicator`}
-          />
-        )
-      )}
+      {complianceData.map(({ key, label, value }) => (
+        <ComplianceBar
+          key={key}
+          label={label}
+          value={value}
+          animationState={animationState}
+          aria-label={`${label} progress indicator`}
+        />
+      ))}
     </div>
   );
-}; 
-
-
+};

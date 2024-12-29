@@ -17,9 +17,12 @@ export * from './components/ActivityCalendar';
 export * from './hooks/useActivities';
 
 // API
-export * as activitiesApi from './api/activities';
+export { ActivitiesAPI } from './api-client';
 
-// Utils
-export * from './utils/activityHelpers';
+// Services
+export * from './services/sync-service';
+
+// Schemas
+export * from './schemas';
 
 

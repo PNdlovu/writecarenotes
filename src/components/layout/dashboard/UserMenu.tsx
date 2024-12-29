@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 
-export default function UserMenu() {
+export function UserMenu() {
   const { data: session } = useSession();
 
   if (!session) {

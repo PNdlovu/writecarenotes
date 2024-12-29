@@ -7,6 +7,7 @@
 import { Organization } from '../validations/organizationValidation';
 import { organizationService } from '../services/organizationService';
 import { DatabaseError } from '@/lib/errors';
+import { TenantContext } from '@/lib/tenantContext';
 
 interface MigrationResult {
   success: boolean;
@@ -24,7 +25,8 @@ interface MigrationOptions {
 export async function migrateOrganization(
   organizationId: string,
   updates: Partial<Organization>,
-  options: MigrationOptions = {}
+  options: MigrationOptions = {},
+  context: TenantContext
 ): Promise<MigrationResult> {
   const changes: string[] = [];
   const errors: string[] = [];
@@ -38,7 +40,7 @@ export async function migrateOrganization(
 
     // Validate updates
     if (options.validateOnly || options.dryRun) {
-      await organizationService.validateCompliance(organizationId);
+      await organizationService.validateCompliance(organizationId, context);
       changes.push('Validation passed');
       
       if (options.validateOnly) {

@@ -1,65 +1,87 @@
-import type { Assessment, AssessmentFilters, CreateAssessmentData } from '../types';
+/**
+ * @fileoverview Assessment service for fetching and managing assessments
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Philani Ndlovu
+ * @copyright Write Care Notes Ltd
+ */
+
+import { prisma } from '@/lib/prisma';
+
+export interface Assessment {
+  id: string;
+  title: string;
+  type: string;
+  status: string;
+  residentId: string;
+  assessorId: string;
+  completedAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
 export const assessmentApi = {
-  async createAssessment(data: CreateAssessmentData): Promise<Assessment> {
-    const response = await fetch('/api/assessments', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to create assessment');
-    }
-    return response.json();
-  },
-
-  async updateAssessment(id: string, data: Partial<Assessment>): Promise<Assessment> {
-    const response = await fetch(`/api/assessments/${id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to update assessment');
-    }
-    return response.json();
-  },
-
-  async getAssessments(params?: { search?: string; category?: string }): Promise<Assessment[]> {
-    const searchParams = new URLSearchParams();
-    if (params?.search) searchParams.set('search', params.search);
-    if (params?.category) searchParams.set('category', params.category);
+  fetchAssessments: async (params: {
+    residentId?: string;
+    assessorId?: string;
+    status?: string;
+    type?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<{ assessments: Assessment[]; total: number }> => {
+    const { residentId, assessorId, status, type, page = 1, limit = 10 } = params;
     
-    const response = await fetch(`/api/assessments?${searchParams.toString()}`);
+    const where = {
+      ...(residentId && { residentId }),
+      ...(assessorId && { assessorId }),
+      ...(status && { status }),
+      ...(type && { type })
+    };
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch assessments');
-    }
-    return response.json();
+    const [assessments, total] = await Promise.all([
+      prisma.assessment.findMany({
+        where,
+        skip: (page - 1) * limit,
+        take: limit,
+        orderBy: { createdAt: 'desc' }
+      }),
+      prisma.assessment.count({ where })
+    ]);
+
+    return {
+      assessments: assessments as Assessment[],
+      total
+    };
   },
 
-  async getAssessmentById(id: string): Promise<Assessment> {
-    const response = await fetch(`/api/assessments/${id}`);
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch assessment');
-    }
-    return response.json();
-  },
-
-  async deleteAssessment(id: string): Promise<void> {
-    const response = await fetch(`/api/assessments/${id}`, {
-      method: 'DELETE',
+  getAssessment: async (id: string): Promise<Assessment | null> => {
+    const assessment = await prisma.assessment.findUnique({
+      where: { id }
     });
 
-    if (!response.ok) {
-      throw new Error('Failed to delete assessment');
-    }
+    return assessment as Assessment | null;
   },
+
+  createAssessment: async (data: Omit<Assessment, 'id' | 'createdAt' | 'updatedAt'>): Promise<Assessment> => {
+    const assessment = await prisma.assessment.create({
+      data
+    });
+
+    return assessment as Assessment;
+  },
+
+  updateAssessment: async (id: string, data: Partial<Assessment>): Promise<Assessment> => {
+    const assessment = await prisma.assessment.update({
+      where: { id },
+      data
+    });
+
+    return assessment as Assessment;
+  },
+
+  deleteAssessment: async (id: string): Promise<void> => {
+    await prisma.assessment.delete({
+      where: { id }
+    });
+  }
 };

@@ -1,333 +1,268 @@
 /**
  * @fileoverview Family Portal Service
  * @version 1.0.0
- * @created 2024-12-12
- * @copyright Phibu Cloud Solutions Ltd
- *
- * Description:
- * Business logic for Family Portal features including validation,
- * error handling, and cross-cutting concerns
+ * @created 2024-03-21
+ * @author Philani Ndlovu
+ * @copyright Write Care Notes Ltd
  */
 
-import { 
-  FamilyMember, 
-  CareNote, 
-  Visit, 
-  Document, 
-  Memory,
-  EmergencyContact,
-  CareTeamMember 
-} from '../types';
-import { FamilyPortalRepository } from '../database/repositories/familyPortalRepository';
-import { DomainError } from '@/lib/errors';
-import { validateResidentAccess } from '@/lib/auth';
-import { validateSchema } from '@/lib/validation';
-import { 
-  familyMemberSchema, 
-  careNoteSchema, 
-  visitSchema,
-  documentSchema,
-  memorySchema,
-  emergencyContactSchema
-} from '../types/schemas';
+import { AccessManagementService } from '@/features/access-management/services/AccessManagementService';
+import { SecurityConfig } from '@/features/access-management/types';
+
+interface FamilyMember {
+  id: string;
+  residentId: string;
+  userId: string;
+  relationship: string;
+  accessLevel: 'FULL' | 'LIMITED' | 'NONE';
+  status: 'ACTIVE' | 'INACTIVE' | 'PENDING';
+  invitedBy: string;
+  invitedAt: Date;
+  lastAccess?: Date;
+}
+
+interface FamilyPortalAccess {
+  id: string;
+  familyMemberId: string;
+  resourceType: string;
+  resourceId: string;
+  accessType: 'VIEW' | 'COMMENT' | 'FULL';
+  grantedBy: string;
+  grantedAt: Date;
+  expiresAt?: Date;
+  status: 'ACTIVE' | 'EXPIRED' | 'REVOKED';
+}
 
 export class FamilyPortalService {
-  private repository: FamilyPortalRepository;
+  private static instance: FamilyPortalService;
+  private accessService: AccessManagementService;
 
-  constructor() {
-    this.repository = new FamilyPortalRepository();
+  private constructor() {
+    const config: SecurityConfig = {
+      algorithm: 'aes-256-gcm',
+      ivLength: 16,
+      encryptionKey: Buffer.from(process.env.ENCRYPTION_KEY || '', 'base64'),
+      tokenSecret: process.env.JWT_SECRET || '',
+      tokenExpiry: 24 * 60 * 60,
+      mfaEnabled: true,
+      passwordPolicy: {
+        minLength: 12,
+        requireNumbers: true,
+        requireSpecialChars: true,
+        requireUppercase: true,
+        requireLowercase: true,
+        expiryDays: 90,
+        preventReuse: 5
+      }
+    };
+
+    this.accessService = new AccessManagementService(config);
   }
 
-  // Family Member Management
-  async getFamilyMembers(residentId: string, tenantId: string): Promise<FamilyMember[]> {
-    try {
-      await validateResidentAccess(residentId, tenantId);
-      return await this.repository.getFamilyMembers(residentId, tenantId);
-    } catch (error) {
-      throw new DomainError(
-        'Failed to retrieve family members',
-        'FAMILY_MEMBERS_RETRIEVAL_ERROR',
-        error
-      );
+  public static getInstance(): FamilyPortalService {
+    if (!FamilyPortalService.instance) {
+      FamilyPortalService.instance = new FamilyPortalService();
     }
+    return FamilyPortalService.instance;
   }
 
-  async updateFamilyMember(
-    memberId: string, 
-    data: Partial<FamilyMember>, 
-    tenantId: string
+  async initialize() {
+    await this.accessService.initialize();
+  }
+
+  async inviteFamilyMember(
+    residentId: string,
+    invitedBy: string,
+    relationship: string,
+    accessLevel: FamilyMember['accessLevel']
   ): Promise<FamilyMember> {
     try {
-      await validateSchema(familyMemberSchema, data);
-      return await this.repository.updateFamilyMember(memberId, data, tenantId);
+      // Check if user has permission to invite family members
+      const accessDecision = await this.accessService.checkAccess({
+        userId: invitedBy,
+        resourceType: 'family_portal',
+        resourceId: residentId,
+        action: 'invite'
+      });
+
+      if (!accessDecision.allowed) {
+        throw new Error('User does not have permission to invite family members');
+      }
+
+      // Create family member record
+      const familyMember: FamilyMember = {
+        id: crypto.randomUUID(),
+        residentId,
+        userId: crypto.randomUUID(), // This will be updated when the invitation is accepted
+        relationship,
+        accessLevel,
+        status: 'PENDING',
+        invitedBy,
+        invitedAt: new Date()
+      };
+
+      // Store family member in database
+      await fetch('/api/family-members', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(familyMember)
+      });
+
+      // Log the invitation
+      await this.accessService.auditLog({
+        action: 'FAMILY_MEMBER_INVITED',
+        description: `Family member invited for resident ${residentId}`,
+        userId: invitedBy,
+        tenantId: 'current-tenant-id', // Replace with actual tenant ID
+        timestamp: new Date(),
+        metadata: {
+          residentId,
+          relationship,
+          accessLevel
+        }
+      });
+
+      return familyMember;
     } catch (error) {
-      throw new DomainError(
-        'Failed to update family member',
-        'FAMILY_MEMBER_UPDATE_ERROR',
-        error
-      );
+      console.error('Failed to invite family member:', error);
+      throw error;
     }
   }
 
-  // Care Notes
-  async getCareNotes(
-    residentId: string,
-    tenantId: string,
-    filter?: { category?: string; visibility?: string }
-  ): Promise<CareNote[]> {
+  async grantAccess(
+    familyMemberId: string,
+    grantedBy: string,
+    resourceType: string,
+    resourceId: string,
+    accessType: FamilyPortalAccess['accessType']
+  ): Promise<FamilyPortalAccess> {
     try {
-      await validateResidentAccess(residentId, tenantId);
-      return await this.repository.getCareNotes(residentId, tenantId, filter);
+      // Check if user has permission to grant access
+      const accessDecision = await this.accessService.checkAccess({
+        userId: grantedBy,
+        resourceType: 'family_portal_access',
+        resourceId: 'global',
+        action: 'grant'
+      });
+
+      if (!accessDecision.allowed) {
+        throw new Error('User does not have permission to grant family portal access');
+      }
+
+      // Create access record
+      const access: FamilyPortalAccess = {
+        id: crypto.randomUUID(),
+        familyMemberId,
+        resourceType,
+        resourceId,
+        accessType,
+        grantedBy,
+        grantedAt: new Date(),
+        status: 'ACTIVE'
+      };
+
+      // Store access in database
+      await fetch('/api/family-portal-access', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(access)
+      });
+
+      // Log the access grant
+      await this.accessService.auditLog({
+        action: 'FAMILY_PORTAL_ACCESS_GRANTED',
+        description: `Family portal access granted for ${resourceType} ${resourceId}`,
+        userId: grantedBy,
+        tenantId: 'current-tenant-id', // Replace with actual tenant ID
+        timestamp: new Date(),
+        metadata: {
+          familyMemberId,
+          resourceType,
+          resourceId,
+          accessType
+        }
+      });
+
+      return access;
     } catch (error) {
-      throw new DomainError(
-        'Failed to retrieve care notes',
-        'CARE_NOTES_RETRIEVAL_ERROR',
-        error
-      );
+      console.error('Failed to grant family portal access:', error);
+      throw error;
     }
   }
 
-  async addCareNote(
-    residentId: string,
-    note: Omit<CareNote, 'id'>,
-    tenantId: string
-  ): Promise<CareNote> {
+  async revokeAccess(
+    accessId: string,
+    revokedBy: string,
+    reason: string
+  ): Promise<FamilyPortalAccess> {
     try {
-      await validateResidentAccess(residentId, tenantId);
-      await validateSchema(careNoteSchema, note);
-      return await this.repository.addCareNote(residentId, note, tenantId);
+      // Check if user has permission to revoke access
+      const accessDecision = await this.accessService.checkAccess({
+        userId: revokedBy,
+        resourceType: 'family_portal_access',
+        resourceId: 'global',
+        action: 'revoke'
+      });
+
+      if (!accessDecision.allowed) {
+        throw new Error('User does not have permission to revoke family portal access');
+      }
+
+      // Get access record
+      const response = await fetch(`/api/family-portal-access/${accessId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch access record');
+      }
+      const access: FamilyPortalAccess = await response.json();
+
+      // Update access record
+      const updatedAccess: FamilyPortalAccess = {
+        ...access,
+        status: 'REVOKED',
+        expiresAt: new Date()
+      };
+
+      // Store updated access in database
+      await fetch(`/api/family-portal-access/${accessId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedAccess)
+      });
+
+      // Log the access revocation
+      await this.accessService.auditLog({
+        action: 'FAMILY_PORTAL_ACCESS_REVOKED',
+        description: `Family portal access revoked for ${access.resourceType} ${access.resourceId}`,
+        userId: revokedBy,
+        tenantId: 'current-tenant-id', // Replace with actual tenant ID
+        timestamp: new Date(),
+        metadata: {
+          familyMemberId: access.familyMemberId,
+          resourceType: access.resourceType,
+          resourceId: access.resourceId,
+          reason
+        }
+      });
+
+      return updatedAccess;
     } catch (error) {
-      throw new DomainError(
-        'Failed to add care note',
-        'CARE_NOTE_CREATION_ERROR',
-        error
-      );
+      console.error('Failed to revoke family portal access:', error);
+      throw error;
     }
   }
 
-  // Visits
-  async scheduleVisit(
-    residentId: string,
-    visit: Omit<Visit, 'id' | 'status'>,
-    tenantId: string
-  ): Promise<Visit> {
+  async getFamilyMemberAccess(familyMemberId: string): Promise<FamilyPortalAccess[]> {
     try {
-      await validateResidentAccess(residentId, tenantId);
-      await validateSchema(visitSchema, visit);
-      return await this.repository.scheduleVisit(residentId, visit, tenantId);
-    } catch (error) {
-      throw new DomainError(
-        'Failed to schedule visit',
-        'VISIT_SCHEDULING_ERROR',
-        error
-      );
-    }
-  }
+      // Get access records from database
+      const response = await fetch(`/api/family-portal-access?familyMemberId=${familyMemberId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch family member access');
+      }
 
-  async getVisits(
-    residentId: string,
-    tenantId: string,
-    filter?: { status?: string; from?: Date; to?: Date }
-  ): Promise<Visit[]> {
-    try {
-      await validateResidentAccess(residentId, tenantId);
-      return await this.repository.getVisits(residentId, tenantId, filter);
+      return response.json();
     } catch (error) {
-      throw new DomainError(
-        'Failed to retrieve visits',
-        'VISITS_RETRIEVAL_ERROR',
-        error
-      );
-    }
-  }
-
-  // Documents
-  async uploadDocument(
-    residentId: string,
-    document: Omit<Document, 'id' | 'uploadDate' | 'lastModified'>,
-    tenantId: string
-  ): Promise<Document> {
-    try {
-      await validateResidentAccess(residentId, tenantId);
-      await validateSchema(documentSchema, document);
-      return await this.repository.uploadDocument(residentId, document, tenantId);
-    } catch (error) {
-      throw new DomainError(
-        'Failed to upload document',
-        'DOCUMENT_UPLOAD_ERROR',
-        error
-      );
-    }
-  }
-
-  async getDocuments(
-    residentId: string,
-    tenantId: string,
-    filter?: { type?: string; status?: string }
-  ): Promise<Document[]> {
-    try {
-      await validateResidentAccess(residentId, tenantId);
-      return await this.repository.getDocuments(residentId, tenantId, filter);
-    } catch (error) {
-      throw new DomainError(
-        'Failed to retrieve documents',
-        'DOCUMENTS_RETRIEVAL_ERROR',
-        error
-      );
-    }
-  }
-
-  // Memories
-  async createMemory(
-    residentId: string,
-    memory: Omit<Memory, 'id'>,
-    tenantId: string
-  ): Promise<Memory> {
-    try {
-      await validateResidentAccess(residentId, tenantId);
-      await validateSchema(memorySchema, memory);
-      return await this.repository.createMemory(residentId, memory, tenantId);
-    } catch (error) {
-      throw new DomainError(
-        'Failed to create memory',
-        'MEMORY_CREATION_ERROR',
-        error
-      );
-    }
-  }
-
-  async getMemories(
-    residentId: string,
-    tenantId: string,
-    filter?: { tags?: string[]; from?: Date; to?: Date }
-  ): Promise<Memory[]> {
-    try {
-      await validateResidentAccess(residentId, tenantId);
-      return await this.repository.getMemories(residentId, tenantId, filter);
-    } catch (error) {
-      throw new DomainError(
-        'Failed to retrieve memories',
-        'MEMORIES_RETRIEVAL_ERROR',
-        error
-      );
-    }
-  }
-
-  // Emergency Contacts
-  async getEmergencyContacts(
-    residentId: string,
-    tenantId: string
-  ): Promise<EmergencyContact[]> {
-    try {
-      await validateResidentAccess(residentId, tenantId);
-      return await this.repository.getEmergencyContacts(residentId, tenantId);
-    } catch (error) {
-      throw new DomainError(
-        'Failed to retrieve emergency contacts',
-        'EMERGENCY_CONTACTS_RETRIEVAL_ERROR',
-        error
-      );
-    }
-  }
-
-  async updateEmergencyContact(
-    contactId: string,
-    data: Partial<EmergencyContact>,
-    tenantId: string
-  ): Promise<EmergencyContact> {
-    try {
-      await validateSchema(emergencyContactSchema, data);
-      return await this.repository.updateEmergencyContact(contactId, data, tenantId);
-    } catch (error) {
-      throw new DomainError(
-        'Failed to update emergency contact',
-        'EMERGENCY_CONTACT_UPDATE_ERROR',
-        error
-      );
-    }
-  }
-
-  // Care Team
-  async getCareTeam(
-    residentId: string,
-    tenantId: string
-  ): Promise<CareTeamMember[]> {
-    try {
-      await validateResidentAccess(residentId, tenantId);
-      return await this.repository.getCareTeam(residentId, tenantId);
-    } catch (error) {
-      throw new DomainError(
-        'Failed to retrieve care team',
-        'CARE_TEAM_RETRIEVAL_ERROR',
-        error
-      );
-    }
-  }
-
-  async getCareTeamMember(
-    memberId: string,
-    tenantId: string
-  ): Promise<CareTeamMember> {
-    try {
-      return await this.repository.getCareTeamMember(memberId, tenantId);
-    } catch (error) {
-      throw new DomainError(
-        'Failed to retrieve care team member',
-        'CARE_TEAM_MEMBER_RETRIEVAL_ERROR',
-        error
-      );
-    }
-  }
-
-  // Analytics
-  async getVisitMetrics(
-    residentId: string,
-    tenantId: string,
-    timeframe: { from: Date; to: Date }
-  ) {
-    try {
-      await validateResidentAccess(residentId, tenantId);
-      return await this.repository.getVisitMetrics(residentId, tenantId, timeframe);
-    } catch (error) {
-      throw new DomainError(
-        'Failed to retrieve visit metrics',
-        'VISIT_METRICS_RETRIEVAL_ERROR',
-        error
-      );
-    }
-  }
-
-  async getCommunicationMetrics(
-    residentId: string,
-    tenantId: string,
-    timeframe: { from: Date; to: Date }
-  ) {
-    try {
-      await validateResidentAccess(residentId, tenantId);
-      return await this.repository.getCommunicationMetrics(residentId, tenantId, timeframe);
-    } catch (error) {
-      throw new DomainError(
-        'Failed to retrieve communication metrics',
-        'COMMUNICATION_METRICS_RETRIEVAL_ERROR',
-        error
-      );
-    }
-  }
-
-  async getFamilyEngagementMetrics(
-    residentId: string,
-    tenantId: string,
-    timeframe: { from: Date; to: Date }
-  ) {
-    try {
-      await validateResidentAccess(residentId, tenantId);
-      return await this.repository.getFamilyEngagementMetrics(residentId, tenantId, timeframe);
-    } catch (error) {
-      throw new DomainError(
-        'Failed to retrieve family engagement metrics',
-        'FAMILY_ENGAGEMENT_METRICS_RETRIEVAL_ERROR',
-        error
-      );
+      console.error('Failed to get family member access:', error);
+      throw error;
     }
   }
 }

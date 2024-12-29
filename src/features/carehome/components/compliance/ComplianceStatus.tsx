@@ -130,9 +130,9 @@ export function ComplianceStatus({ careHomeId, region }: ComplianceStatusProps) 
           <div className="space-y-2">
             {complianceData.report.findings
               .filter(finding => finding.severity === 'high')
-              .map((finding, index) => (
+              .map((finding) => (
                 <div
-                  key={index}
+                  key={`${finding.category}-${finding.description}`}
                   className="p-3 bg-red-50 rounded-md text-sm text-red-700"
                 >
                   <p className="font-medium">{finding.category}</p>
@@ -148,5 +148,3 @@ export function ComplianceStatus({ careHomeId, region }: ComplianceStatusProps) 
     </Card>
   );
 }
-
-

@@ -1,115 +1,125 @@
-import { useCallback, useContext, useMemo } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-import { AccessManagementService } from '../services/accessManagementService'
-import { AuthContext } from '@/features/auth/contexts/AuthContext'
-import { OrganizationContext } from '@/features/organizations/contexts/OrganizationContext'
-import {
-    AccessRequest,
-    ResourceType,
-    PermissionAction,
-    Role,
-    AccessDecision
-} from '../types'
+/**
+ * @fileoverview React hook for managing access control
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Philani Ndlovu
+ * @copyright Write Care Notes Ltd
+ */
 
-interface UseAccessProps {
-    resourceType: ResourceType
-    resourceId?: string
-    action: PermissionAction
+import { useState, useEffect, useCallback, useContext } from 'react';
+import { AccessDecision, AccessRequest, EmergencyAccess } from '../types';
+import { AccessManagementContext } from '../context/AccessManagementContext';
+
+interface UseAccessParams {
+  resourceType: string;
+  resourceId: string;
+  action: string;
 }
 
-export function useAccess({ resourceType, resourceId, action }: UseAccessProps) {
-    const { user } = useContext(AuthContext)
-    const { organization, careHome } = useContext(OrganizationContext)
-    const queryClient = useQueryClient()
-    const accessService = AccessManagementService.getInstance()
+interface UseAccessResult {
+  isAllowed: boolean;
+  isLoading: boolean;
+  error: Error | null;
+  checkAccess: () => Promise<boolean>;
+  requestEmergencyAccess: () => Promise<EmergencyAccess>;
+  hasRole: (role: string) => boolean;
+  decision: AccessDecision | null;
+}
 
-    const accessRequest: AccessRequest = useMemo(() => ({
-        userId: user?.id || '',
-        userRoles: user?.roles || [],
+export function useAccess({
+  resourceType,
+  resourceId,
+  action
+}: UseAccessParams): UseAccessResult {
+  const [isAllowed, setIsAllowed] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
+  const [decision, setDecision] = useState<AccessDecision | null>(null);
+
+  const { accessService, currentUser } = useContext(AccessManagementContext);
+
+  const checkAccess = useCallback(async () => {
+    if (!accessService || !currentUser) {
+      setIsAllowed(false);
+      return false;
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const request: AccessRequest = {
+        userId: currentUser.id,
         resourceType,
-        resourceId: resourceId || '',
+        resourceId,
         action,
         context: {
-            organizationId: organization?.id || '',
-            careHomeId: careHome?.id,
-            region: organization?.region || 'ENGLAND',
-            timestamp: new Date(),
-            deviceType: typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown'
+          tenantId: currentUser.tenantId,
+          timestamp: new Date(),
+          deviceInfo: navigator.userAgent
         }
-    }), [user, resourceType, resourceId, action, organization, careHome])
+      };
 
-    // Check access using React Query
-    const { data: accessDecision, isLoading } = useQuery({
-        queryKey: ['access', accessRequest],
-        queryFn: () => accessService.checkAccess(accessRequest),
-        enabled: !!user && !!organization
-    })
-
-    // Helper function to check specific roles
-    const hasRole = useCallback((role: Role | Role[]) => {
-        const roles = Array.isArray(role) ? role : [role]
-        return user?.roles.some(r => roles.includes(r as Role)) || false
-    }, [user])
-
-    // Request emergency access
-    const requestEmergencyAccess = useCallback(async (reason: string): Promise<void> => {
-        if (!user || !resourceId) return
-
-        try {
-            await accessService.requestEmergencyAccess(
-                user.id,
-                resourceType,
-                resourceId,
-                reason
-            )
-            // Invalidate access queries to reflect emergency access
-            queryClient.invalidateQueries({ queryKey: ['access'] })
-        } catch (error) {
-            console.error('Error requesting emergency access:', error)
-            throw error
-        }
-    }, [user, resourceType, resourceId, queryClient])
-
-    return {
-        // Access control
-        isAllowed: accessDecision?.granted || false,
-        isLoading,
-        accessDecision,
-        
-        // Role checking
-        hasRole,
-        roles: user?.roles || [],
-        
-        // Emergency access
-        requestEmergencyAccess,
-        
-        // Raw access request (useful for debugging)
-        accessRequest
+      const accessDecision = await accessService.checkAccess(request);
+      setDecision(accessDecision);
+      setIsAllowed(accessDecision.allowed);
+      return accessDecision.allowed;
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Failed to check access');
+      setError(error);
+      setIsAllowed(false);
+      return false;
+    } finally {
+      setIsLoading(false);
     }
+  }, [accessService, currentUser, resourceType, resourceId, action]);
+
+  const requestEmergencyAccess = useCallback(async () => {
+    if (!accessService || !currentUser) {
+      throw new Error('Access service or user not available');
+    }
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const emergencyAccess = await accessService.requestEmergencyAccess(
+        currentUser.id,
+        resourceType,
+        resourceId
+      );
+
+      // Recheck access after emergency access is granted
+      await checkAccess();
+
+      return emergencyAccess;
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Failed to request emergency access');
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [accessService, currentUser, resourceType, resourceId, checkAccess]);
+
+  const hasRole = useCallback((role: string): boolean => {
+    if (!currentUser) return false;
+    return currentUser.roles.includes(role);
+  }, [currentUser]);
+
+  useEffect(() => {
+    checkAccess();
+  }, [checkAccess]);
+
+  return {
+    isAllowed,
+    isLoading,
+    error,
+    checkAccess,
+    requestEmergencyAccess,
+    hasRole,
+    decision
+  };
 }
 
-// Utility hook for checking multiple permissions at once
-export function useMultiAccess(requests: UseAccessProps[]) {
-    const results = requests.map(request => useAccess(request))
-    
-    return {
-        isAllowed: results.every(r => r.isAllowed),
-        isLoading: results.some(r => r.isLoading),
-        individual: results
-    }
-}
-
-// Higher-order component for access control
-export function withAccess<P extends object>(
-    WrappedComponent: React.ComponentType<P>,
-    accessProps: UseAccessProps
-) {
-    return function WithAccessWrapper(props: P) {
-        const { isAllowed, isLoading } = useAccess(accessProps)
-
-        if (isLoading) return null
-        if (!isAllowed) return null
-
-        return <WrappedComponent {...props} />
-    }
-}
+export default useAccess;
