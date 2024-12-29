@@ -16,6 +16,7 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: ["class"],
   theme: {
     extend: {
       fontFamily: {
@@ -42,58 +43,45 @@ const config: Config = {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: {
-          DEFAULT: "#f0f9ff",
-          secondary: "#f0fdf9"
-        },
-        foreground: {
-          DEFAULT: "rgb(51, 65, 85)",
-          muted: "rgb(100, 116, 139)"
-        },
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#7FD02B",
-          hover: "#72BB27",
-          light: "#E8F5D6"
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#2B95D0",
-          hover: "#2785BB",
-          light: "#D6EBF5"
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
-        success: {
-          DEFAULT: "rgb(34, 197, 94)",
-          light: "rgb(220, 252, 231)"
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
         },
-        warning: {
-          DEFAULT: "rgb(234, 179, 8)",
-          light: "rgb(254, 249, 195)"
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
-        error: {
-          DEFAULT: "rgb(239, 68, 68)",
-          light: "rgb(254, 226, 226)"
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
         },
-        info: {
-          DEFAULT: "rgb(59, 130, 246)",
-          light: "rgb(219, 234, 254)"
-        }
-      },
-      backgroundImage: {
-        'main-gradient': 'linear-gradient(to bottom, #f0f9ff, #f0fdf9)',
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      boxShadow: {
-        card: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
-        "card-hover": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
-      }
     },
   },
-  plugins: [
-    require('tailwindcss-animate')
-  ],
+  plugins: [],
 }
 
 export default config
