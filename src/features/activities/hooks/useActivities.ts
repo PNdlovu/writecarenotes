@@ -1,48 +1,55 @@
 /**
- * @fileoverview Activities hook with offline support and multi-tenant capabilities
- * @version 2.0.0
- * @created 2024-12-13
+ * @fileoverview Activities hook with offline support, multi-tenant capabilities, and enterprise features
+ * @version 3.0.0
+ * @created 2024-12-29
  * @author Write Care Notes Team
  * @copyright Write Care Notes Ltd
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { Activity, ActivityStatus } from '../types/models';
-import { ActivityService } from '../services/activityService';
-import { useTenantContext } from '@/lib/multi-tenant/context';
-import { useNetworkStatus } from '@/lib/hooks/useNetworkStatus';
-import { useLocalization } from '@/lib/hooks/useLocalization';
-import { useErrorHandler } from '@/lib/hooks/useErrorHandler';
-import { useToast } from '@/components/ui/toast';
+import { Activity, ActivityFilter, ActivityStats } from '../../types';
+import { ActivitiesAPI } from '../../api-client';
+import { useTenantContext } from '../../lib/multi-tenant/context';
+import { useNetworkStatus } from '../../lib/hooks/useNetworkStatus';
+import { useLocalization } from '../../lib/hooks/useLocalization';
+import { useErrorHandler } from '../../lib/hooks/useErrorHandler';
+import { useToast } from '../../components/ui/toast';
+import { usePermissions } from '../../lib/hooks/usePermissions';
 
 interface UseActivitiesProps {
   initialActivities?: Activity[];
   autoSync?: boolean;
+  filter?: ActivityFilter;
+  careHomeId: string;
 }
 
 export function useActivities({ 
   initialActivities = [], 
-  autoSync = true 
-}: UseActivitiesProps = {}) {
+  autoSync = true,
+  filter,
+  careHomeId
+}: UseActivitiesProps) {
   const [activities, setActivities] = useState<Activity[]>(initialActivities);
+  const [stats, setStats] = useState<ActivityStats | null>(null);
   const [loading, setLoading] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [lastSynced, setLastSynced] = useState<Date | null>(null);
 
-  const tenantContext = useTenantContext();
+  const { organizationId } = useTenantContext();
   const { isOnline } = useNetworkStatus();
   const { t } = useLocalization();
   const { handleError } = useErrorHandler();
   const { showToast } = useToast();
+  const { hasPermission } = usePermissions();
 
-  const activityService = new ActivityService(tenantContext);
+  const api = new ActivitiesAPI(organizationId, careHomeId);
 
   // Sync activities when coming back online
   useEffect(() => {
     if (isOnline && autoSync) {
       syncActivities();
     }
-  }, [isOnline, autoSync]);
+  }, [isOnline, autoSync, filter]);
 
   const syncActivities = async () => {
     if (!isOnline) {
@@ -53,10 +60,22 @@ export function useActivities({
       return;
     }
 
+    if (!hasPermission('activities.view')) {
+      showToast({
+        type: 'error',
+        message: t('common.errors.permissionDenied')
+      });
+      return;
+    }
+
     try {
       setSyncing(true);
-      const { items } = await activityService.queryActivities({});
+      const [items, activityStats] = await Promise.all([
+        api.getActivities(filter),
+        api.getActivityStats()
+      ]);
       setActivities(items);
+      setStats(activityStats);
       setLastSynced(new Date());
       showToast({
         type: 'success',
@@ -70,9 +89,17 @@ export function useActivities({
   };
 
   const addActivity = useCallback(async (activity: Omit<Activity, 'id'>) => {
+    if (!hasPermission('activities.create')) {
+      showToast({
+        type: 'error',
+        message: t('common.errors.permissionDenied')
+      });
+      throw new Error('Permission denied');
+    }
+
     try {
       setLoading(true);
-      const newActivity = await activityService.createActivity(activity);
+      const newActivity = await api.createActivity(activity);
       setActivities(prev => [...prev, newActivity]);
       showToast({
         type: 'success',
@@ -85,12 +112,20 @@ export function useActivities({
     } finally {
       setLoading(false);
     }
-  }, [activityService, t]);
+  }, [api, t]);
 
   const updateActivity = useCallback(async (id: string, updates: Partial<Activity>) => {
+    if (!hasPermission('activities.edit')) {
+      showToast({
+        type: 'error',
+        message: t('common.errors.permissionDenied')
+      });
+      throw new Error('Permission denied');
+    }
+
     try {
       setLoading(true);
-      const updated = await activityService.updateActivity(id, updates);
+      const updated = await api.updateActivity(id, updates);
       setActivities(prev => 
         prev.map(activity => 
           activity.id === id ? updated : activity
@@ -107,74 +142,43 @@ export function useActivities({
     } finally {
       setLoading(false);
     }
-  }, [activityService, t]);
+  }, [api, t]);
 
-  const updateActivityStatus = useCallback(async (id: string, status: ActivityStatus) => {
-    return updateActivity(id, { status });
-  }, [updateActivity]);
+  const deleteActivity = useCallback(async (id: string) => {
+    if (!hasPermission('activities.delete')) {
+      showToast({
+        type: 'error',
+        message: t('common.errors.permissionDenied')
+      });
+      throw new Error('Permission denied');
+    }
 
-  const cancelActivity = useCallback(async (id: string, reason?: string) => {
     try {
       setLoading(true);
-      const cancelled = await activityService.cancelActivity(id, reason);
-      setActivities(prev => 
-        prev.map(activity => 
-          activity.id === id ? cancelled : activity
-        )
-      );
+      await api.deleteActivity(id);
+      setActivities(prev => prev.filter(activity => activity.id !== id));
       showToast({
         type: 'success',
-        message: t('activities.cancelled')
+        message: t('activities.deleted')
       });
-      return cancelled;
     } catch (error) {
-      handleError(error, 'Failed to cancel activity');
+      handleError(error, 'Failed to delete activity');
       throw error;
     } finally {
       setLoading(false);
     }
-  }, [activityService, t]);
-
-  const getActivityById = useCallback((id: string) => {
-    return activities.find(activity => activity.id === id);
-  }, [activities]);
-
-  const queryActivities = useCallback(async (params: {
-    status?: ActivityStatus[];
-    category?: string[];
-    startDate?: Date;
-    endDate?: Date;
-    search?: string;
-    page?: number;
-    limit?: number;
-  }) => {
-    try {
-      setLoading(true);
-      const result = await activityService.queryActivities(params);
-      setActivities(result.items);
-      return result;
-    } catch (error) {
-      handleError(error, 'Failed to query activities');
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  }, [activityService]);
+  }, [api, t]);
 
   return {
     activities,
+    stats,
     loading,
     syncing,
     lastSynced,
-    isOnline,
+    syncActivities,
     addActivity,
     updateActivity,
-    updateActivityStatus,
-    cancelActivity,
-    getActivityById,
-    queryActivities,
-    syncActivities,
+    deleteActivity,
+    hasPermission: (action: string) => hasPermission(`activities.${action}`)
   };
 }
-
-
