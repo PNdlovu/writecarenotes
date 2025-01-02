@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Document as PDFDocument, Page } from 'react-pdf';
 import { Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/components/ui/Select/Select';
 
 interface DocumentPreviewProps {
   fileUrl: string;

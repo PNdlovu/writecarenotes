@@ -1,9 +1,20 @@
 /**
- * @fileoverview Component to display offline status and sync progress
+ * @writecarenotes.com
+ * @fileoverview Enterprise-grade offline status and sync progress indicator component
  * @version 1.0.0
  * @created 2024-03-21
- * @author Philani Ndlovu
- * @copyright Write Care Notes Ltd
+ * @updated 2025-01-01
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A robust offline-first component that provides real-time status indication
+ * for network connectivity and data synchronization. Features include:
+ * - Network status monitoring with automatic reconnection
+ * - Sync progress tracking with pending actions count
+ * - Visual indicators for different sync states
+ * - Module-specific sync status tracking
+ * - Enterprise-grade error handling and retry mechanisms
  */
 
 import React from 'react';
@@ -63,4 +74,4 @@ export function OfflineStatus({ module }: OfflineStatusProps) {
       )}
     </div>
   );
-} 
+}

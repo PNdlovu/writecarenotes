@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/Button/Button"
+import { Input } from "@/components/ui/Input/Input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select/Select"
 import { DatePicker } from "@/components/ui/date-picker"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/Badge/Badge"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { FilterIcon, XIcon } from "lucide-react"
 import { useTranslations } from 'next-intl'

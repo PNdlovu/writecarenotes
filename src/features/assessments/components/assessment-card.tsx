@@ -2,6 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import type { Assessment } from '../types';
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
 
 interface AssessmentCardProps {
   assessment: Assessment;

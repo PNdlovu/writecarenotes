@@ -6,7 +6,11 @@ Advanced medication management system designed for care homes across the UK and 
 ## Core Components
 
 ### Services
-- `MedicationService`: Core medication management operations
+- `MedicationService`: Base medication management functionality
+- `StockService`: Comprehensive inventory and stock control
+- `PrescriptionService`: Prescription management
+- `MARService`: Medication administration records
+- `SchedulingService`: Medication scheduling and reminders
 - `MedicationAnalyticsService`: Analytics and reporting
 - `MedicationSafetyService`: AI-powered safety monitoring
 - `AdministrationService`: Medication administration workflow

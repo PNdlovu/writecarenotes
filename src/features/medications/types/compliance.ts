@@ -1,92 +1,71 @@
-import { Region } from '@/types/region';
-
-export type CareHomeType = 'CHILDRENS' | 'RESIDENTIAL' | 'NURSING';
-
-export type ComplianceAction = 
-  | 'INDIVIDUAL_HEALTHCARE_PLAN_APPROVED'
-  | 'GP_APPROVAL_RECEIVED'
-  | 'RISK_ASSESSMENT_COMPLETED'
-  | 'CAPACITY_ASSESSMENT_COMPLETED'
-  | 'NURSING_ASSESSMENT_COMPLETED'
-  | 'PHARMACIST_REVIEW_COMPLETED'
-  | 'WITNESS_VERIFICATION_COMPLETED';
-
-export interface ComplianceRecord {
-  id: string;
-  careHomeType: CareHomeType;
-  action: ComplianceAction;
-  completedAt: string;
-  completedBy: string;
-  documentReference?: string;
-  notes?: string;
-  expiresAt?: string;
-}
+/**
+ * @writecarenotes.com
+ * @fileoverview Compliance Type Definitions
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @updated 2024-03-21
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * Type definitions for medication compliance and regulatory requirements.
+ */
 
 export interface ComplianceRequirement {
   id: string;
-  careHomeType: CareHomeType;
-  requiredActions: ComplianceAction[];
-  frequency?: number; // in days, if periodic checks are needed
-  description: string;
-  isActive: boolean;
-}
-
-export interface MedicationCompliance {
-  region: Region;
-  careHomeType: CareHomeType;
-  requirements: {
-    // CQC (England)
-    requiresDoubleSignature: boolean;
-    requiresControlledDrugRegister: boolean;
-    // Ofsted (England - Children's Homes)
-    requiresParentalConsent?: boolean;
-    requiresOfstedNotification?: boolean;
-    requiresIndividualHealthcarePlan?: boolean;
-    // CIW (Wales)
-    requiresWelshTranslation?: boolean;
-    // Care Inspectorate (Scotland)
-    requiresNHSScotlandApproval?: boolean;
-    // RQIA (Northern Ireland)
-    requiresControlledDrugWitness?: boolean;
-    // HIQA (Ireland)
-    requiresMedicationAuditTrail?: boolean;
-    // Offline Support
-    offlineEnabled: boolean;
-    lastSyncTimestamp: string;
-  };
-  auditTrail: {
-    lastVerifiedBy: string;
-    lastVerifiedAt: string;
-    verificationMethod: 'PIN' | 'BARCODE';
-    parentalConsentDate?: string;
-    parentalConsentBy?: string;
-    ofstedNotificationDate?: string;
-    healthcarePlanReviewDate?: string;
-    offlineSyncStatus: 'SYNCED' | 'PENDING' | 'FAILED';
-  };
-}
-
-export interface RegionalMedicationSettings {
-  region: Region;
-  careHomeType: CareHomeType;
-  maxDosageUnits: Record<string, number>;
-  restrictedMedications: string[];
-  requiresPharmacistApproval: boolean;
-  stockControlEnabled: boolean;
-  // Offline settings
-  offlineEnabled: boolean;
-  offlineSyncInterval: number; // in minutes
-  maxOfflinePeriod: number; // in hours
-  // Regional specific settings
-  requiresParentalConsent: boolean;
-  requiresOfstedNotification: boolean;
-  requiresIndividualHealthcarePlan: boolean;
-  requiresControlledDrugRegister: boolean;
+  medicationId: string;
+  requiresWitness: boolean;
   requiresDoubleSignature: boolean;
-  requiresWelshTranslation: boolean;
-  requiresNHSScotlandApproval: boolean;
-  requiresControlledDrugWitness: boolean;
-  requiresMedicationAuditTrail: boolean;
+  requiresStockCheck: boolean;
+  requiresParentalConsent?: boolean;
+  maxAdministrationWindow?: number; // minutes
+  stockThresholdDays?: number;
+  retentionPeriod?: number; // days
+  createdAt: string;
+  updatedAt: string;
+}
+
+export enum CareHomeType {
+  RESIDENTIAL = 'RESIDENTIAL',
+  NURSING = 'NURSING',
+  DEMENTIA = 'DEMENTIA',
+  LEARNING_DISABILITIES = 'LEARNING_DISABILITIES',
+  MENTAL_HEALTH = 'MENTAL_HEALTH',
+  CHILDRENS = 'CHILDRENS',
+  SUPPORTED_LIVING = 'SUPPORTED_LIVING'
+}
+
+export interface ComplianceAlert {
+  id: string;
+  medicationId: string;
+  type: ComplianceAlertType;
+  severity: AlertSeverity;
+  message: string;
+  status: AlertStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export enum ComplianceAlertType {
+  WITNESS_REQUIRED = 'WITNESS_REQUIRED',
+  DOUBLE_SIGNATURE_REQUIRED = 'DOUBLE_SIGNATURE_REQUIRED',
+  STOCK_CHECK_REQUIRED = 'STOCK_CHECK_REQUIRED',
+  PARENTAL_CONSENT_REQUIRED = 'PARENTAL_CONSENT_REQUIRED',
+  ADMINISTRATION_WINDOW_EXCEEDED = 'ADMINISTRATION_WINDOW_EXCEEDED',
+  STOCK_THRESHOLD_BREACH = 'STOCK_THRESHOLD_BREACH'
+}
+
+export enum AlertSeverity {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  CRITICAL = 'CRITICAL'
+}
+
+export enum AlertStatus {
+  ACTIVE = 'ACTIVE',
+  ACKNOWLEDGED = 'ACKNOWLEDGED',
+  RESOLVED = 'RESOLVED'
 }
 
 

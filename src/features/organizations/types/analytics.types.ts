@@ -7,6 +7,7 @@
  */
 
 import { z } from 'zod'
+import { DateRange } from '@/features/financial/core/types'
 
 export interface PerformanceMetrics {
   bedOccupancy: number
@@ -108,10 +109,7 @@ export interface ComplianceMetrics {
 }
 
 export interface OrganizationAnalytics {
-  period: {
-    start: Date
-    end: Date
-  }
+  period: DateRange
   performance: PerformanceMetrics
   resources: ResourceMetrics
   financial: FinancialMetrics

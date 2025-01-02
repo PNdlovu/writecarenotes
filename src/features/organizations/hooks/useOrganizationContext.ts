@@ -1,10 +1,10 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect } from 'react'
-import { Organization } from '../types/organization.types'
+import type { Organization } from '../types'
 import { organizationService } from '../services/organizationService'
 import { OrganizationAnalyticsService } from '../services/analyticsService'
-import { OrganizationMetrics, CareHomeMetricsSummary } from '../repositories/analyticsRepository'
+import type { OrganizationMetrics, CareHomeMetricsSummary } from '../services/analytics/types'
 
 export interface OrganizationContextType {
   organization: Organization | null

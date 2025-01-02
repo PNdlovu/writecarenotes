@@ -11,9 +11,9 @@
 import { Metadata } from "next"
 import { DemoRequestForm } from "@/components/marketing/DemoRequestForm"
 import { DemoFeatures } from "@/components/marketing/DemoFeatures"
-import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
-import { CalendarClock } from "lucide-react"
+import { Badge } from "@/components/ui/Badge/Badge"
+import { Card } from "@/components/ui/Card"
+import { Shield, HeadphonesIcon, Users, CalendarClock } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Request Demo | Write Care Notes - Care Home Management Software",
@@ -30,21 +30,46 @@ export default function DemoPage() {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <div className="relative isolate overflow-hidden bg-gradient-to-b from-blue-100/20">
+      <div className="relative isolate overflow-hidden bg-blue-100">
         <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
-          <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-blue-100 to-blue-200 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" />
+          <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-blue-100 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" />
         </div>
         
         <div className="mx-auto max-w-7xl px-6 pb-16 pt-6 sm:pb-24 lg:flex lg:px-8 lg:py-12">
           <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl lg:flex-shrink-0 lg:pt-4">
             <div className="mt-4 sm:mt-8 lg:mt-4">
-              <Badge className="mb-4" variant="outline">Book a Demo</Badge>
-              <h1 className="mt-6 text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-                Experience the Future of Care Home Management
+              <Badge className="mb-4 bg-blue-50 text-blue-700 hover:bg-blue-100">Enterprise Care & Children's Home Software</Badge>
+              <h1 className="mt-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+                Why Choose Write Care Notes?
               </h1>
-              <p className="mt-6 text-lg leading-8 text-gray-600">
-                Schedule a personalized demo to see how Write Care Notes can transform your care home operations and improve resident care quality.
+              <p className="mt-6 text-base leading-7 text-gray-600 max-w-2xl">
+                Experience how our platform streamlines operations for both care homes and children's homes while improving care quality.
               </p>
+              
+              {/* Trust Indicators */}
+              <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div className="flex items-center gap-3">
+                  <Shield className="h-6 w-6 text-blue-600" />
+                  <div className="text-sm">
+                    <p className="font-medium">Fully Compliant</p>
+                    <p className="text-gray-500">CQC, Ofsted, CIW & More</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <HeadphonesIcon className="h-6 w-6 text-blue-600" />
+                  <div className="text-sm">
+                    <p className="font-medium">24/7 Support</p>
+                    <p className="text-gray-500">UK-based experts</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Users className="h-6 w-6 text-blue-600" />
+                  <div className="text-sm">
+                    <p className="font-medium">500+ Facilities</p>
+                    <p className="text-gray-500">Trust our platform</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -67,19 +92,23 @@ export default function DemoPage() {
                     <div className="inline-flex p-3 rounded-xl bg-blue-50 mb-4">
                       <CalendarClock className="h-8 w-8 text-blue-600" />
                     </div>
-                    <h2 className="text-3xl font-bold tracking-tight text-gray-900 bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                      Request Demo
+                    <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+                      Book Your Demo
                     </h2>
                     <p className="mt-4 text-lg text-gray-600">
-                      Fill out the form below and one of our care home specialists will get in touch to schedule your demo.
+                      Get a personalized walkthrough of how Write Care Notes can help your care home.
                     </p>
                   </div>
                   <div className="bg-white rounded-lg">
                     <DemoRequestForm />
                   </div>
-                  <div className="text-center text-sm text-gray-500">
-                    <p>Your data is secure and will never be shared with third parties.</p>
-                    <p>Typical response time: Within 24 hours</p>
+                  <div className="space-y-3 text-center text-sm">
+                    <div className="flex items-center justify-center gap-2 text-blue-600">
+                      <Shield className="h-4 w-4" />
+                      <p>ISO 27001 certified & GDPR compliant</p>
+                    </div>
+                    <p className="text-gray-500">Typical response time: Within 24 hours</p>
+                    <p className="text-gray-500">Available across England, Wales, Scotland, Northern Ireland, and Republic of Ireland</p>
                   </div>
                 </div>
               </Card>
@@ -89,4 +118,4 @@ export default function DemoPage() {
       </div>
     </div>
   )
-} 
+}

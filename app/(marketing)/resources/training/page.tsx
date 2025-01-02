@@ -9,24 +9,23 @@
  */
 
 import { Metadata } from "next"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/Button/Button"
+import { Card } from "@/components/ui/Card"
+import { Badge } from "@/components/ui/Badge/Badge"
 import Link from "next/link"
 import { 
-  GraduationCap,
-  BookOpen,
-  Video,
-  FileText,
-  Clock,
   Award,
-  Certificate,
-  Users,
-  Heart,
+  BookOpen,
   Brain,
+  Clock,
+  FileText,
+  Heart,
   Pill,
   Shield,
-  Stethoscope
+  Stethoscope,
+  Users,
+  Video,
+  GraduationCap
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -37,10 +36,16 @@ export const metadata: Metadata = {
 
 const mandatoryCourses = [
   {
+    title: "Care Certificate",
+    description: "Essential skills and knowledge for care workers",
+    icon: GraduationCap,
+    category: "Core"
+  },
+  {
     title: "Care Certificate Standards",
     description: "Complete training covering all 15 care certificate standards",
     duration: "15 hours",
-    icon: Certificate,
+    icon: GraduationCap,
     level: "Foundation",
     href: "/resources/training/care-certificate"
   },

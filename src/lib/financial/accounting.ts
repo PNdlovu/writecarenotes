@@ -316,6 +316,349 @@ export class AccountingService {
       closingBalance
     };
   }
+
+  async performReconciliation(params: {
+    accountId: string;
+    startDate: Date;
+    endDate: Date;
+    bankStatement: {
+      date: Date;
+      description: string;
+      amount: number;
+    }[];
+  }): Promise<{
+    matched: Transaction[];
+    unmatched: Transaction[];
+    unmatchedStatements: typeof params.bankStatement;
+  }> {
+    const { accountId, startDate, endDate, bankStatement } = params;
+
+    // Get account transactions for the period
+    const { transactions } = await this.getAccountTransactions(accountId, {
+      startDate,
+      endDate,
+      limit: 1000 // Increased limit for reconciliation
+    });
+
+    const matched: Transaction[] = [];
+    const unmatched: Transaction[] = [];
+    const unmatchedStatements = [...bankStatement];
+
+    // Simple matching algorithm based on amount and date proximity
+    for (const transaction of transactions) {
+      const entry = transaction.entries.find(e => e.accountId === accountId);
+      if (!entry) continue;
+
+      const amount = entry.debit - entry.credit;
+      const statementIndex = unmatchedStatements.findIndex(stmt => {
+        const dateDiff = Math.abs(stmt.date.getTime() - transaction.date.getTime());
+        const isWithinTimeframe = dateDiff <= 24 * 60 * 60 * 1000; // 24 hours
+        return Math.abs(stmt.amount - amount) < 0.01 && isWithinTimeframe;
+      });
+
+      if (statementIndex >= 0) {
+        matched.push(transaction);
+        unmatchedStatements.splice(statementIndex, 1);
+      } else {
+        unmatched.push(transaction);
+      }
+    }
+
+    return {
+      matched,
+      unmatched,
+      unmatchedStatements
+    };
+  }
+
+  async createReconciliationEntry(data: {
+    accountId: string;
+    date: Date;
+    description: string;
+    matchedTransactions: string[];
+    adjustmentAmount?: number;
+    notes?: string;
+  }): Promise<{
+    reconciliation: any;
+    adjustmentTransaction?: Transaction;
+  }> {
+    const { accountId, date, description, matchedTransactions, adjustmentAmount, notes } = data;
+
+    return prisma.$transaction(async (tx) => {
+      // Create reconciliation record
+      const reconciliation = await tx.reconciliation.create({
+        data: {
+          tenantId: this.tenantContext.id,
+          accountId,
+          date,
+          description,
+          notes,
+          transactions: {
+            connect: matchedTransactions.map(id => ({ id }))
+          }
+        }
+      });
+
+      // Create adjustment transaction if needed
+      let adjustmentTransaction: Transaction | undefined;
+      if (adjustmentAmount && Math.abs(adjustmentAmount) > 0.01) {
+        const adjustmentEntry = {
+          accountId,
+          debit: adjustmentAmount > 0 ? adjustmentAmount : 0,
+          credit: adjustmentAmount < 0 ? -adjustmentAmount : 0
+        };
+
+        const suspenseAccountId = await this.getOrCreateSuspenseAccount();
+        const suspenseEntry = {
+          accountId: suspenseAccountId,
+          debit: adjustmentAmount < 0 ? -adjustmentAmount : 0,
+          credit: adjustmentAmount > 0 ? adjustmentAmount : 0
+        };
+
+        adjustmentTransaction = await this.createTransaction({
+          date,
+          description: `Reconciliation adjustment - ${description}`,
+          entries: [adjustmentEntry, suspenseEntry],
+          reference: `RECON-ADJ-${reconciliation.id}`
+        });
+
+        await this.postTransaction(adjustmentTransaction.id);
+      }
+
+      return {
+        reconciliation,
+        adjustmentTransaction
+      };
+    });
+  }
+
+  private async getOrCreateSuspenseAccount(): Promise<string> {
+    const suspenseAccount = await prisma.account.findFirst({
+      where: {
+        tenantId: this.tenantContext.id,
+        code: 'SUSP',
+        type: AccountType.LIABILITY
+      }
+    });
+
+    if (suspenseAccount) {
+      return suspenseAccount.id;
+    }
+
+    const newAccount = await this.createAccount({
+      code: 'SUSP',
+      name: 'Suspense Account',
+      type: AccountType.LIABILITY,
+      description: 'Temporary account for reconciliation adjustments'
+    });
+
+    return newAccount.id;
+  }
+
+  async createBatchTransactions(transactions: Array<{
+    date: Date;
+    description: string;
+    entries: Array<{
+      accountId: string;
+      debit: number;
+      credit: number;
+      description?: string;
+      costCenterId?: string;
+    }>;
+    reference?: string;
+  }>): Promise<Transaction[]> {
+    return prisma.$transaction(async (tx) => {
+      const results: Transaction[] = [];
+
+      for (const transaction of transactions) {
+        // Validate each transaction's double-entry
+        const totalDebits = transaction.entries.reduce((sum, entry) => sum + entry.debit, 0);
+        const totalCredits = transaction.entries.reduce((sum, entry) => sum + entry.credit, 0);
+
+        if (Math.abs(totalDebits - totalCredits) > 0.01) {
+          throw new Error(`Transaction debits and credits must be equal. Difference: ${totalDebits - totalCredits}`);
+        }
+
+        // Create the transaction
+        const result = await tx.journalEntry.create({
+          data: {
+            organizationId: this.tenantContext.id,
+            date: transaction.date,
+            description: transaction.description,
+            reference: transaction.reference || `BATCH-${new Date().getTime()}`,
+            status: 'DRAFT',
+            amount: totalDebits, // Total transaction amount
+            type: 'DEBIT', // Default type
+            lines: {
+              create: transaction.entries.map(entry => ({
+                accountId: entry.accountId,
+                costCenterId: entry.costCenterId,
+                description: entry.description || transaction.description,
+                debit: entry.debit,
+                credit: entry.credit
+              }))
+            }
+          },
+          include: {
+            lines: true
+          }
+        });
+
+        results.push(result);
+      }
+
+      return results;
+    });
+  }
+
+  async postBatchTransactions(transactionIds: string[]): Promise<Transaction[]> {
+    return prisma.$transaction(async (tx) => {
+      const results: Transaction[] = [];
+
+      for (const id of transactionIds) {
+        // Get transaction with entries
+        const transaction = await tx.journalEntry.findFirst({
+          where: {
+            id,
+            organizationId: this.tenantContext.id
+          },
+          include: {
+            lines: true
+          }
+        });
+
+        if (!transaction) {
+          throw new Error(`Transaction ${id} not found`);
+        }
+
+        if (transaction.status !== 'DRAFT') {
+          throw new Error(`Transaction ${id} is not in draft status`);
+        }
+
+        // Update account balances
+        for (const line of transaction.lines) {
+          await tx.account.update({
+            where: { id: line.accountId },
+            data: {
+              balance: {
+                increment: line.debit - line.credit
+              }
+            }
+          });
+        }
+
+        // Update transaction status
+        const posted = await tx.journalEntry.update({
+          where: { id },
+          data: { status: 'POSTED' },
+          include: { lines: true }
+        });
+
+        results.push(posted);
+      }
+
+      return results;
+    });
+  }
+
+  async generateBatchReport(batchId: string): Promise<{
+    totalTransactions: number;
+    totalAmount: number;
+    accountSummary: Array<{
+      accountId: string;
+      accountCode: string;
+      accountName: string;
+      totalDebits: number;
+      totalCredits: number;
+      netChange: number;
+    }>;
+    costCenterSummary: Array<{
+      costCenterId: string;
+      costCenterCode: string;
+      costCenterName: string;
+      totalAmount: number;
+    }>;
+  }> {
+    const transactions = await prisma.journalEntry.findMany({
+      where: {
+        organizationId: this.tenantContext.id,
+        reference: {
+          startsWith: `BATCH-${batchId}`
+        }
+      },
+      include: {
+        lines: {
+          include: {
+            account: true,
+            costCenter: true
+          }
+        }
+      }
+    });
+
+    const accountSummary = new Map<string, {
+      accountId: string;
+      accountCode: string;
+      accountName: string;
+      totalDebits: number;
+      totalCredits: number;
+      netChange: number;
+    }>();
+
+    const costCenterSummary = new Map<string, {
+      costCenterId: string;
+      costCenterCode: string;
+      costCenterName: string;
+      totalAmount: number;
+    }>();
+
+    let totalAmount = 0;
+
+    // Process transactions
+    for (const transaction of transactions) {
+      totalAmount += transaction.amount;
+
+      // Process lines
+      for (const line of transaction.lines) {
+        // Update account summary
+        const accountKey = line.accountId;
+        const accountSummaryItem = accountSummary.get(accountKey) || {
+          accountId: line.accountId,
+          accountCode: line.account.code,
+          accountName: line.account.name,
+          totalDebits: 0,
+          totalCredits: 0,
+          netChange: 0
+        };
+
+        accountSummaryItem.totalDebits += line.debit;
+        accountSummaryItem.totalCredits += line.credit;
+        accountSummaryItem.netChange = accountSummaryItem.totalDebits - accountSummaryItem.totalCredits;
+        accountSummary.set(accountKey, accountSummaryItem);
+
+        // Update cost center summary if available
+        if (line.costCenterId && line.costCenter) {
+          const costCenterKey = line.costCenterId;
+          const costCenterSummaryItem = costCenterSummary.get(costCenterKey) || {
+            costCenterId: line.costCenterId,
+            costCenterCode: line.costCenter.code,
+            costCenterName: line.costCenter.name,
+            totalAmount: 0
+          };
+
+          costCenterSummaryItem.totalAmount += line.debit - line.credit;
+          costCenterSummary.set(costCenterKey, costCenterSummaryItem);
+        }
+      }
+    }
+
+    return {
+      totalTransactions: transactions.length,
+      totalAmount,
+      accountSummary: Array.from(accountSummary.values()),
+      costCenterSummary: Array.from(costCenterSummary.values())
+    };
+  }
 }
 
 

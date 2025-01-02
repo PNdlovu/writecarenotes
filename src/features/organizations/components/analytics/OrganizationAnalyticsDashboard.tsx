@@ -2,15 +2,15 @@
 
 import { useState } from 'react'
 import { useOrganizationAnalytics } from '../../hooks/useOrganizationAnalytics'
-import { Card } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card } from '@/components/ui/Card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
+} from '@/components/ui/Select/Select'
 import {
   LineChart,
   Line,

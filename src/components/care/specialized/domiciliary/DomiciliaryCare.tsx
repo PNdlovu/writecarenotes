@@ -1,5 +1,76 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Enterprise domiciliary care management component
+ * @version 1.0.0
+ * @created 2025-01-01
+ * @updated 2025-01-02
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * Enterprise-grade component for managing home-based care services across the UK
+ * and Ireland. Provides comprehensive functionality for care visit management,
+ * staff coordination, and service delivery tracking. Implements strict regional
+ * compliance and data protection measures.
+ *
+ * Features:
+ * - Visit scheduling and management
+ * - Staff assignment and tracking
+ * - Care task management
+ * - Risk assessment handling
+ * - Equipment and resource tracking
+ * - Document management
+ * - Emergency protocols
+ * - Compliance monitoring
+ *
+ * Mobile-First Considerations:
+ * - Responsive layout with fluid typography
+ * - Touch-optimized controls (min 44x44px)
+ * - Offline-first architecture
+ * - GPS location integration
+ * - Optimized data transfer
+ * - Battery-efficient operations
+ * - Quick action shortcuts
+ * - Gesture support
+ *
+ * Enterprise Features:
+ * - Role-based access control
+ * - Multi-region support
+ * - Comprehensive audit logging
+ * - Real-time synchronization
+ * - Advanced security measures
+ * - Performance monitoring
+ * - Error boundary implementation
+ * - Analytics integration
+ */
+
+// 1. React and Framework imports
 import React from 'react';
+import { useRouter } from 'next/router';
+
+// 2. Third-party libraries
+import { format } from 'date-fns';
+
+// 3. Base Components
 import { BaseCareComponent, BaseCareProps } from '../../base/BaseCareComponent';
+
+// 4. UI Components
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button/Button';
+import { Calendar } from '@/components/ui/Calendar';
+
+// 5. Hooks and utilities
+import { useOfflineStatus } from '@/hooks/useOfflineStatus';
+import { useAnalytics } from '@/hooks/useAnalytics';
+
+// 6. Types and interfaces
+import type { DomiciliaryCareProps } from '@/types/domiciliary';
+
+// 7. Constants and configurations
+import { VISIT_TYPES, CARE_LEVELS } from '@/config/domiciliary';
+
+// 8. Styles
+import styles from './DomiciliaryCare.module.css';
 
 interface DomiciliaryCareProps extends BaseCareProps {
   homeAssessment?: {

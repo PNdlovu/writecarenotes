@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="80" viewBox="0 0 300 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background shape -->
+  <rect x="10" y="10" width="280" height="60" rx="8" fill="#FFFFFF" class="logo-bg"/>
+  
+  <!-- Icon -->
+  <circle cx="45" cy="40" r="25" fill="#000000" class="mono-color"/>
+  <path d="M35 40 L45 50 L60 30" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Text -->
+  <text x="85" y="45" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="600" fill="#000000" class="mono-color">
+    Write Care Notes
+  </text>
+  
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .logo-bg { fill: #000000; }
+      .mono-color { fill: #FFFFFF; }
+    }
+  </style>
+</svg>

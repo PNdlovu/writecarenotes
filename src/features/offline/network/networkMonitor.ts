@@ -1,194 +1,179 @@
 /**
- * @fileoverview Network monitor for tracking online/offline status
+ * @writecarenotes.com
+ * @fileoverview Network monitoring service
  * @version 1.0.0
  * @created 2024-03-21
+ * @updated 2024-03-21
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * Monitors network connectivity and provides status updates
  */
 
-import { Logger } from '@/lib/logger';
-import { Metrics } from '@/lib/metrics';
-import { NetworkError } from '../types/errors';
-import { NetworkConfig, NetworkStatus } from '../types';
+import { Logger, logger } from '@/lib/logger';
 
-export class NetworkMonitor {
+interface NetworkConfig {
+  pingEndpoint: string;
+  pingInterval: number;
+  timeout: number;
+}
+
+interface NetworkStatus {
+  isOnline: boolean;
+  lastChecked: number;
+  latency: number | null;
+  type: string;
+}
+
+interface NetworkMetrics {
+  recordLatency(value: number): void;
+  recordOnlineStatus(isOnline: boolean): void;
+  recordPingFailure(): void;
+}
+
+class BasicMetrics implements NetworkMetrics {
   private logger: Logger;
-  private metrics: Metrics;
-  private config: NetworkConfig | null = null;
-  private pingInterval: NodeJS.Timeout | null = null;
-  private onStatusChange: ((isOnline: boolean) => void) | null = null;
-  private currentStatus: NetworkStatus = {
-    isOnline: navigator.onLine,
-    lastChecked: Date.now(),
-    latency: null,
-    type: this.getConnectionType()
+  private metrics: Record<string, number> = {
+    latency: 0,
+    onlineStatus: 0,
+    pingFailures: 0
   };
 
   constructor() {
+    this.logger = new Logger('NetworkMetrics');
+  }
+
+  recordLatency(value: number): void {
+    this.metrics.latency = value;
+    this.logger.debug('network.latency', { value });
+  }
+
+  recordOnlineStatus(isOnline: boolean): void {
+    this.metrics.onlineStatus = isOnline ? 1 : 0;
+    this.logger.debug('network.online_status', { value: this.metrics.onlineStatus });
+  }
+
+  recordPingFailure(): void {
+    this.metrics.pingFailures++;
+    this.logger.debug('network.ping_failure', { value: this.metrics.pingFailures });
+  }
+}
+
+const isClient = typeof window !== 'undefined';
+
+export class NetworkMonitor {
+  private config: NetworkConfig;
+  private status: NetworkStatus;
+  private checkInterval: NodeJS.Timeout | null;
+  private metrics: NetworkMetrics;
+  private logger: Logger;
+  private onStatusChange?: (isOnline: boolean) => void;
+
+  constructor(config: Partial<NetworkConfig> = {}) {
     this.logger = new Logger('NetworkMonitor');
-    this.metrics = new Metrics('network');
-    this.setupEventListeners();
-  }
+    const defaultEndpoint = isClient ? new URL('/api/health', window.location.origin).toString() : '/api/health';
+    
+    this.config = {
+      pingEndpoint: defaultEndpoint,
+      pingInterval: 30000,
+      timeout: 5000,
+      ...config
+    };
 
-  /**
-   * Initialize network monitor
-   */
-  initialize(config: NetworkConfig): void {
-    this.config = config;
-    this.onStatusChange = config.onStatusChange;
+    this.status = {
+      isOnline: isClient ? navigator.onLine : false,
+      lastChecked: 0,
+      latency: null,
+      type: 'unknown'
+    };
 
-    // Start ping interval if configured
-    if (config.pingEndpoint && config.pingInterval) {
-      this.startPingInterval();
+    this.checkInterval = null;
+    this.metrics = new BasicMetrics();
+
+    if (isClient) {
+      this.setupEventListeners();
     }
-
-    this.logger.info('Network monitor initialized', { 
-      pingEndpoint: config.pingEndpoint,
-      pingInterval: config.pingInterval 
-    });
-  }
-
-  /**
-   * Get current network status
-   */
-  getStatus(): NetworkStatus {
-    return { ...this.currentStatus };
-  }
-
-  /**
-   * Check if online
-   */
-  isOnline(): boolean {
-    return this.currentStatus.isOnline;
-  }
-
-  /**
-   * Force network check
-   */
-  async checkConnection(): Promise<NetworkStatus> {
-    if (!this.config?.pingEndpoint) {
-      return this.getStatus();
-    }
-
-    try {
-      const startTime = performance.now();
-      const response = await fetch(this.config.pingEndpoint, {
-        method: 'HEAD',
-        cache: 'no-cache'
-      });
-
-      if (!response.ok) {
-        throw new NetworkError('Ping endpoint returned non-200 status');
-      }
-
-      const latency = performance.now() - startTime;
-      this.updateStatus(true, latency);
-      
-      // Record metrics
-      this.metrics.recordTiming('ping_latency', latency);
-      this.metrics.increment('ping_success', 1);
-
-      return this.getStatus();
-    } catch (error) {
-      this.updateStatus(false, null);
-      this.metrics.increment('ping_failure', 1);
-      this.logger.warn('Network check failed', { error });
-      return this.getStatus();
-    }
-  }
-
-  /**
-   * Stop network monitoring
-   */
-  stop(): void {
-    if (this.pingInterval) {
-      clearInterval(this.pingInterval);
-      this.pingInterval = null;
-    }
-    this.removeEventListeners();
-    this.logger.info('Network monitor stopped');
-  }
-
-  private startPingInterval(): void {
-    if (this.pingInterval) {
-      clearInterval(this.pingInterval);
-    }
-
-    this.pingInterval = setInterval(
-      () => this.checkConnection(),
-      this.config?.pingInterval || 30000
-    );
   }
 
   private setupEventListeners(): void {
-    window.addEventListener('online', this.handleOnline);
-    window.addEventListener('offline', this.handleOffline);
-    
-    // Listen for connection changes if supported
-    if ('connection' in navigator) {
-      (navigator as any).connection?.addEventListener('change', this.handleConnectionChange);
+    window.addEventListener('online', () => this.handleOnlineStatus(true));
+    window.addEventListener('offline', () => this.handleOnlineStatus(false));
+  }
+
+  private handleOnlineStatus(isOnline: boolean): void {
+    void this.updateStatus(isOnline, null);
+  }
+
+  async checkConnection(): Promise<void> {
+    if (!isClient) return;
+
+    const startTime = Date.now();
+
+    try {
+      const response = await fetch(this.config.pingEndpoint, {
+        method: 'GET',
+        headers: { 'Cache-Control': 'no-cache' }
+      });
+
+      const latency = Date.now() - startTime;
+      this.metrics.recordLatency(latency);
+
+      await this.updateStatus(response.ok, latency);
+    } catch (error) {
+      this.logger.warn('Network check failed', { error });
+      this.metrics.recordPingFailure();
+      await this.updateStatus(false, null);
     }
   }
 
-  private removeEventListeners(): void {
-    window.removeEventListener('online', this.handleOnline);
-    window.removeEventListener('offline', this.handleOffline);
+  private async updateStatus(isOnline: boolean, latency: number | null): Promise<void> {
+    const previousStatus = this.status.isOnline;
     
-    if ('connection' in navigator) {
-      (navigator as any).connection?.removeEventListener('change', this.handleConnectionChange);
-    }
-  }
-
-  private handleOnline = (): void => {
-    this.logger.info('Browser reported online status');
-    this.checkConnection(); // Verify with ping
-  };
-
-  private handleOffline = (): void => {
-    this.logger.warn('Browser reported offline status');
-    this.updateStatus(false, null);
-  };
-
-  private handleConnectionChange = (): void => {
-    const type = this.getConnectionType();
-    this.logger.info('Connection type changed', { type });
-    
-    this.currentStatus = {
-      ...this.currentStatus,
-      type
-    };
-
-    // Record metrics
-    this.metrics.increment('connection_changes', 1, { type });
-  };
-
-  private updateStatus(isOnline: boolean, latency: number | null): void {
-    const previousStatus = this.currentStatus.isOnline;
-    
-    this.currentStatus = {
+    this.status = {
       isOnline,
       lastChecked: Date.now(),
       latency,
       type: this.getConnectionType()
     };
 
-    // Notify if status changed
+    this.logger.info('Network status updated', this.status);
+    this.metrics.recordOnlineStatus(isOnline);
+
     if (previousStatus !== isOnline && this.onStatusChange) {
       this.onStatusChange(isOnline);
     }
-
-    // Record metrics
-    this.metrics.gauge('online_status', isOnline ? 1 : 0);
-    if (latency !== null) {
-      this.metrics.gauge('latency', latency);
-    }
-
-    this.logger.info('Network status updated', this.currentStatus);
   }
 
   private getConnectionType(): string {
-    if ('connection' in navigator) {
-      const connection = (navigator as any).connection;
-      return connection?.effectiveType || connection?.type || 'unknown';
+    if (isClient && 'connection' in navigator) {
+      const conn = (navigator as any).connection;
+      return conn?.effectiveType || 'unknown';
     }
     return 'unknown';
   }
-} 
+
+  start(onStatusChange?: (isOnline: boolean) => void): void {
+    if (!isClient || this.checkInterval) return;
+
+    this.onStatusChange = onStatusChange;
+    void this.checkConnection();
+
+    this.checkInterval = setInterval(() => {
+      void this.checkConnection();
+    }, this.config.pingInterval);
+  }
+
+  stop(): void {
+    if (this.checkInterval) {
+      clearInterval(this.checkInterval);
+      this.checkInterval = null;
+    }
+  }
+
+  getStatus(): NetworkStatus {
+    return { ...this.status };
+  }
+}
+
+export const networkMonitor = new NetworkMonitor();

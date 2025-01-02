@@ -9,10 +9,10 @@
  */
 
 import React, { useState } from 'react';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button/Button";
+import { Input } from "@/components/ui/Input/Input";
+import { Badge } from "@/components/ui/Badge/Badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
@@ -21,15 +21,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/Dialog/Dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
+} from "@/components/ui/Select/Select";
+import { useToast } from "@/components/ui/UseToast";
 import { useAccessibility } from '../../hooks/useAccessibility';
 
 interface DocumentExportProps {

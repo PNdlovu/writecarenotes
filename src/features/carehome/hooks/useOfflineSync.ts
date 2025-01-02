@@ -1,72 +1,63 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Care Home offline sync hook
+ * @version 1.0.0
+ * @created 2025-01-01
+ * @updated 2025-01-01
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ */
+
 import { useState, useEffect } from 'react';
-import { useNetworkStatus } from '@/hooks/useNetworkStatus';
-import { useToast } from '@/hooks/useToast';
-import { CareHomeCache } from '@/lib/cache/implementations/CareHomeCache';
-import { OfflineSync } from '@/lib/offline/OfflineSync';
+import { useToast } from '@/components/ui/use-toast';
+import { useOffline } from '@/features/offline/hooks/useOffline';
+import type { CareHomeChange } from '../types';
 
 export function useOfflineSync(careHomeId: string) {
-  const [isSyncing, setIsSyncing] = useState(false);
-  const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
-  const [pendingChanges, setPendingChanges] = useState<any[]>([]);
-  const { isOnline } = useNetworkStatus();
+  const [pendingChanges, setPendingChanges] = useState<CareHomeChange[]>([]);
   const { toast } = useToast();
-  
-  const cache = new CareHomeCache();
-  const offlineSync = new OfflineSync();
+  const { 
+    isOnline, 
+    isSyncing, 
+    queueAction, 
+    syncNow,
+    lastSyncTime 
+  } = useOffline({
+    syncInterval: 5000, // Sync every 5 seconds when online
+    maxRetries: 3,
+  });
 
   useEffect(() => {
-    const init = async () => {
-      await cache.initialize();
-      const changes = await cache.getPendingChanges(careHomeId);
-      setPendingChanges(changes);
-    };
-    init();
-  }, [careHomeId]);
-
-  useEffect(() => {
+    // Attempt sync when we come online and have pending changes
     if (isOnline && pendingChanges.length > 0 && !isSyncing) {
-      syncChanges();
+      syncNow();
     }
-  }, [isOnline, pendingChanges]);
+  }, [isOnline, pendingChanges, isSyncing, syncNow]);
 
-  const syncChanges = async () => {
-    try {
-      setIsSyncing(true);
-      await offlineSync.forceSyncNow();
-      const changes = await cache.getPendingChanges(careHomeId);
-      setPendingChanges(changes);
-      setLastSyncTime(new Date());
-      toast({
-        title: 'Sync Complete',
-        description: 'All changes have been synchronized',
-        type: 'success'
-      });
-    } catch (error) {
-      console.error('Sync failed:', error);
-      toast({
-        title: 'Sync Failed',
-        description: 'Failed to synchronize changes. Will retry automatically.',
-        type: 'error'
-      });
-    } finally {
-      setIsSyncing(false);
-    }
-  };
-
-  const addOfflineChange = async (change: any) => {
-    const currentChanges = await cache.getPendingChanges(careHomeId);
-    await cache.storePendingChanges(careHomeId, [...currentChanges, change]);
+  const addOfflineChange = async (change: CareHomeChange) => {
     setPendingChanges(prev => [...prev, change]);
+    
+    // Queue the change with high priority since it's user data
+    queueAction('care_home_update', {
+      careHomeId,
+      change,
+      timestamp: new Date().toISOString(),
+    }, 2);
+
+    toast({
+      title: 'Change Saved Offline',
+      description: isOnline 
+        ? 'Change will be synced shortly'
+        : 'Change will be synced when you are back online',
+    });
   };
 
   return {
+    isOnline,
     isSyncing,
     lastSyncTime,
     pendingChanges,
-    isOnline,
-    syncChanges,
-    addOfflineChange
+    addOfflineChange,
+    syncNow,
   };
 }
-
-

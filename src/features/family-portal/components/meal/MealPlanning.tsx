@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge/Badge";
+import { Button } from "@/components/ui/Button/Button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { 
   Table,
@@ -17,15 +17,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/form/textarea";
+} from "@/components/ui/Dialog/Dialog";
+import { Textarea } from "@/components/ui/Form/textarea";
 import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Select/Select";
 import { Utensils, AlertCircle } from 'lucide-react';
 
 interface Meal {

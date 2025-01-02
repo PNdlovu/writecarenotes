@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/form/input";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge/Badge";
+import { Button } from "@/components/ui/Button/Button";
+import { Input } from "@/components/ui/Form/input";
 import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Select/Select";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/form/textarea";
+} from "@/components/ui/Dialog/Dialog";
+import { Textarea } from "@/components/ui/Form/textarea";
 import { 
   Table,
   TableBody,
@@ -33,7 +33,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/form/checkbox";
+import { Checkbox } from "@/components/ui/Form/checkbox";
 import { 
   ClipboardCheck,
   UserCheck,

@@ -9,8 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Input } from '@/components/ui/input'
-import { Select } from '@/components/ui/select'
+import { Input } from '@/components/ui/Input/Input'
+import { Select } from '@/components/ui/Select/Select'
 import type { Bed } from '../../types/bed.types'
 import { BedStatus, BedType } from '../../types/bed.types'
 

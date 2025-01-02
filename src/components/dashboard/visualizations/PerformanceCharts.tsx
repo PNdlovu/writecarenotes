@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ChartConfig, PerformanceData } from './types';
-import { Progress } from '@/components/ui/progress';
+import { Progress } from '@/components/ui/Progress';
 import { cn } from '@/lib/utils';
 
 interface PerformanceChartsProps {

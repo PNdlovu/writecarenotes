@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths } from 'date-fns';
 import { Activity } from '../types';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/Button';
+import { Card, CardHeader, CardContent } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Calendar } from '@/components/ui/Calendar';
+import { Tooltip } from '@/components/ui/Tooltip';
+import { ScrollArea } from '@/components/ui/ScrollArea';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface ActivityCalendarProps {
@@ -131,5 +134,3 @@ export function ActivityCalendar({ activities, onActivityClick }: ActivityCalend
     </Card>
   );
 } 
-
-

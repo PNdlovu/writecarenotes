@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/Toast/use-toast';
 
 interface MedicationAdminParams {
   medicationId: string;

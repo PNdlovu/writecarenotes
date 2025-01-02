@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/form/input";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button/Button";
+import { Input } from "@/components/ui/Form/input";
+import { Badge } from "@/components/ui/Badge/Badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Textarea } from "@/components/ui/form/textarea";
+import { Textarea } from "@/components/ui/Form/textarea";
 import {
   Dialog,
   DialogContent,
@@ -12,16 +12,16 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/Dialog/Dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/form/label";
+} from "@/components/ui/DropdownMenu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import { Label } from "@/components/ui/Form/label";
 import { Icons } from "@/components/ui/icons";
 
 interface Memory {

@@ -1,6 +1,6 @@
 import React from 'react'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert'
+import { Button } from '@/components/ui/Button/Button'
 import { BedError } from '../types/errors'
 
 interface Props {

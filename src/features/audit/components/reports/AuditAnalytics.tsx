@@ -7,9 +7,9 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
-import { Select } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/Card';
+import { Select } from '@/components/ui/Select/Select';
+import { Button } from '@/components/ui/Button/Button';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Icons } from '@/components/ui/icons';
 import { useToast } from '@/components/ui/use-toast';

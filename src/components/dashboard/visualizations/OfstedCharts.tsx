@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ChartConfig, OfstedMetrics, OfstedRating } from './types';
-import { Progress } from '@/components/ui/progress';
+import { Progress } from '@/components/ui/Progress';
 import { cn } from '@/lib/utils';
 
 interface OfstedChartsProps {

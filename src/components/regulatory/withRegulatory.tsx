@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 import { RegulatoryCompliance } from './RegulatoryCompliance';
 import { Region } from '@/types/regulatory';
 import { CareType } from '@/types/care';

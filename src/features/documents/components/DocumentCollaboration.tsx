@@ -17,12 +17,12 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+} from '@/components/ui/Dialog/Dialog';
+import { Button } from '@/components/ui/Button/Button';
+import { Input } from '@/components/ui/Input/Input';
+import { Textarea } from '@/components/ui/Textarea';
+import { Badge } from '@/components/ui/Badge/Badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { toast } from '@/components/ui/use-toast';
 import {
   Select,
@@ -30,7 +30,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/components/ui/Select/Select';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 

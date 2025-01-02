@@ -7,10 +7,8 @@
  */
 
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
-import prisma from '@/lib/prisma';
 import { validateRequest } from '@/lib/api';
+import { assessmentService } from './service';
 
 export async function GET(request: Request) {
   try {
@@ -18,53 +16,24 @@ export async function GET(request: Request) {
     const { user, query } = await validateRequest(request);
 
     const { searchParams } = new URL(request.url);
-    const search = searchParams.get('search');
-    const category = searchParams.get('category');
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '20');
+    const status = searchParams.get('status');
+    const type = searchParams.get('type');
+    const residentId = searchParams.get('residentId');
+    const assessorId = searchParams.get('assessorId');
 
-    // 2. Build query filters
-    const where = {
-      organizationId: user.organizationId,
-      ...(search
-        ? {
-            OR: [
-              { residentName: { contains: search, mode: 'insensitive' } },
-              { assessmentType: { contains: search, mode: 'insensitive' } },
-            ],
-          }
-        : {}),
-      ...(category && category !== 'All Categories'
-        ? { category: category }
-        : {}),
-    };
-
-    // 3. Execute query with pagination
-    const assessments = await prisma.assessment.findMany({
-      where,
-      include: {
-        resident: true,
-        assignedTo: true,
-      },
-      orderBy: {
-        updatedAt: 'desc',
-      },
-      take: 20,
+    // 2. Fetch assessments using service
+    const { assessments, total } = await assessmentService.fetchAssessments({
+      residentId,
+      assessorId,
+      status,
+      type,
+      page,
+      limit
     });
 
-    // 4. Format response
-    const formattedAssessments = assessments.map((assessment) => ({
-      id: assessment.id,
-      residentName: `${assessment.resident.firstName} ${assessment.resident.lastName}`,
-      assessmentType: assessment.type,
-      category: assessment.category,
-      status: assessment.status,
-      completedDate: assessment.completedAt,
-      nextDueDate: assessment.nextDueDate,
-      assignedTo: `${assessment.assignedTo.firstName} ${assessment.assignedTo.lastName}`,
-      score: assessment.score,
-      recommendations: assessment.recommendations,
-    }));
-
-    return NextResponse.json(formattedAssessments);
+    return NextResponse.json({ assessments, total });
   } catch (error) {
     console.error('Error in GET /api/assessments:', error);
     
@@ -81,19 +50,12 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    // Implementation moved from src/features/assessments/api/assessments.ts
     const { user, body } = await validateRequest(request);
 
-    const assessment = await prisma.assessment.create({
-      data: {
-        ...body,
-        organizationId: user.organizationId,
-        createdById: user.id,
-      },
-      include: {
-        resident: true,
-        assignedTo: true,
-      },
+    const assessment = await assessmentService.createAssessment({
+      ...body,
+      organizationId: user.organizationId,
+      createdById: user.id
     });
 
     return NextResponse.json(assessment, { status: 201 });

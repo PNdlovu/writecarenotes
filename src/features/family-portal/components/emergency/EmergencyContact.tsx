@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/form/input";
-import { Label } from "@/components/ui/form/label";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button/Button";
+import { Input } from "@/components/ui/Form/input";
+import { Label } from "@/components/ui/Form/label";
+import { Badge } from "@/components/ui/Badge/Badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Dialog,
@@ -12,7 +12,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/Dialog/Dialog";
 
 interface EmergencyContact {
   id: string;

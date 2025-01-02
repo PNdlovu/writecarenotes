@@ -1,3 +1,39 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Authentication page layout component
+ * @version 1.0.0
+ * @created 2025-01-01
+ * @updated 2025-01-02
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A layout component for authentication-related pages that provides
+ * consistent styling and behavior. Features include:
+ * - Session state management
+ * - Loading state handling
+ * - Automatic redirection for authenticated users
+ * - Consistent branding and layout
+ * - Responsive design
+ * - Error boundary protection
+ *
+ * Mobile-First Considerations:
+ * - Responsive grid layout
+ * - Dynamic spacing
+ * - Flexible content areas
+ * - Touch-friendly zones
+ * - Loading indicators
+ * - Viewport adaptations
+ *
+ * Enterprise Features:
+ * - Session management
+ * - Error boundaries
+ * - Analytics tracking
+ * - Performance monitoring
+ * - Accessibility support
+ * - Brand consistency
+ */
+
 'use client';
 
 import { useSession } from 'next-auth/react';

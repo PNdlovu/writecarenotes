@@ -1,3 +1,19 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Core incident service for basic incident operations
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @updated 2024-03-21
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * Core incident service for managing basic incident operations including
+ * reporting, status updates, action tracking, and lessons learned.
+ * Handles the fundamental CRUD operations for incidents and provides
+ * basic notification capabilities.
+ */
+
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../../../utils/logger';
 import { NotificationService } from '../../../services/notificationService';

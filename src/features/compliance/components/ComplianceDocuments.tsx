@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Button } from "@/components/ui/Button/Button"
+import { Badge } from "@/components/ui/Badge/Badge"
+import { Input } from "@/components/ui/Input/Input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/Select/Select"
 import { FileIcon, SearchIcon, FilterIcon } from "lucide-react"
 import type { ComplianceDocument } from '../types'
 

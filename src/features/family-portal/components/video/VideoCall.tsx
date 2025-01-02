@@ -10,10 +10,10 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button/Button";
+import { Input } from "@/components/ui/Input/Input";
+import { Badge } from "@/components/ui/Badge/Badge";
 import {
   Dialog,
   DialogContent,
@@ -21,9 +21,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/Dialog/Dialog";
 import { useAccessibility } from '../../hooks/useAccessibility';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/UseToast";
 import { EnhancedTelehealth } from '@/features/telehealth/services/enhancedTelehealth';
 
 interface VideoCallProps {

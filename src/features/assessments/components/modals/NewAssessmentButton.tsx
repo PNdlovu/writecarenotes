@@ -6,12 +6,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '../../../../components/ui/dialog';
-import { Button } from '../../../../components/ui/button';
+  DialogFooter,
+} from '@/components/ui/Dialog';
+import { Button } from '@/components/ui/Button';
 import { Plus } from 'lucide-react';
 import { AssessmentForm } from '../templates/AssessmentForm';
 import { AssessmentType } from '../../types/assessment.types';
-import { assessmentApi } from '../../api/assessments';
+import { assessmentApi } from '@/api/assessments/assessmentApi';
 
 interface NewAssessmentButtonProps {
   residentId: string;
@@ -70,5 +71,3 @@ export const NewAssessmentButton: React.FC<NewAssessmentButtonProps> = ({
     </Dialog>
   );
 };
-
-

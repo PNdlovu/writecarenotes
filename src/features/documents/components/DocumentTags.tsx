@@ -15,24 +15,27 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
+} from '@/components/ui/Dialog/Dialog';
+import { Button } from '@/components/ui/Button/Button';
+import { Input } from '@/components/ui/Form/Input';
+import { Label } from '@/components/ui/Form/Label';
+import { Badge } from '@/components/ui/Badge/Badge';
 import {
   Command,
+  CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from '@/components/ui/command';
+  CommandList,
+  CommandSeparator,
+} from '@/components/ui/Command';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { toast } from '@/components/ui/use-toast';
+} from '@/components/ui/Popover';
+import { toast } from '@/components/ui/Toast';
 import {
   Table,
   TableBody,
@@ -40,8 +43,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { ScrollArea } from '@/components/ui/scroll-area';
+} from '@/components/ui/Table';
+import { ScrollArea } from '@/components/ui/ScrollArea';
 import {
   cn
 } from '@/lib/utils';

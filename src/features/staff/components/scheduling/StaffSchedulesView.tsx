@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useToast } from '@/components/ui/use-toast';
-import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/UseToast';
+import { Button } from '@/components/ui/Button';
 import { ShiftCalendar } from '@/features/schedule';
 import { MonitoringService } from '../../services/monitoring-service';
 import { SchedulingOptimizer } from '../../services/scheduling-optimizer';

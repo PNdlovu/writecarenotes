@@ -11,8 +11,8 @@
 'use client'
 
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/Button/Button"
+import { Card } from "@/components/ui/Card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { 
   Check, 
@@ -29,7 +29,7 @@ import {
   BarChart 
 } from "lucide-react"
 import React from "react"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/Badge/Badge"
 
 const plans = [
   {

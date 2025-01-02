@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeAll, afterAll } from '@jest/globals';
 import { setupTestData, clearTestData, testOrg, testCareHome, testUser, mockRequest } from './setup';
-import { GET } from '@/app/api/organizations/[id]/care-homes/[careHomeId]/activities/analytics/route';
+import { GET } from '@/app/api/organizations/[organizationId]/care-homes/[careHomeId]/activities/analytics/route';
 
 describe('Activities Analytics API', () => {
   beforeAll(async () => {

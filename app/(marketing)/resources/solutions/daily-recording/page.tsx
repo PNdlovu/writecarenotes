@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 import Link from 'next/link';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/Card';
 import { Mic, Smartphone, Clock, Check, Star, ArrowRight, Heart } from 'lucide-react';
 import Image from 'next/image';
 

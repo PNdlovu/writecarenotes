@@ -12,8 +12,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/DropdownMenu';
+import { Button } from '@/components/ui/Button/Button';
 import { Icons } from '@/components/ui/icons';
 import { AuditExportProps } from '../../types/ui.types';
 

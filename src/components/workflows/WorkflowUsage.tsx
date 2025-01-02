@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/Badge/Badge';
 import { format } from 'date-fns';
 import Link from 'next/link';
 

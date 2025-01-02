@@ -217,8 +217,13 @@ export class IndexedDB {
   }
 
   private async openDatabase(): Promise<IDBDatabase> {
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined' || !window.indexedDB) {
+      throw new StorageError('IndexedDB is not available in this environment');
+    }
+
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open(IndexedDB.DB_NAME, IndexedDB.DB_VERSION);
+      const request = window.indexedDB.open(IndexedDB.DB_NAME, IndexedDB.DB_VERSION);
 
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;

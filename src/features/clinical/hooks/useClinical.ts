@@ -9,7 +9,7 @@ import {
   VitalType,
   ReferralStatus
 } from '../types';
-import { useToast } from '@/components/ui/toast';
+import { useToast } from '@/components/ui/Toast';
 
 interface UseClinicalProps {
   residentId: string;

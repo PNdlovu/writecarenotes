@@ -1,7 +1,7 @@
 import { PayrollPeriod, PayrollStatus } from '../../types/payroll.types';
 import { formatCurrency } from '@/lib/utils/format';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/Badge/Badge';
+import { Button } from '@/components/ui/Button/Button';
 import {
   Table,
   TableBody,

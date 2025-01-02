@@ -1,5 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { EmergencyAlertList } from './EmergencyAlertList';
 import { RaiseAlertDialog } from './RaiseAlertDialog';
 import { useEmergencyResponse } from '@/hooks/useEmergencyResponse';

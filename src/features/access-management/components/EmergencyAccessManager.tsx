@@ -10,6 +10,17 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AccessManagementContext } from '../context/AccessManagementContext';
 import { EmergencyAccess, EmergencyPermission } from '../types';
 
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/Select';
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/Form';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/Dialog';
+import { Table, TableHeader, TableBody, TableRow, TableCell, TableHead } from '@/components/ui/Table';
+import { Badge } from '@/components/ui/Badge';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/Alert';
+
 interface EmergencyAccessRequest {
   id: string;
   userId: string;

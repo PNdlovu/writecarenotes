@@ -1,11 +1,11 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { Icon } from '@/components/ui/icon';
-import { Spinner } from '@/components/ui/spinner';
-import { Alert } from '@/components/ui/alert';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button/Button';
+import { Progress } from '@/components/ui/Progress';
+import { Badge } from '@/components/ui/Badge/Badge';
+import { Icon } from '@/components/ui/Icons';
+import { Spinner } from '@/components/ui/Spinner';
+import { Alert } from '@/components/ui/Alert';
 import { useComplianceManagement } from '../hooks/useComplianceManagement';
 import { Region } from '../types/compliance.types';
 

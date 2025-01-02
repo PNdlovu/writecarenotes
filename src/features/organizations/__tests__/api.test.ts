@@ -183,11 +183,11 @@ describe('Organization API', () => {
     });
   });
 
-  describe('GET /api/organizations/[id]', () => {
+  describe('GET /api/organizations/[organizationId]', () => {
     it('should return a single organization', async () => {
       const { req, res } = createMocks({
         method: 'GET',
-        query: { id: 'test-org' }
+        query: { organizationId: 'test-org' }
       });
 
       (organizationService.getOrganization as jest.Mock).mockResolvedValue(
@@ -195,7 +195,7 @@ describe('Organization API', () => {
       );
 
       const response = await handleGetOrganization(req as unknown as NextRequest, {
-        params: { id: 'test-org' }
+        params: { organizationId: 'test-org' }
       });
       const data = await response.json();
 
@@ -210,13 +210,13 @@ describe('Organization API', () => {
     it('should handle not found errors', async () => {
       const { req, res } = createMocks({
         method: 'GET',
-        query: { id: 'non-existent' }
+        query: { organizationId: 'non-existent' }
       });
 
       (organizationService.getOrganization as jest.Mock).mockResolvedValue(null);
 
       const response = await handleGetOrganization(req as unknown as NextRequest, {
-        params: { id: 'non-existent' }
+        params: { organizationId: 'non-existent' }
       });
       const data = await response.json();
 
@@ -225,7 +225,7 @@ describe('Organization API', () => {
     });
   });
 
-  describe('PATCH /api/organizations/[id]', () => {
+  describe('PATCH /api/organizations/[organizationId]', () => {
     const updateData = {
       name: 'Updated Organization',
       status: 'INACTIVE'
@@ -234,7 +234,7 @@ describe('Organization API', () => {
     it('should update an organization', async () => {
       const { req, res } = createMocks({
         method: 'PATCH',
-        query: { id: 'test-org' },
+        query: { organizationId: 'test-org' },
         body: updateData
       });
 
@@ -245,7 +245,7 @@ describe('Organization API', () => {
       });
 
       const response = await handleUpdateOrganization(req as unknown as NextRequest, {
-        params: { id: 'test-org' }
+        params: { organizationId: 'test-org' }
       });
       const data = await response.json();
 
@@ -262,27 +262,27 @@ describe('Organization API', () => {
     it('should validate update data', async () => {
       const { req, res } = createMocks({
         method: 'PATCH',
-        query: { id: 'test-org' },
+        query: { organizationId: 'test-org' },
         body: updateData
       });
 
       await handleUpdateOrganization(req as unknown as NextRequest, {
-        params: { id: 'test-org' }
+        params: { organizationId: 'test-org' }
       });
 
       expect(validateRequest).toHaveBeenCalledWith(updateData);
     });
   });
 
-  describe('DELETE /api/organizations/[id]', () => {
+  describe('DELETE /api/organizations/[organizationId]', () => {
     it('should delete an organization', async () => {
       const { req, res } = createMocks({
         method: 'DELETE',
-        query: { id: 'test-org' }
+        query: { organizationId: 'test-org' }
       });
 
       const response = await handleDeleteOrganization(req as unknown as NextRequest, {
-        params: { id: 'test-org' }
+        params: { organizationId: 'test-org' }
       });
 
       expect(response.status).toBe(204);
@@ -295,7 +295,7 @@ describe('Organization API', () => {
     it('should handle deletion errors', async () => {
       const { req, res } = createMocks({
         method: 'DELETE',
-        query: { id: 'test-org' }
+        query: { organizationId: 'test-org' }
       });
 
       (organizationService.deleteOrganization as jest.Mock).mockRejectedValue(
@@ -303,7 +303,7 @@ describe('Organization API', () => {
       );
 
       const response = await handleDeleteOrganization(req as unknown as NextRequest, {
-        params: { id: 'test-org' }
+        params: { organizationId: 'test-org' }
       });
       const data = await response.json();
 
@@ -312,7 +312,7 @@ describe('Organization API', () => {
     });
   });
 
-  describe('PATCH /api/organizations/[id]/settings', () => {
+  describe('PATCH /api/organizations/[organizationId]/settings', () => {
     const settingsData = {
       security: {
         mfa: false,
@@ -325,7 +325,7 @@ describe('Organization API', () => {
     it('should update organization settings', async () => {
       const { req, res } = createMocks({
         method: 'PATCH',
-        query: { id: 'test-org' },
+        query: { organizationId: 'test-org' },
         body: settingsData
       });
 
@@ -339,7 +339,7 @@ describe('Organization API', () => {
       });
 
       const response = await handleUpdateSettings(req as unknown as NextRequest, {
-        params: { id: 'test-org' }
+        params: { organizationId: 'test-org' }
       });
       const data = await response.json();
 
@@ -354,11 +354,11 @@ describe('Organization API', () => {
     });
   });
 
-  describe('POST /api/organizations/[id]/care-homes', () => {
+  describe('POST /api/organizations/[organizationId]/care-homes', () => {
     it('should add a care home to an organization', async () => {
       const { req, res } = createMocks({
         method: 'POST',
-        query: { id: 'test-org' },
+        query: { organizationId: 'test-org' },
         body: { careHomeId: 'test-care-home' }
       });
 
@@ -368,7 +368,7 @@ describe('Organization API', () => {
       });
 
       const response = await handleAddCareHome(req as unknown as NextRequest, {
-        params: { id: 'test-org' }
+        params: { organizationId: 'test-org' }
       });
       const data = await response.json();
 
@@ -384,12 +384,12 @@ describe('Organization API', () => {
     it('should validate care home ID', async () => {
       const { req, res } = createMocks({
         method: 'POST',
-        query: { id: 'test-org' },
+        query: { organizationId: 'test-org' },
         body: {}
       });
 
       const response = await handleAddCareHome(req as unknown as NextRequest, {
-        params: { id: 'test-org' }
+        params: { organizationId: 'test-org' }
       });
       const data = await response.json();
 
@@ -398,11 +398,11 @@ describe('Organization API', () => {
     });
   });
 
-  describe('DELETE /api/organizations/[id]/care-homes/[careHomeId]', () => {
+  describe('DELETE /api/organizations/[organizationId]/care-homes/[careHomeId]', () => {
     it('should remove a care home from an organization', async () => {
       const { req, res } = createMocks({
         method: 'DELETE',
-        query: { id: 'test-org', careHomeId: 'test-care-home' }
+        query: { organizationId: 'test-org', careHomeId: 'test-care-home' }
       });
 
       (organizationService.removeCareHome as jest.Mock).mockResolvedValue({
@@ -411,7 +411,7 @@ describe('Organization API', () => {
       });
 
       const response = await handleRemoveCareHome(req as unknown as NextRequest, {
-        params: { id: 'test-org', careHomeId: 'test-care-home' }
+        params: { organizationId: 'test-org', careHomeId: 'test-care-home' }
       });
       const data = await response.json();
 

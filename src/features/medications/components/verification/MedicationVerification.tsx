@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/Button/Button';
+import { Input } from '@/components/ui/Input/Input';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
+} from '@/components/ui/Dialog/Dialog';
+import { Badge } from '@/components/ui/Badge/Badge';
+import { Card } from '@/components/ui/Card';
 import {
   Fingerprint,
   ScanLine,

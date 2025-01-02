@@ -9,7 +9,7 @@
 
 'use client'
 
-import { Card } from '@/components/ui/card'
+import { Card } from '@/components/ui/Card'
 import { Heart, Shield, Clock, Users } from 'lucide-react'
 import { motion } from 'framer-motion'
 

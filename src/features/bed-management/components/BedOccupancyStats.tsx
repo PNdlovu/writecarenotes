@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { BedOccupancyStats as Stats } from '../types/bed.types'
 
 interface BedOccupancyStatsProps {

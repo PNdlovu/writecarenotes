@@ -15,14 +15,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@/components/ui/Card';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/components/ui/Select/Select';
 import { useState } from 'react';
 import { Users, Eye, Edit2, Link } from 'lucide-react';
 import { Badge, Progress } from '@/components/ui/feedback';

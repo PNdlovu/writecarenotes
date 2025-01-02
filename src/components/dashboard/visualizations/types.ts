@@ -1,4 +1,4 @@
-import { BadgeProps } from '@/components/ui/badge'
+import { BadgeProps } from '@/components/ui/Badge/Badge'
 
 export interface AuditLog {
   timestamp: Date

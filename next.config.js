@@ -1,17 +1,6 @@
-const withPWA = require('next-pwa')({
-  dest: 'public',
-  register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development'
-})
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
-  },
   images: {
     remotePatterns: [
       {
@@ -62,6 +51,6 @@ const nextConfig = {
     '@mapbox/node-pre-gyp',
     'bcrypt'
   ]
-};
+}
 
-module.exports = withPWA(nextConfig);
+module.exports = nextConfig

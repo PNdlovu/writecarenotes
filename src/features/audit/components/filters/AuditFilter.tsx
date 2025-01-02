@@ -7,12 +7,12 @@
  */
 
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input/Input';
 import { Label } from '@/components/ui/label';
-import { Select } from '@/components/ui/select';
+import { Select } from '@/components/ui/Select/Select';
 import { DatePicker } from '@/components/ui/date-picker';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 import { AuditFilterProps } from '../../types/ui.types';
 import { AuditLogAction, AuditLogStatus } from '@/types/audit';
 

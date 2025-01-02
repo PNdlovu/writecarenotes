@@ -3,14 +3,14 @@ import { useDocumentWorkflows } from '@/hooks/useDocumentWorkflow';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/ui/Dialog/Dialog';
 import {
   Form,
   FormControl,
@@ -18,9 +18,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+} from '@/components/ui/Form';
+import { Input } from '@/components/ui/Input/Input';
+import { Textarea } from '@/components/ui/Textarea';
 import { Loader2, Plus, X } from 'lucide-react';
 
 const workflowFormSchema = z.object({

@@ -5,7 +5,7 @@ import {
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
   ComposedChart, Area, Treemap
 } from 'recharts'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
 import { useTheme } from 'next-themes'
 import { COLORS } from '@/lib/constants'
 import { ChartConfig } from './types'

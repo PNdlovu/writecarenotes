@@ -3,13 +3,13 @@
 import { useState } from 'react'
 import { useOrganization } from '../../hooks/useOrganization'
 import { OrganizationSettings as Settings } from '../../types/organization.types'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/Button/Button'
+import { Input } from '@/components/ui/Input/Input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Card } from '@/components/ui/card'
-import { toast } from '@/components/ui/use-toast'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
+import { Card } from '@/components/ui/Card'
+import { toast } from '@/components/ui/UseToast'
 import { Loader2 } from 'lucide-react'
 
 export function OrganizationSettings() {

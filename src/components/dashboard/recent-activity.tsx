@@ -1,7 +1,7 @@
 "use client"
 
 import { useParams } from 'next/navigation'
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar/avatar"
 
 interface Activity {
   name: string;

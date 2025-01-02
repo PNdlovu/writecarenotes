@@ -1,12 +1,30 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Hook for managing staff data
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @updated 2024-03-21
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * Custom hook for fetching and managing staff data, including profile
+ * information, schedules, and assignments.
+ */
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { staffAPI } from '../api/staff-api';
-import { StaffMember } from '../types';
+import type { StaffMember } from '../types';
 
 export function useStaffMembers() {
-  return useQuery({
+  const { data = [] } = useQuery({
     queryKey: ['staff'],
     queryFn: () => staffAPI.getStaffMembers(),
   });
+
+  return {
+    data
+  };
 }
 
 export function useStaffMember(id: string) {
@@ -31,7 +49,7 @@ export function useUpdateStaffMember() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: Partial<StaffMember> }) => 
+    mutationFn: ({ id, data }: { id: string; data: Partial<StaffMember> }) =>
       staffAPI.updateStaffMember(id, data),
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['staff'] });

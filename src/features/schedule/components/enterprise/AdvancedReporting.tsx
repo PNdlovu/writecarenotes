@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/Button/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 import { BarChart, LineChart, PieChart } from "@/components/ui/charts";
 import { Download, Filter, BarChart as ChartIcon, LineChart as TrendIcon, PieChart as PieIcon } from "lucide-react";
 import {
@@ -10,7 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Select/Select";
 
 export function AdvancedReporting() {
   return (

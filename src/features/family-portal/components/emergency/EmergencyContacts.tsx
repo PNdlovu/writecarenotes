@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/form/label";
+import { Button } from "@/components/ui/Button/Button";
+import { Card } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input/Input";
+import { Label } from "@/components/ui/Form/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -10,7 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Select/Select";
 import {
   Dialog,
   DialogContent,
@@ -19,8 +19,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
+} from "@/components/ui/Dialog/Dialog";
+import { Badge } from "@/components/ui/Badge/Badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Icons } from "@/components/ui/icons";
 

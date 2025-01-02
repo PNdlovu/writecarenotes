@@ -1,17 +1,17 @@
 import { useTranslation } from 'next-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { DocumentType, DocumentStatus } from '@prisma/client';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/components/ui/Select/Select';
 import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Badge } from '@/components/ui/Badge/Badge';
+import { ScrollArea } from '@/components/ui/ScrollArea';
 
 interface DocumentFiltersProps {
   filters: {

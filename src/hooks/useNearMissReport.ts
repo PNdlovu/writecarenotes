@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/UseToast';
 import { nearMissService } from '@/services/nearMissService';
 import type { 
   NearMissReport, 

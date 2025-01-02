@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { Card } from "@/components/ui/card"
+import { Card } from "@/components/ui/Card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Avatar } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
+import { Avatar } from "@/components/ui/Avatar"
+import { Badge } from "@/components/ui/Badge/Badge"
 import { formatDistanceToNow } from 'date-fns'
 import { useTranslations } from 'next-intl'
 

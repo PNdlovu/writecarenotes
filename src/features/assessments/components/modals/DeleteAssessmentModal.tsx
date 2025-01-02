@@ -1,7 +1,15 @@
 import { Fragment } from 'react';
-import { Dialog, Transition } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/Dialog';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/Alert';
 
 interface DeleteAssessmentModalProps {
   isOpen: boolean;
@@ -55,15 +63,15 @@ export const DeleteAssessmentModal: React.FC<DeleteAssessmentModalProps> = ({
                     />
                   </div>
                   <div>
-                    <Dialog.Title
+                    <DialogTitle
                       as="h3"
                       className="text-lg font-medium leading-6 text-gray-900"
                     >
                       Delete Assessment
-                    </Dialog.Title>
-                    <p className="mt-2 text-sm text-gray-500">
+                    </DialogTitle>
+                    <DialogDescription className="mt-2 text-sm text-gray-500">
                       Are you sure you want to delete "{assessmentTitle}"? This action cannot be undone.
-                    </p>
+                    </DialogDescription>
                   </div>
                 </div>
 
@@ -89,5 +97,3 @@ export const DeleteAssessmentModal: React.FC<DeleteAssessmentModalProps> = ({
     </Transition>
   );
 };
-
-

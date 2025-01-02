@@ -1,10 +1,37 @@
 /**
- * WriteCareNotes.com
- * @fileoverview Magic Link Verification Component
+ * @writecarenotes.com
+ * @fileoverview Magic link verification and authentication component
  * @version 1.0.0
- * @created 2024-03-21
- * @author Write Care Notes Team
- * @copyright Write Care Notes Ltd
+ * @created 2025-01-01
+ * @updated 2025-01-02
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A component that handles the verification of magic link tokens for
+ * passwordless authentication. Features include:
+ * - Automatic token verification
+ * - Loading state management
+ * - Error handling with user feedback
+ * - Automatic redirection after verification
+ * - Session establishment
+ * - Token expiration handling
+ *
+ * Mobile-First Considerations:
+ * - Responsive layout
+ * - Loading indicators
+ * - Clear error states
+ * - Smooth transitions
+ * - Touch interaction delays
+ * - Network status feedback
+ *
+ * Enterprise Features:
+ * - Token validation
+ * - Session security
+ * - Rate limiting
+ * - Audit logging
+ * - Error tracking
+ * - Analytics integration
  */
 
 'use client'
@@ -12,7 +39,8 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
-import { useToast } from '@/components/ui/use-toast'
+
+import { useToast } from '@/components/ui/Toast/useToast'
 
 export function VerifyMagicLink() {
   const router = useRouter()

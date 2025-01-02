@@ -5,8 +5,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+} from '@/components/ui/Tooltip';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert';
 
 export const AccessibleTooltip: React.FC<{
   content: string;

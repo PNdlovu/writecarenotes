@@ -1,16 +1,61 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Care component factory for specialized care services
+ * @version 1.0.0
+ * @created 2025-01-01
+ * @updated 2025-01-02
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A factory component that dynamically generates specialized care components
+ * based on care type and regional requirements. Features include:
+ * - Dynamic component selection based on care type
+ * - Regional regulatory compliance integration
+ * - Support for multiple specialized care types
+ * - Automatic regulatory wrapper application
+ * - Type-safe component generation
+ * - Error boundary protection
+ * - Performance optimization
+ *
+ * Mobile-First Considerations:
+ * - Responsive layouts
+ * - Touch-friendly controls
+ * - Dynamic loading states
+ * - Network resilience
+ * - Offline support
+ * - Resource optimization
+ *
+ * Enterprise Features:
+ * - Regulatory compliance
+ * - Error boundaries
+ * - Performance monitoring
+ * - Audit logging
+ * - Analytics tracking
+ * - Regional adaptation
+ */
+
 import React from 'react';
+
+// Types
 import { CareType, BasePerson } from '../../types/care';
 import { Region } from '../../types/regulatory';
-import { MentalHealthCare } from '../specialized-care/MentalHealthCare';
-import { LearningDisabilitySupport } from '../specialized-care/LearningDisabilitySupport';
-import { EndOfLifeCare } from '../specialized-care/EndOfLifeCare';
-import { DementiaCare } from '../specialized-care/DementiaCare';
-import { PhysicalDisabilitiesCare } from '../specialized-care/PhysicalDisabilitiesCare';
-import { DomiciliaryCare } from '../specialized-care/DomiciliaryCare';
-import { SupportedLiving } from '../specialized-care/SupportedLiving';
-import { SubstanceMisuse } from '../specialized-care/SubstanceMisuse';
-import { BrainInjuryCare } from '../specialized-care/BrainInjuryCare';
-import { ChildrensCare } from '../specialized-care/ChildrensCare';
+
+// Specialized Care Components
+import { MentalHealthCare } from './specialized/mental-health/MentalHealthCare';
+import { LearningDisabilitySupport } from './specialized/learning-disabilities/LearningDisabilitiesCare';
+import { EndOfLifeCare } from './specialized/end-of-life/EndOfLifeCare';
+import { DementiaCare } from './specialized/dementia/DementiaCare';
+import { PhysicalDisabilitiesCare } from './specialized/physical-disabilities/PhysicalDisabilitiesCare';
+import { DomiciliaryCare } from './specialized/domiciliary/DomiciliaryCare';
+import { SupportedLiving } from './specialized/supported-living/SupportedLiving';
+import { SubstanceMisuse } from './specialized/substance-misuse/SubstanceMisuse';
+import { BrainInjuryCare } from './specialized/brain-injury/BrainInjuryCare';
+import { ChildrensCare } from './specialized/childrens/ChildrensCare';
+import { YoungAdultCare } from './specialized/young-adult/YoungAdultCare';
+import { MentalCapacityAssessment } from './specialized/mental-capacity/MentalCapacityAssessment';
+
+// Higher Order Components
 import { withRegulatory } from '../regulatory/withRegulatory';
 
 interface CareComponentFactoryProps {
@@ -37,6 +82,8 @@ export const CareComponentFactory: React.FC<CareComponentFactoryProps> = ({
   const RegulatedSubstanceMisuse = withRegulatory(SubstanceMisuse);
   const RegulatedBrainInjuryCare = withRegulatory(BrainInjuryCare);
   const RegulatedChildrensCare = withRegulatory(ChildrensCare);
+  const RegulatedYoungAdultCare = withRegulatory(YoungAdultCare);
+  const RegulatedMentalCapacityAssessment = withRegulatory(MentalCapacityAssessment);
 
   // Common props for regulatory components
   const regulatoryProps = {
@@ -110,6 +157,24 @@ export const CareComponentFactory: React.FC<CareComponentFactoryProps> = ({
         <RegulatedChildrensCare
           person={person}
           ofstedData={person.ofstedRequirements}
+          {...regulatoryProps}
+        />
+      );
+
+    case 'young-adult':
+      return (
+        <RegulatedYoungAdultCare
+          person={person}
+          assessment={person.youngAdultAssessment}
+          {...regulatoryProps}
+        />
+      );
+
+    case 'mental-capacity':
+      return (
+        <RegulatedMentalCapacityAssessment
+          person={person}
+          assessment={person.mentalCapacityAssessment}
           {...regulatoryProps}
         />
       );

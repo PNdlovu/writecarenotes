@@ -1,33 +1,36 @@
 /**
- * @fileoverview Emergency Access Service
+ * WriteCareNotes.com
+ * @fileoverview Emergency Service Implementation
  * @version 1.0.0
  * @created 2024-03-21
- * @author Philani Ndlovu
- * @copyright Write Care Notes Ltd
+ * @author Phibu Cloud Solutions Ltd
+ * @copyright Phibu Cloud Solutions Ltd
  */
 
 import { AccessManagementService } from '@/features/access-management/services/AccessManagementService';
+import { NotificationService } from '@/features/notifications/services/NotificationService';
 import { SecurityConfig } from '@/features/access-management/types';
-
-interface EmergencyAccess {
-  id: string;
-  userId: string;
-  resourceId: string;
-  resourceType: string;
-  reason: string;
-  grantedAt: Date;
-  expiresAt: Date;
-  status: 'ACTIVE' | 'EXPIRED' | 'REVOKED';
-  revokedAt?: Date;
-  revokedBy?: string;
-  revokeReason?: string;
-}
+import {
+  EmergencyIncident,
+  EmergencyProtocol,
+  EmergencyAction,
+  EmergencyNotification,
+  EmergencyReport,
+  EmergencyType,
+  EmergencyStatus,
+  EmergencySeverity,
+  EmergencyDashboardFilters
+} from '../types';
 
 export class EmergencyService {
   private static instance: EmergencyService;
+  private baseUrl: string;
   private accessService: AccessManagementService;
+  private notificationService: NotificationService;
 
   private constructor() {
+    this.baseUrl = process.env.REACT_APP_API_URL || '';
+    
     const config: SecurityConfig = {
       algorithm: 'aes-256-gcm',
       ivLength: 16,
@@ -47,6 +50,7 @@ export class EmergencyService {
     };
 
     this.accessService = new AccessManagementService(config);
+    this.notificationService = NotificationService.getInstance();
   }
 
   public static getInstance(): EmergencyService {
@@ -56,136 +60,251 @@ export class EmergencyService {
     return EmergencyService.instance;
   }
 
-  async initialize() {
-    await this.accessService.initialize();
-  }
-
-  async requestEmergencyAccess(
-    userId: string,
-    resourceType: string,
-    resourceId: string,
-    reason: string
-  ): Promise<EmergencyAccess> {
+  /**
+   * Creates a new emergency incident
+   */
+  public async createIncident(incident: Omit<EmergencyIncident, 'id' | 'timeline' | 'createdAt' | 'updatedAt'>): Promise<EmergencyIncident> {
     try {
-      // Check if user has permission to request emergency access
-      const accessDecision = await this.accessService.checkAccess({
-        userId,
-        resourceType: 'emergency_access',
-        resourceId: 'global',
-        action: 'request'
-      });
-
-      if (!accessDecision.allowed) {
-        throw new Error('User does not have permission to request emergency access');
-      }
-
-      // Create emergency access record
-      const emergencyAccess: EmergencyAccess = {
-        id: crypto.randomUUID(),
-        userId,
-        resourceType,
-        resourceId,
-        reason,
-        grantedAt: new Date(),
-        expiresAt: new Date(Date.now() + 4 * 60 * 60 * 1000), // 4 hours from now
-        status: 'ACTIVE'
-      };
-
-      // Store emergency access in database
-      await fetch('/api/emergency-access', {
+      const response = await fetch(`${this.baseUrl}/api/emergency/incidents`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(emergencyAccess)
+        body: JSON.stringify(incident)
       });
 
-      // Log the emergency access request
-      await this.accessService.auditLog({
-        action: 'EMERGENCY_ACCESS_GRANTED',
-        description: `Emergency access granted for ${resourceType} ${resourceId}`,
-        userId,
-        tenantId: 'current-tenant-id', // Replace with actual tenant ID
-        timestamp: new Date(),
-        metadata: {
-          resourceType,
-          resourceId,
-          reason,
-          expiresAt: emergencyAccess.expiresAt
-        }
-      });
-
-      return emergencyAccess;
-    } catch (error) {
-      console.error('Failed to request emergency access:', error);
-      throw error;
-    }
-  }
-
-  async revokeEmergencyAccess(
-    accessId: string,
-    userId: string,
-    revokeReason: string
-  ): Promise<EmergencyAccess> {
-    try {
-      // Check if user has permission to revoke emergency access
-      const accessDecision = await this.accessService.checkAccess({
-        userId,
-        resourceType: 'emergency_access',
-        resourceId: 'global',
-        action: 'revoke'
-      });
-
-      if (!accessDecision.allowed) {
-        throw new Error('User does not have permission to revoke emergency access');
-      }
-
-      // Get emergency access record
-      const response = await fetch(`/api/emergency-access/${accessId}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch emergency access record');
+        throw new Error(`Failed to create incident: ${response.statusText}`);
       }
-      const emergencyAccess: EmergencyAccess = await response.json();
 
-      // Update emergency access record
-      const updatedAccess: EmergencyAccess = {
-        ...emergencyAccess,
-        status: 'REVOKED',
-        revokedAt: new Date(),
-        revokedBy: userId,
-        revokeReason
-      };
+      const createdIncident = await response.json();
 
-      // Store updated emergency access in database
-      await fetch(`/api/emergency-access/${accessId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedAccess)
-      });
+      // Notify relevant personnel
+      await this.notifyEmergencyTeam(createdIncident);
 
-      // Log the emergency access revocation
-      await this.accessService.auditLog({
-        action: 'EMERGENCY_ACCESS_REVOKED',
-        description: `Emergency access revoked for ${emergencyAccess.resourceType} ${emergencyAccess.resourceId}`,
-        userId,
-        tenantId: 'current-tenant-id', // Replace with actual tenant ID
-        timestamp: new Date(),
-        metadata: {
-          resourceType: emergencyAccess.resourceType,
-          resourceId: emergencyAccess.resourceId,
-          revokeReason,
-          originalGrantedAt: emergencyAccess.grantedAt
-        }
-      });
-
-      return updatedAccess;
+      return createdIncident;
     } catch (error) {
-      console.error('Failed to revoke emergency access:', error);
+      console.error('Error creating incident:', error);
       throw error;
     }
   }
 
-  async getEmergencyAccessHistory(userId: string): Promise<EmergencyAccess[]> {
+  /**
+   * Updates an existing emergency incident
+   */
+  public async updateIncident(incidentId: string, updates: Partial<EmergencyIncident>): Promise<EmergencyIncident> {
     try {
-      // Check if user has permission to view emergency access history
+      const response = await fetch(`${this.baseUrl}/api/emergency/incidents/${incidentId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update incident: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error updating incident:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Retrieves an emergency incident by ID
+   */
+  public async getIncident(incidentId: string): Promise<EmergencyIncident> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/emergency/incidents/${incidentId}`);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch incident: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching incident:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Lists emergency incidents based on filters
+   */
+  public async listIncidents(filters?: EmergencyDashboardFilters): Promise<EmergencyIncident[]> {
+    try {
+      const queryParams = new URLSearchParams();
+      if (filters) {
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value !== undefined) {
+            if (key === 'dateRange') {
+              queryParams.append('startDate', value.start.toISOString());
+              queryParams.append('endDate', value.end.toISOString());
+            } else if (Array.isArray(value)) {
+              value.forEach(v => queryParams.append(key + '[]', v));
+            } else {
+              queryParams.append(key, value.toString());
+            }
+          }
+        });
+      }
+
+      const response = await fetch(`${this.baseUrl}/api/emergency/incidents?${queryParams}`);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch incidents: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching incidents:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Records an action taken during an emergency
+   */
+  public async recordAction(incidentId: string, action: Omit<EmergencyAction, 'id'>): Promise<EmergencyAction> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/emergency/incidents/${incidentId}/actions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(action)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to record action: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error recording action:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Creates or updates an emergency protocol
+   */
+  public async saveProtocol(protocol: Omit<EmergencyProtocol, 'id'>): Promise<EmergencyProtocol> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/emergency/protocols`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(protocol)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to save protocol: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error saving protocol:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Retrieves emergency protocols by type
+   */
+  public async getProtocols(type?: EmergencyType): Promise<EmergencyProtocol[]> {
+    try {
+      const url = type 
+        ? `${this.baseUrl}/api/emergency/protocols?type=${type}`
+        : `${this.baseUrl}/api/emergency/protocols`;
+      
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch protocols: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error fetching protocols:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Creates an emergency report
+   */
+  public async createReport(report: Omit<EmergencyReport, 'id' | 'submittedAt'>): Promise<EmergencyReport> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/emergency/reports`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(report)
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to create report: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error creating report:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Updates an emergency report's status
+   */
+  public async updateReportStatus(
+    reportId: string,
+    status: 'SUBMITTED' | 'REVIEWED' | 'APPROVED',
+    reviewedBy?: string
+  ): Promise<EmergencyReport> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/emergency/reports/${reportId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status, reviewedBy })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to update report status: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error updating report status:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Sends emergency notifications
+   */
+  private async notifyEmergencyTeam(incident: EmergencyIncident): Promise<void> {
+    try {
+      const notifications: EmergencyNotification[] = incident.responders.map(responder => ({
+        id: crypto.randomUUID(),
+        incidentId: incident.id,
+        type: 'SYSTEM',
+        recipient: responder,
+        message: `Emergency: ${incident.type} incident reported at ${incident.location}. Severity: ${incident.severity}`,
+        priority: incident.severity === 'CRITICAL' ? 'URGENT' : 'HIGH',
+        status: 'PENDING'
+      }));
+
+      await Promise.all(notifications.map(notification =>
+        this.notificationService.send(notification)
+      ));
+    } catch (error) {
+      console.error('Error notifying emergency team:', error);
+      // Don't throw here to prevent blocking the incident creation
+      // but log for monitoring
+    }
+  }
+
+  /**
+   * Retrieves emergency access history
+   */
+  public async getEmergencyAccessHistory(userId: string): Promise<EmergencyAccess[]> {
+    try {
       const accessDecision = await this.accessService.checkAccess({
         userId,
         resourceType: 'emergency_access',
@@ -197,24 +316,23 @@ export class EmergencyService {
         throw new Error('User does not have permission to view emergency access history');
       }
 
-      // Get emergency access history from database
-      const response = await fetch(`/api/emergency-access?userId=${userId}`);
+      const response = await fetch(`${this.baseUrl}/api/emergency/access?userId=${userId}`);
+      
       if (!response.ok) {
         throw new Error('Failed to fetch emergency access history');
       }
 
-      // Log the access
       await this.accessService.auditLog({
         action: 'EMERGENCY_ACCESS_HISTORY_VIEWED',
-        description: `Emergency access history viewed`,
+        description: 'Emergency access history viewed',
         userId,
-        tenantId: 'current-tenant-id', // Replace with actual tenant ID
+        tenantId: 'current-tenant-id',
         timestamp: new Date()
       });
 
       return response.json();
     } catch (error) {
-      console.error('Failed to get emergency access history:', error);
+      console.error('Error fetching emergency access history:', error);
       throw error;
     }
   }

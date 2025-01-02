@@ -1,6 +1,6 @@
 import { Metadata } from "next"
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/Card"
+import { Button } from "@/components/ui/Button/Button"
 import { Video, Play, Clock, Tag } from "lucide-react"
 
 export const metadata: Metadata = {

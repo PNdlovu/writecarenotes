@@ -1,7 +1,7 @@
 import React from 'react';
-import { PayrollService } from '@/lib/payroll/services/payroll-service';
+import { PayrollService } from '../../services/payroll-service';
 import { LocalStorageRepository } from '@/lib/storage/localStorageRepository';
-import { Region, TaxYear, NICategory } from '@/lib/payroll/types';
+import { Region, TaxYear, NICategory } from '../../lib/types';
 import { useTenantContext } from '@/lib/multi-tenant/hooks';
 import { PayrollFormData } from '../../types/payroll.types';
 

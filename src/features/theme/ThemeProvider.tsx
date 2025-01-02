@@ -1,125 +1,64 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { themeTokens } from './tokens';
+import { createContext, useContext } from 'react';
+import { ThemeProvider as NextThemeProvider } from 'next-themes';
 
 interface ThemeContextType {
-  theme: string;
-  setTheme: (theme: string) => void;
-  systemTheme: string;
-  customTheme: CustomTheme | null;
-  setCustomTheme: (theme: CustomTheme | null) => void;
-  tokens: typeof themeTokens;
-  applyThemeOverrides: (overrides: Partial<CustomTheme>) => void;
-}
-
-interface CustomTheme {
   colors: {
-    primary: string;
-    secondary: string;
-    accent: string;
-  };
-  logo?: string;
-  fonts?: {
-    heading?: string;
-    body?: string;
-  };
-}
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-interface ThemeProviderProps {
-  children: React.ReactNode;
-  defaultTheme?: string;
-  storageKey?: string;
-}
-
-export function ThemeProvider({
-  children,
-  defaultTheme = 'system',
-  storageKey = 'ui-theme',
-}: ThemeProviderProps) {
-  const [theme, setTheme] = useLocalStorage<string>(storageKey, defaultTheme);
-  const [systemTheme, setSystemTheme] = useState<string>('light');
-  const [customTheme, setCustomTheme] = useState<CustomTheme | null>(null);
-
-  // Monitor system theme changes
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const handleChange = (e: MediaQueryListEvent) => {
-      setSystemTheme(e.matches ? 'dark' : 'light');
+    england: { primary: string; secondary: string };
+    wales: { primary: string; secondary: string };
+    scotland: { primary: string; secondary: string };
+    ireland: { primary: string; secondary: string };
+    northernIreland: { primary: string; secondary: string };
+    careLevel: {
+      LOW: string;
+      MEDIUM: string;
+      HIGH: string;
     };
-
-    setSystemTheme(mediaQuery.matches ? 'dark' : 'light');
-    mediaQuery.addEventListener('change', handleChange);
-    
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
-
-  // Apply theme changes
-  useEffect(() => {
-    const root = document.documentElement;
-    const effectiveTheme = theme === 'system' ? systemTheme : theme;
-    
-    root.classList.remove('light', 'dark');
-    root.classList.add(effectiveTheme);
-
-    // Apply custom theme if present
-    if (customTheme) {
-      Object.entries(customTheme.colors).forEach(([key, value]) => {
-        root.style.setProperty(`--color-${key}`, value);
-      });
-
-      if (customTheme.fonts) {
-        if (customTheme.fonts.heading) {
-          root.style.setProperty('--font-family-heading', customTheme.fonts.heading);
-        }
-        if (customTheme.fonts.body) {
-          root.style.setProperty('--font-family-body', customTheme.fonts.body);
-        }
-      }
-    }
-  }, [theme, systemTheme, customTheme]);
-
-  // Apply theme overrides (for enterprise customization)
-  const applyThemeOverrides = (overrides: Partial<CustomTheme>) => {
-    setCustomTheme(prev => ({
-      ...prev,
-      ...overrides,
-      colors: {
-        ...(prev?.colors || {}),
-        ...(overrides.colors || {}),
-      },
-      fonts: {
-        ...(prev?.fonts || {}),
-        ...(overrides.fonts || {}),
-      },
-    }));
+    status: {
+      ACTIVE: string;
+      DISCHARGED: string;
+      TEMPORARY: string;
+      ADMITTED: string;
+    };
   };
+}
 
-  const value = {
-    theme,
-    setTheme,
-    systemTheme,
-    customTheme,
-    setCustomTheme,
-    tokens: themeTokens,
-    applyThemeOverrides,
-  };
+const defaultColors = {
+  england: { primary: '#005EB8', secondary: '#003087' },
+  wales: { primary: '#D30731', secondary: '#A6093D' },
+  scotland: { primary: '#005EB8', secondary: '#002855' },
+  ireland: { primary: '#169B62', secondary: '#0D5C3A' },
+  northernIreland: { primary: '#008542', secondary: '#005128' },
+  careLevel: {
+    LOW: '#4CAF50',
+    MEDIUM: '#FFA726',
+    HIGH: '#F44336'
+  },
+  status: {
+    ACTIVE: '#4CAF50',
+    DISCHARGED: '#9E9E9E',
+    TEMPORARY: '#FFA726',
+    ADMITTED: '#2196F3'
+  }
+};
 
+const ThemeContext = createContext<ThemeContextType>({ colors: defaultColors });
+
+export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
+    <NextThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <ThemeContext.Provider value={{ colors: defaultColors }}>
+        {children}
+      </ThemeContext.Provider>
+    </NextThemeProvider>
   );
 }
 
-export function useTheme() {
+export const useTheme = () => {
   const context = useContext(ThemeContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useTheme must be used within a ThemeProvider');
   }
   return context;
-}
+}; 

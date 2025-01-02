@@ -7,8 +7,8 @@
  * @copyright Phibu Cloud Solutions Ltd.
  */
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Activity, Users, FileText, Bell } from "lucide-react"
 import { EmptyPlaceholder } from "@/components/empty-placeholder"
 

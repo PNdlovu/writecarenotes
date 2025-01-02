@@ -11,13 +11,13 @@ import {
   SyncOperation, 
   SyncQueueEntry,
   RealtimeUpdate,
-  SyncPriority,
-  BatchStrategy
+  SyncPriority
 } from '../types';
 import { IndexedDB } from '../storage/indexedDB';
 import { compressionUtil } from '../utils/compression';
 import { analyticsService } from '../services/analytics';
-import { WebSocket } from '../network/websocket';
+import { WebSocketClient } from '../network/websocket';
+import { BatchStrategy } from './batchStrategy';
 
 export class SyncQueue {
   private static readonly STORE_KEY = 'sync_queue';
@@ -26,7 +26,7 @@ export class SyncQueue {
   private db: IndexedDB;
   private config: SyncConfig | null = null;
   private isProcessing = false;
-  private ws: WebSocket | null = null;
+  private ws: WebSocketClient | null = null;
   private batchStrategy: BatchStrategy;
 
   constructor() {
@@ -62,7 +62,7 @@ export class SyncQueue {
    * Initialize WebSocket connection
    */
   private async initializeWebSocket(): Promise<void> {
-    this.ws = new WebSocket(this.config!.websocketUrl);
+    this.ws = new WebSocketClient(this.config!.websocketUrl, this.config);
     
     this.ws.onMessage(async (update: RealtimeUpdate) => {
       await this.handleRealtimeUpdate(update);

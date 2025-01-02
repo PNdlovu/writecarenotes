@@ -1,7 +1,15 @@
 /**
+ * @writecarenotes.com
  * @fileoverview Type definitions for offline functionality
  * @version 1.0.0
  * @created 2024-03-21
+ * @updated 2024-03-21
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * Type definitions for offline functionality including network,
+ * storage, and sync operations.
  */
 
 export type Region = 'UK_ENGLAND' | 'UK_WALES' | 'UK_SCOTLAND' | 'UK_NORTHERN_IRELAND' | 'IRELAND';
@@ -88,14 +96,19 @@ export interface SyncStatus {
   };
 }
 
+export enum ConflictResolutionType {
+  KEEP_LOCAL = 'KEEP_LOCAL',
+  KEEP_REMOTE = 'KEEP_REMOTE',
+  MERGE = 'MERGE',
+  MANUAL = 'MANUAL'
+}
+
 export interface ConflictResolution {
-  action: 'client-wins' | 'server-wins' | 'manual' | 'abort';
-  resolvedData?: any;
-  metadata?: {
-    resolvedBy: string;
-    timestamp: number;
-    reason: string;
-  };
+  type: ConflictResolutionType;
+  entityId: string;
+  entityType: string;
+  resolution: any;
+  timestamp: number;
 }
 
 export interface StorageEntry<T> {
@@ -180,4 +193,25 @@ export class QuotaExceededError extends StorageError {
     super(message, options);
     this.name = 'QuotaExceededError';
   }
+}
+
+export interface NetworkConfig {
+  pingEndpoint: string;
+  pingInterval: number;
+  timeout: number;
+  onStatusChange?: (isOnline: boolean) => void;
+}
+
+export interface NetworkStatus {
+  isOnline: boolean;
+  lastChecked: number;
+  latency: number | null;
+  type: string;
+}
+
+export interface SyncState {
+  lastSync: number | null;
+  inProgress: boolean;
+  error: Error | null;
+  pendingChanges: number;
 } 

@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
-import { useResidentTranslation } from '@/features/i18n/hooks';
+import { useResidentTranslation } from '@/lib/i18n/hooks';
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@/components/ui/Card';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/ui/Dialog/Dialog';
 import {
   Table,
   TableBody,
@@ -22,22 +22,22 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/Button/Button';
+import { Badge } from '@/components/ui/Badge/Badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+import { Label } from '@/components/ui/Label';
+import { Input } from '@/components/ui/Input/Input';
+import { Textarea } from '@/components/ui/Textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+} from '@/components/ui/Select/Select';
+import { Calendar } from '@/components/ui/Calendar';
+import { ScrollArea } from '@/components/ui/ScrollArea';
+import { Separator } from '@/components/ui/Separator';
 import type { Resident } from '../../types/resident.types';
 import type { DoLS, DoLSAssessment, DoLSReview } from '../../types/dols.types';
 

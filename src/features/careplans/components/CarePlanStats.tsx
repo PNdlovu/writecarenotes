@@ -6,7 +6,7 @@
  * @copyright Write Care Notes Ltd
  */
 
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/Card';
 import { useCarePlan } from '../hooks/useCarePlan';
 
 interface CarePlanStatsProps {

@@ -6,15 +6,15 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/components/ui/Select/Select';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+} from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge/Badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/form/radio-group';
 import { Label } from '@/components/ui/label';
 import { DocumentVersion } from '@prisma/client';

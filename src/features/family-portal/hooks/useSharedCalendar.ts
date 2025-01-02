@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/UseToast';
 import type { CalendarEvent } from '../components/collaboration/SharedCalendar';
 
 interface UseSharedCalendarProps {

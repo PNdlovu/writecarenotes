@@ -6,10 +6,10 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/Button/Button";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
+import { Badge } from "@/components/ui/Badge/Badge";
+import { useToast } from "@/components/ui/UseToast";
 import { Bell, Phone, AlertTriangle } from 'lucide-react';
 
 interface EmergencyAlertProps {

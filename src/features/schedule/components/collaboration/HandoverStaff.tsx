@@ -1,7 +1,7 @@
 import React from 'react'
-import { Card } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/Card'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
+import { Badge } from '@/components/ui/Badge/Badge'
 import type { Staff } from '@prisma/client'
 
 interface HandoverStaffProps {

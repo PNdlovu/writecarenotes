@@ -11,9 +11,9 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/Dialog/Dialog';
+import { Button } from '@/components/ui/Button/Button';
+import { Alert, AlertDescription } from '@/components/ui/Alert';
 
 interface PINEntryProps {
   isOpen: boolean;

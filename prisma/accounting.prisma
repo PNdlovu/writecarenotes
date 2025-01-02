@@ -1,0 +1,204 @@
+// Accounting Module Schema
+// This schema focuses on pure accounting functionality, separate from financial operations
+
+// Chart of Accounts
+model Account {
+  id              String          @id @default(uuid())
+  code            String          // Account code (e.g., "1000")
+  name            String          // Account name
+  type            AccountType     // Asset, Liability, Equity, Revenue, Expense
+  category        String          // Custom categorization
+  description     String?
+  isActive        Boolean         @default(true)
+  parentId        String?         // For hierarchical account structure
+  parent          Account?        @relation("AccountHierarchy", fields: [parentId], references: [id])
+  children        Account[]       @relation("AccountHierarchy")
+  organizationId  String
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  createdBy       String
+  updatedBy       String?
+  entries         LedgerEntry[]   // Journal entry lines
+  metadata        Json?
+
+  @@unique([organizationId, code])
+  @@index([organizationId, type])
+  @@index([organizationId, isActive])
+}
+
+enum AccountType {
+  ASSET
+  LIABILITY
+  EQUITY
+  REVENUE
+  EXPENSE
+}
+
+// Journal Entries
+model JournalEntry {
+  id              String          @id @default(uuid())
+  date            DateTime        // Transaction date
+  postingPeriod   String         // YYYY-MM
+  reference       String         // Unique reference number
+  description     String
+  status          EntryStatus    @default(DRAFT)
+  organizationId  String
+  entries         LedgerEntry[]  // Double-entry lines
+  attachments     Attachment[]   // Supporting documents
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  createdBy       String
+  updatedBy       String?
+  metadata        Json?
+
+  @@index([organizationId, date])
+  @@index([organizationId, postingPeriod])
+  @@index([organizationId, status])
+}
+
+enum EntryStatus {
+  DRAFT
+  POSTED
+  VOIDED
+}
+
+// Individual lines in a journal entry
+model LedgerEntry {
+  id              String        @id @default(uuid())
+  journalEntryId  String
+  accountId       String
+  debit           Decimal      @default(0)
+  credit          Decimal      @default(0)
+  description     String?
+  costCenter      String?      // For cost accounting
+  journalEntry    JournalEntry @relation(fields: [journalEntryId], references: [id])
+  account         Account      @relation(fields: [accountId], references: [id])
+
+  @@index([journalEntryId])
+  @@index([accountId])
+}
+
+// Supporting documents for journal entries
+model Attachment {
+  id              String        @id @default(uuid())
+  journalEntryId  String
+  url             String       // Document storage URL
+  type            String       // File type
+  name            String       // Original filename
+  journalEntry    JournalEntry @relation(fields: [journalEntryId], references: [id])
+  uploadedAt      DateTime     @default(now())
+  uploadedBy      String
+
+  @@index([journalEntryId])
+}
+
+// Accounting Periods
+model AccountingPeriod {
+  id              String        @id @default(uuid())
+  organizationId  String
+  period          String       // YYYY-MM
+  status          PeriodStatus @default(OPEN)
+  startDate       DateTime
+  endDate         DateTime
+  closedAt        DateTime?
+  closedBy        String?
+  metadata        Json?
+
+  @@unique([organizationId, period])
+  @@index([organizationId, status])
+}
+
+enum PeriodStatus {
+  OPEN
+  CLOSED
+  LOCKED
+}
+
+// VAT Returns
+model VATReturn {
+  id                          String    @id @default(uuid())
+  organizationId              String
+  period                      String    // YYYY-MM
+  submissionDate              DateTime
+  vatDueSales                 Decimal
+  vatDueAcquisitions          Decimal
+  totalVatDue                 Decimal
+  vatReclaimedCurrPeriod      Decimal
+  netVatDue                   Decimal
+  totalValueSalesExVAT        Decimal
+  totalValuePurchasesExVAT    Decimal
+  totalValueGoodsSuppliedExVAT Decimal
+  totalAcquisitionsExVAT      Decimal
+  submittedBy                 String
+  status                      VATStatus @default(DRAFT)
+  metadata                    Json?
+
+  @@unique([organizationId, period])
+  @@index([organizationId, status])
+}
+
+enum VATStatus {
+  DRAFT
+  SUBMITTED
+  ACCEPTED
+  REJECTED
+}
+
+// Cost Centers
+model CostCenter {
+  id              String    @id @default(uuid())
+  organizationId  String
+  code            String
+  name            String
+  description     String?
+  isActive        Boolean   @default(true)
+  parentId        String?
+  parent          CostCenter? @relation("CostCenterHierarchy", fields: [parentId], references: [id])
+  children        CostCenter[] @relation("CostCenterHierarchy")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  createdBy       String
+  updatedBy       String?
+  metadata        Json?
+
+  @@unique([organizationId, code])
+  @@index([organizationId, isActive])
+}
+
+// Year-End Closing Entries
+model YearEndClosing {
+  id              String    @id @default(uuid())
+  organizationId  String
+  fiscalYear      String    // YYYY
+  status          ClosingStatus @default(IN_PROGRESS)
+  startedAt       DateTime  @default(now())
+  completedAt     DateTime?
+  processedBy     String
+  metadata        Json?
+
+  @@unique([organizationId, fiscalYear])
+  @@index([organizationId, status])
+}
+
+enum ClosingStatus {
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  REVERSED
+}
+
+// Audit Trail for Accounting Changes
+model AccountingAudit {
+  id              String    @id @default(uuid())
+  organizationId  String
+  entityType      String    // Account, JournalEntry, etc.
+  entityId        String    // ID of the changed record
+  action          String    // Created, Updated, Deleted
+  changes         Json      // Before/After values
+  performedAt     DateTime  @default(now())
+  performedBy     String
+  metadata        Json?
+
+  @@index([organizationId, entityType])
+  @@index([organizationId, performedAt])
+} 

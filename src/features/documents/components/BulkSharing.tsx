@@ -16,8 +16,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/Dialog/Dialog';
+import { Button } from '@/components/ui/Button/Button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -26,9 +26,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+} from '@/components/ui/Select/Select';
+import { Input } from '@/components/ui/Input/Input';
+import { Badge } from '@/components/ui/Badge/Badge';
 import { toast } from '@/components/ui/use-toast';
 import {
   Table,

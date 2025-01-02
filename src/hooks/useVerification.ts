@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/Toast/use-toast';
 import { verificationService } from '@/services/verificationService';
 import type { PINVerification, VerificationResult } from '@/types/verification';
 

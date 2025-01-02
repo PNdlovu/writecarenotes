@@ -1,30 +1,42 @@
-export interface Document {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: Date;
-  updatedAt: Date;
-  metadata: DocumentMetadata;
-}
+/**
+ * WriteCareNotes.com
+ * @fileoverview Document Feature Types
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Phibu Cloud Solutions Ltd
+ * @copyright Phibu Cloud Solutions Ltd
+ */
 
-export interface DocumentMetadata {
-  version: string;
-  tags: string[];
-  securityLevel: SecurityLevel;
-  retentionPeriod?: number;
-}
+import type {
+  Document as CoreDocument,
+  DocumentMetadata as CoreDocumentMetadata,
+  DocumentSecurity,
+  DocumentPermissions,
+  DocumentStats,
+  DocumentVersion,
+  DocumentShare,
+  DocumentAction
+} from '@/types/documents';
 
-export enum SecurityLevel {
-  PUBLIC = 'PUBLIC',
-  INTERNAL = 'INTERNAL',
-  CONFIDENTIAL = 'CONFIDENTIAL',
-  RESTRICTED = 'RESTRICTED'
-}
+// Re-export core types
+export type {
+  CoreDocument as Document,
+  CoreDocumentMetadata as DocumentMetadata,
+  DocumentSecurity,
+  DocumentPermissions,
+  DocumentStats,
+  DocumentVersion,
+  DocumentShare,
+  DocumentAction
+};
 
+// Feature-specific types
 export type DocumentFilter = {
   searchTerm?: string;
   tags?: string[];
-  securityLevel?: SecurityLevel;
+  securityLevel?: DocumentSecurity['isEncrypted'];
+  category?: string;
+  status?: CoreDocumentMetadata['status'];
   dateRange?: {
     start: Date;
     end: Date;

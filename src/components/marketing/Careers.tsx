@@ -10,9 +10,9 @@
 
 'use client'
 
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/Button/Button"
+import { Card } from "@/components/ui/Card"
+import { Badge } from "@/components/ui/Badge/Badge"
 import { 
   Code2, 
   HeartHandshake, 

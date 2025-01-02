@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { ChartConfig, ComplianceMetrics } from './types';
-import { Progress, ProgressProps } from '@/components/ui/progress';
+import { Progress, ProgressProps } from '@/components/ui/Progress';
 import { cn } from '@/lib/utils';
 
 interface ComplianceBarProps extends ProgressProps {

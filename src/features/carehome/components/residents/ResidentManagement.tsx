@@ -2,13 +2,15 @@
 'use client';
 
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'next-i18next';
+import { Card } from '@/components/ui/Card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+import { ScrollArea } from '@/components/ui/ScrollArea';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Input } from '@/components/ui/Form/Input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 import {
   Table,
   TableBody,
@@ -16,14 +18,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/Table';
 import { useResidentWellbeing } from '../../hooks/useResidentWellbeing';
 import { useResidentManagement } from '../../hooks/useResidentManagement';
 import { ResidentStatus, MobilityLevel, DietaryRequirement, SocialPreference } from '../../types/resident';
 import { CareLevel } from '../../types/care';
 import { LoadingState } from '../shared/LoadingState';
 import { ErrorBoundary } from '../shared/ErrorBoundary';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/Dialog';
 
 interface ResidentManagementProps {
   careHomeId: string;

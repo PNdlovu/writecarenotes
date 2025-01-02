@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 import {
   Dialog,
   DialogContent,
@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/ui/Dialog/Dialog';
 import { Plus, Filter, SortAsc } from 'lucide-react';
 import { HandoverTask } from '../../types/handover';
 import { CareTaskCard } from './CareTaskCard';

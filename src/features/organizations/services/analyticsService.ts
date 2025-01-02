@@ -1,10 +1,11 @@
-import { OrganizationAnalyticsRepository, OrganizationMetrics, CareHomeMetricsSummary } from '../repositories/analyticsRepository'
+import { AnalyticsRepository } from './repositories/analyticsRepository'
+import type { OrganizationMetrics, CareHomeMetricsSummary } from './analytics/types'
 
 export class OrganizationAnalyticsService {
-  private repository: OrganizationAnalyticsRepository
+  private repository: AnalyticsRepository
 
   constructor() {
-    this.repository = new OrganizationAnalyticsRepository()
+    this.repository = new AnalyticsRepository()
   }
 
   async getOrganizationMetrics(organizationId: string): Promise<OrganizationMetrics> {

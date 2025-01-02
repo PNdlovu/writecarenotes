@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { medicationService } from '../services/medicationService';
 import type { MedicationAlert, AlertType, AlertSeverity } from '../types';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/UseToast';
 import { useOrganization } from '@/hooks/useOrganization';
 
 export function useAlerts() {

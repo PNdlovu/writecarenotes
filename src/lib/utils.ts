@@ -1,6 +1,22 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Utility functions
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @updated 2024-03-21
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * Common utility functions used across the application.
+ */
+
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
+/**
+ * Merge class names with Tailwind CSS classes
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }

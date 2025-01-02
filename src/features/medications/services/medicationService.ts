@@ -336,8 +336,47 @@ export class MedicationService {
   }
 
   private async notifyHighPriorityAlert(alert: MedicationAlert): Promise<void> {
-    // Implement notification logic for high priority alerts
-    // This could integrate with your notification system
+    // Implementation
+  }
+
+  async searchMedications(query: string, filters?: { form?: string; route?: string; controlled?: boolean }): Promise<Medication[]> {
+    const tenant = await getCurrentTenant();
+    
+    const where: any = {
+      organizationId: tenant.organizationId,
+      OR: [
+        { name: { contains: query, mode: 'insensitive' } },
+        { description: { contains: query, mode: 'insensitive' } },
+        { drugCode: { contains: query, mode: 'insensitive' } }
+      ]
+    };
+
+    if (filters?.form) {
+      where.form = filters.form;
+    }
+
+    if (filters?.route) {
+      where.route = filters.route;
+    }
+
+    if (filters?.controlled !== undefined) {
+      where.controlled = filters.controlled;
+    }
+
+    const medications = await prisma.medication.findMany({
+      where,
+      include: {
+        stock: true,
+        schedule: {
+          where: {
+            endDate: { gte: new Date() }
+          }
+        }
+      },
+      orderBy: { name: 'asc' }
+    });
+
+    return medications;
   }
 }
 

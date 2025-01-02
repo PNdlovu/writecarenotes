@@ -11,11 +11,11 @@ import { useCarePlan } from '../hooks/useCarePlan';
 import { CarePlanStats } from './CarePlanStats';
 import { useAccess, useMultiAccess } from '@/features/access-management/hooks/useAccess';
 import { ResourceType, PermissionAction } from '@/features/access-management/types';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/Button/Button';
+import { Card } from '@/components/ui/Card';
 import { Spinner } from '@/components/ui/loading/spinner';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { useToast } from '@/components/ui/toast/use-toast';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert';
+import { useToast } from '@/components/ui/Toast/use-toast';
 import type { CarePlanFilters } from '../types/careplan.types';
 
 interface CarePlansManagementProps {

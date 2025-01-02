@@ -7,8 +7,8 @@
  */
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Select } from '@/components/ui/select';
+import { Button } from '@/components/ui/Button/Button';
+import { Select } from '@/components/ui/Select/Select';
 import { Icons } from '@/components/ui/icons';
 import { AuditPaginationProps } from '../../types/ui.types';
 

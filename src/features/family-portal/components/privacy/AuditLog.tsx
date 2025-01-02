@@ -5,22 +5,22 @@
  */
 
 import React, { useState } from 'react';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button/Button";
+import { Badge } from "@/components/ui/Badge/Badge";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Select/Select";
 import { useAuditLog } from '../../hooks/useAuditLog';
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from 'date-fns';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/Input/Input';
 import { DateRangePicker } from "@/components/ui/date-range-picker";
-import { useI18n } from '@/features/i18n/lib/config';
+import { useI18n } from '@/lib/i18n/lib/config';
 import { useNetworkStatus } from '@/lib/offline/hooks';
 import { AuditEntry, PrivacyComponentProps } from '../../types/privacy';
 import { Alert } from '@/components/ui/alert';

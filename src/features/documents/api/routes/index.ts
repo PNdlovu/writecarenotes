@@ -1,3 +1,0 @@
-export { documentRoutes } from './documentRoutes';
-
-

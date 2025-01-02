@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/UseToast';
 import type { Task } from '../components/collaboration/TaskManager';
 
 interface UseTaskManagerProps {

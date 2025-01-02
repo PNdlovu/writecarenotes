@@ -1,133 +1,144 @@
-import { NextResponse } from 'next/server';
-import { validateRequest } from '@/lib/api';
-import prisma from '@/lib/prisma';
+/**
+ * @fileoverview Calendar API routes for managing calendar events
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Philani Ndlovu
+ * @copyright Write Care Notes Ltd
+ */
 
-export async function GET(request: Request) {
+import { NextRequest } from 'next/server';
+import { validateRequest } from '@/lib/api';
+import { rateLimit } from '@/lib/rate-limit';
+import { cache } from '@/lib/cache';
+import { calendarService } from './service';
+import { createEventSchema, updateEventSchema } from './validation';
+import { ApiError } from '@/lib/errors';
+
+const RATE_LIMIT = {
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+};
+
+const CACHE_CONFIG = {
+  ttl: 5 * 60, // 5 minutes
+  staleWhileRevalidate: 60, // 1 minute
+};
+
+export const runtime = 'edge';
+export const preferredRegion = 'auto';
+
+// API Version Header Check
+function checkApiVersion(request: NextRequest) {
+  const version = request.headers.get('x-api-version');
+  if (!version || version !== '2024-03') {
+    throw new ApiError(400, 'Invalid or missing API version. Please use x-api-version: 2024-03');
+  }
+}
+
+export async function GET(request: NextRequest) {
   try {
-    // 1. Validate request & auth
-    const { user, query } = await validateRequest(request);
+    // Check API version
+    checkApiVersion(request);
+
+    // Apply rate limiting
+    await rateLimit(request, RATE_LIMIT);
 
     const { searchParams } = new URL(request.url);
     const startDate = searchParams.get('startDate');
     const endDate = searchParams.get('endDate');
+    const facilityId = searchParams.get('facilityId');
 
-    // 2. Build query filters
-    const where = {
-      organizationId: user.organizationId,
-      ...(startDate && endDate
-        ? {
-            date: {
-              gte: new Date(startDate),
-              lte: new Date(endDate),
-            },
-          }
-        : {}),
-    };
+    // Generate cache key
+    const cacheKey = `calendar:${facilityId}:${startDate}:${endDate}`;
 
-    // 3. Get events
-    const events = await prisma.event.findMany({
-      where,
-      include: {
-        resident: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        staff: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-      orderBy: {
-        date: 'asc',
-      },
-    });
+    // Try to get from cache first
+    const cachedData = await cache.get(cacheKey);
+    if (cachedData) {
+      return Response.json(cachedData);
+    }
 
-    // 4. Format response
-    const formattedEvents = events.map(event => ({
-      id: event.id,
-      title: event.title,
-      date: event.date.toISOString(),
-      type: event.type,
-      description: event.description,
-      residentId: event.residentId,
-      residentName: event.resident?.name,
-      staffId: event.staffId,
-      staffName: event.staff?.name,
-      status: event.status,
-      createdAt: event.createdAt.toISOString(),
-      updatedAt: event.updatedAt.toISOString(),
-    }));
+    // Get fresh data
+    const events = await calendarService.getEvents({ startDate, endDate });
 
-    return NextResponse.json(formattedEvents);
+    // Cache the result
+    await cache.set(cacheKey, events, CACHE_CONFIG);
+
+    return Response.json(events);
   } catch (error) {
-    console.error('Error in GET /api/calendar:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    if (error instanceof ApiError) {
+      return Response.json({ error: error.message }, { status: error.statusCode });
+    }
+    return Response.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
-    // 1. Validate request & auth
-    const { user } = await validateRequest(request);
-    const body = await request.json();
+    // Check API version
+    checkApiVersion(request);
 
-    // 2. Create event
-    const event = await prisma.event.create({
-      data: {
-        organizationId: user.organizationId,
-        title: body.title,
-        date: new Date(body.date),
-        type: body.type,
-        description: body.description,
-        residentId: body.residentId,
-        staffId: body.staffId,
-        status: 'scheduled',
-      },
-      include: {
-        resident: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-        staff: {
-          select: {
-            id: true,
-            name: true,
-          },
-        },
-      },
-    });
+    // Apply rate limiting
+    await rateLimit(request, RATE_LIMIT);
 
-    // 3. Format response
-    const formattedEvent = {
-      id: event.id,
-      title: event.title,
-      date: event.date.toISOString(),
-      type: event.type,
-      description: event.description,
-      residentId: event.residentId,
-      residentName: event.resident?.name,
-      staffId: event.staffId,
-      staffName: event.staff?.name,
-      status: event.status,
-      createdAt: event.createdAt.toISOString(),
-      updatedAt: event.updatedAt.toISOString(),
-    };
+    const { user, body } = await validateRequest(request, createEventSchema);
+    const event = await calendarService.createEvent(body, user);
 
-    return NextResponse.json(formattedEvent, { status: 201 });
+    // Invalidate relevant caches
+    await cache.invalidatePattern(`calendar:${user.facilityId}:*`);
+
+    return Response.json(event);
   } catch (error) {
-    console.error('Error in POST /api/calendar:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    if (error instanceof ApiError) {
+      return Response.json({ error: error.message }, { status: error.statusCode });
+    }
+    return Response.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    // Check API version
+    checkApiVersion(request);
+
+    // Apply rate limiting
+    await rateLimit(request, RATE_LIMIT);
+
+    const { user, body } = await validateRequest(request, updateEventSchema);
+    const { id } = body;
+    const event = await calendarService.updateEvent(id, body, user);
+
+    // Invalidate relevant caches
+    await cache.invalidatePattern(`calendar:${user.facilityId}:*`);
+
+    return Response.json(event);
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return Response.json({ error: error.message }, { status: error.statusCode });
+    }
+    return Response.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: NextRequest) {
+  try {
+    // Check API version
+    checkApiVersion(request);
+
+    // Apply rate limiting
+    await rateLimit(request, RATE_LIMIT);
+
+    const { user, body } = await validateRequest(request);
+    const { id } = body;
+    await calendarService.deleteEvent(id, user);
+
+    // Invalidate relevant caches
+    await cache.invalidatePattern(`calendar:${user.facilityId}:*`);
+
+    return Response.json({ success: true });
+  } catch (error) {
+    if (error instanceof ApiError) {
+      return Response.json({ error: error.message }, { status: error.statusCode });
+    }
+    return Response.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

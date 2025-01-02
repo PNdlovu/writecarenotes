@@ -1,8 +1,8 @@
 // src/features/bed-management/components/details/BedDetails.tsx
 
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/Card'
+import { Badge } from '@/components/ui/Badge/Badge'
+import { Button } from '@/components/ui/Button/Button'
 import type { Bed } from '../../types/bed.types'
 
 interface BedDetailsProps {

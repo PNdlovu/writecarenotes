@@ -1,5 +1,5 @@
 // Dashboard metrics charts
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/Card'
 import { LineChartComponent, BarChartComponent, PieChartComponent } from './ChartTypes'
 import { VisualizationProps } from './types'
 import { COLORS } from '@/lib/constants'

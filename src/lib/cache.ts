@@ -1,56 +1,70 @@
 /**
- * @fileoverview Cache utility for server-side caching
+ * @writecarenotes.com
+ * @fileoverview Cache service for application-wide caching
  * @version 1.0.0
  * @created 2024-03-21
- * @author Philani Ndlovu
- * @copyright Write Care Notes Ltd
+ * @updated 2024-03-21
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * Provides in-memory caching functionality with TTL support
  */
 
-interface CacheItem<T> {
-  value: T;
-  expiry: number;
+interface CacheOptions {
+  ttl?: number; // Time to live in milliseconds
 }
 
-class Cache {
-  private store: Map<string, CacheItem<any>>;
-  private defaultTTL: number;
+interface CacheEntry<T> {
+  value: T;
+  expiry: number | null;
+}
 
-  constructor(defaultTTL = 5 * 60 * 1000) { // 5 minutes default TTL
-    this.store = new Map();
-    this.defaultTTL = defaultTTL;
+export class CacheService {
+  private cache: Map<string, CacheEntry<any>>;
+
+  constructor() {
+    this.cache = new Map();
   }
 
-  set<T>(key: string, value: T, ttl = this.defaultTTL): void {
-    this.store.set(key, {
-      value,
-      expiry: Date.now() + ttl
-    });
+  set<T>(key: string, value: T, options: CacheOptions = {}): void {
+    const expiry = options.ttl ? Date.now() + options.ttl : null;
+    this.cache.set(key, { value, expiry });
   }
 
   get<T>(key: string): T | null {
-    const item = this.store.get(key);
+    const entry = this.cache.get(key);
     
-    if (!item) return null;
+    if (!entry) return null;
     
-    if (Date.now() > item.expiry) {
-      this.store.delete(key);
+    if (entry.expiry && Date.now() > entry.expiry) {
+      this.cache.delete(key);
       return null;
     }
     
-    return item.value;
+    return entry.value;
   }
 
   delete(key: string): void {
-    this.store.delete(key);
+    this.cache.delete(key);
   }
 
   clear(): void {
-    this.store.clear();
+    this.cache.clear();
+  }
+
+  has(key: string): boolean {
+    const entry = this.cache.get(key);
+    if (!entry) return false;
+    if (entry.expiry && Date.now() > entry.expiry) {
+      this.cache.delete(key);
+      return false;
+    }
+    return true;
   }
 }
 
-export const cache = new Cache();
-export default cache; 
+export const cacheService = new CacheService(); 
 
 
 

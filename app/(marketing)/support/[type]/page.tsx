@@ -1,8 +1,9 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 import Link from 'next/link';
+import { Command } from '@/components/ui/command';
 import {
   Heart,
   Brain,
@@ -194,6 +195,26 @@ export default function CareTypePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
+      <Command
+        hotkeys={[
+          {
+            id: 'help',
+            title: 'Help',
+            hotkey: '?',
+            handler: () => {
+              // Show help
+            }
+          },
+          {
+            id: 'theme',
+            title: 'Change Theme',
+            hotkey: 'cmd+t',
+            handler: () => {
+              // Toggle theme
+            }
+          }
+        ]}
+      />
       <div className="container mx-auto px-4 py-20">
         {/* Header */}
         <div className="max-w-4xl mx-auto text-center mb-16">

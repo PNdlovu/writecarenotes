@@ -1,25 +1,20 @@
-import { render } from '@testing-library/react'
-import { ReactElement } from 'react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import '@testing-library/jest-dom';
+import { render } from '@testing-library/react';
+import { SessionProvider } from 'next-auth/react';
+import { ThemeProvider } from '@/features/theme';
 
-const createTestQueryClient = () => new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-})
+const customRender = (ui: React.ReactElement, options = {}) => {
+  return render(ui, {
+    wrapper: ({ children }) => (
+      <SessionProvider>
+        <ThemeProvider>
+          {children}
+        </ThemeProvider>
+      </SessionProvider>
+    ),
+    ...options,
+  });
+};
 
-export function renderWithClient(ui: ReactElement) {
-  const testQueryClient = createTestQueryClient()
-  const { rerender, ...result } = render(
-    <QueryClientProvider client={testQueryClient}>{ui}</QueryClientProvider>
-  )
-  return {
-    ...result,
-    rerender: (rerenderUi: ReactElement) =>
-      rerender(
-        <QueryClientProvider client={testQueryClient}>{rerenderUi}</QueryClientProvider>
-      ),
-  }
-}
+export * from '@testing-library/react';
+export { customRender as render };

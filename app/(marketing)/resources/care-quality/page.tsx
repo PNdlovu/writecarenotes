@@ -9,8 +9,8 @@
  */
 
 import { Metadata } from "next"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/Button/Button"
+import { Card } from "@/components/ui/Card"
 import Link from "next/link"
 import { 
   Heart,

@@ -1,9 +1,75 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Version monitoring dashboard
+ * @version 1.0.0
+ * @created 2025-01-02
+ * @updated 2025-01-02
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A comprehensive monitoring dashboard for tracking API version usage,
+ * compliance, and migration status. Features include:
+ * - Real-time version metrics
+ * - Regional compliance tracking
+ * - Client migration status
+ * - Performance analytics
+ * - Interactive visualizations
+ * - Automated alerts
+ * - Historical trends
+ * - Custom reporting
+ */
+
 'use client';
 
 import { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
+// Data Visualization
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip as RechartsTooltip,
+  Legend,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  PieChart,
+  Pie
+} from 'recharts';
+
+// Configuration
 import { API_VERSIONS, API_VERSION_CONFIGS } from '@/config/api-versions';
 
+// UI Components
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/Card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/Select/Select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/Button/Button';
+
+// Types
 interface VersionMetrics {
   version: string;
   requests: number;
@@ -27,6 +93,20 @@ interface ClientMigration {
   migrationStatus: 'pending' | 'in-progress' | 'completed' | 'failed';
   lastUpdated: string;
 }
+
+// Constants
+const STATUS_COLORS = {
+  compliant: 'bg-green-100 text-green-800',
+  warning: 'bg-yellow-100 text-yellow-800',
+  'non-compliant': 'bg-red-100 text-red-800'
+};
+
+const MIGRATION_STATUS_COLORS = {
+  pending: 'bg-gray-100 text-gray-800',
+  'in-progress': 'bg-blue-100 text-blue-800',
+  completed: 'bg-green-100 text-green-800',
+  failed: 'bg-red-100 text-red-800'
+};
 
 export function VersionDashboard() {
   const [metrics, setMetrics] = useState<VersionMetrics[]>([]);
@@ -166,5 +246,3 @@ export function VersionDashboard() {
     </div>
   );
 }
-
-

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button/Button';
 import { Camera, X } from 'lucide-react';
 import { useVerification } from '../hooks/useVerification';
 import Quagga from 'quagga';

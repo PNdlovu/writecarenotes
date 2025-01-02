@@ -1,15 +1,15 @@
 import React from 'react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
+import { Card } from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button/Button'
+import { Progress } from '@/components/ui/Progress'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
+} from '@/components/ui/Select/Select'
+import { Badge } from '@/components/ui/Badge/Badge'
 import type { HandoverSession, ComplianceStatus } from '../../types/handover'
 
 interface HandoverQualityProps {

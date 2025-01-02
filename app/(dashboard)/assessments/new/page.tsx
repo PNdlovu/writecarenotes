@@ -2,9 +2,9 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { useToast } from '@/components/ui/use-toast';
+import { Button } from '@/components/ui/Button/Button';
+import { Card } from '@/components/ui/Card';
+import { useToast } from '@/components/ui/Toast/use-toast';
 import { AssessmentForm } from '@/features/assessments/components/assessment-form';
 import type { CreateAssessmentData } from '@/features/assessments/types';
 import { assessmentApi } from '@/features/assessments/api/assessment-service';

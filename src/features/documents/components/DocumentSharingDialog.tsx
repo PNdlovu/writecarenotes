@@ -5,10 +5,13 @@ import { useTranslation } from 'next-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Document } from '@prisma/client';
 import { useToast } from '@/hooks/useToast';
-import { Dialog } from '@/components/ui/Dialog';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/Dialog";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Form/Input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
+import { Label } from "@/components/ui/Form/Label";
+import { ScrollArea } from "@/components/ui/ScrollArea";
+import { Separator } from "@/components/ui/Separator";
 
 interface Share {
   id: string;

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button/Button';
+import { Badge } from '@/components/ui/Badge/Badge';
+import { ScrollArea } from '@/components/ui/ScrollArea';
 import {
   Calendar as CalendarIcon,
   Clock,
@@ -13,14 +13,14 @@ import {
   Filter,
   RefreshCw,
 } from 'lucide-react';
-import { Calendar } from '@/components/ui/calendar';
+import { Calendar } from '@/components/ui/Calendar';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/components/ui/Select/Select';
 import {
   Dialog,
   DialogContent,
@@ -28,8 +28,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
+} from '@/components/ui/Dialog/Dialog';
+import { Input } from '@/components/ui/Input/Input';
 import { Label } from '@/components/ui/label';
 import { addDays, format, isSameDay, parseISO, isAfter } from 'date-fns';
 import { cn } from '@/lib/utils';

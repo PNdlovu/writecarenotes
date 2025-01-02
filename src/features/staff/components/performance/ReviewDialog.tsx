@@ -8,25 +8,26 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/ui/Dialog';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from '@/components/ui/Form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/Select';
+import { Input } from '@/components/ui/Form/Input';
+import { Textarea } from '@/components/ui/Form/Textarea';
+import { Button } from '@/components/ui/Button';
 import { PerformanceRating, ReviewType } from '@/features/staff/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 

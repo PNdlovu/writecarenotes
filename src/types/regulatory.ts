@@ -114,6 +114,111 @@ export interface HIQARequirements {
     findings: string[];
     actionPlan?: string;
   }[];
-} 
+}
 
+export interface OfstedRequirements {
+  registration: {
+    registrationNumber: string;
+    registrationDate: Date;
+    registrationType: 'FULL' | 'PROVISIONAL' | 'SUSPENDED';
+    conditions: string[];
+  };
+  inspections: {
+    date: Date;
+    type: 'FULL' | 'INTERIM' | 'MONITORING' | 'EMERGENCY';
+    overallEffectiveness: 'OUTSTANDING' | 'GOOD' | 'REQUIRES_IMPROVEMENT' | 'INADEQUATE';
+    outcomes: {
+      overallExperiences: string;
+      qualityOfCare: string;
+      safeguarding: string;
+      leadership: string;
+      education: string;
+    };
+    recommendations: string[];
+    requirements: string[];
+  }[];
+  qualityStandards: {
+    statement: {
+      lastUpdated: Date;
+      content: string;
+      approved: boolean;
+    };
+    childrensGuide: {
+      lastUpdated: Date;
+      formats: string[];
+      accessible: boolean;
+    };
+    staffQualifications: {
+      role: string;
+      requiredQualifications: string[];
+      completedQualifications: string[];
+      inProgress: string[];
+    }[];
+  };
+  safeguarding: {
+    designatedLead: {
+      name: string;
+      qualification: string;
+      lastTraining: Date;
+    };
+    policies: {
+      name: string;
+      lastReviewed: Date;
+      nextReview: Date;
+      version: string;
+    }[];
+    training: {
+      type: string;
+      completedBy: string[];
+      dueBy: string[];
+      refreshDate: Date;
+    }[];
+  };
+  educationProvision: {
+    arrangements: {
+      type: 'ON_SITE' | 'LOCAL_SCHOOL' | 'SPECIALIST_PROVISION' | 'MIXED';
+      providers: {
+        name: string;
+        dfENumber?: string;
+        ofstedRating?: string;
+        lastInspection?: Date;
+      }[];
+    };
+    monitoring: {
+      attendance: {
+        period: string;
+        percentage: number;
+        issues: string[];
+      }[];
+      progress: {
+        subject: string;
+        level: string;
+        achievements: string[];
+      }[];
+    };
+  };
+  healthAndWellbeing: {
+    medicalOfficer: {
+      name: string;
+      qualification: string;
+      registrationNumber: string;
+    };
+    healthAssessments: {
+      type: string;
+      frequency: string;
+      lastCompleted: Date;
+      nextDue: Date;
+    }[];
+    mentalHealthSupport: {
+      type: string;
+      provider: string;
+      frequency: string;
+      lastReview: Date;
+    }[];
+  };
+}
 
+export interface BasePerson {
+  // ... existing properties ...
+  ofstedRequirements?: OfstedRequirements;
+}

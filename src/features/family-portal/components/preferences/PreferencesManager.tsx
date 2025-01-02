@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Switch } from "@/components/ui/form/switch";
-import { Label } from "@/components/ui/form/label";
+import { Button } from "@/components/ui/Button/Button";
+import { Card } from "@/components/ui/Card";
+import { Switch } from "@/components/ui/Form/Switch";
+import { Label } from "@/components/ui/Form/Label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Form/Select";
 import {
   Dialog,
   DialogContent,
@@ -17,17 +17,17 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Icons } from "@/components/ui/icons";
+} from "@/components/ui/Dialog/Dialog";
+import { Alert, AlertDescription } from "@/components/ui/Alert";
+import { Icons } from "@/components/ui/Icons";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/form/radio-group";
-import { Separator } from "@/components/ui/separator";
+} from "@/components/ui/Accordion/Accordion";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/Form/RadioGroup";
+import { Separator } from "@/components/ui/Separator";
 
 interface PreferencesManagerProps {
   residentId: string;

@@ -9,9 +9,9 @@
  */
 
 import { Metadata } from "next"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/Button/Button"
+import { Card } from "@/components/ui/Card"
+import { Badge } from "@/components/ui/Badge/Badge"
 import Link from "next/link"
 import { 
   FileText,
@@ -21,12 +21,12 @@ import {
   ArrowLeft,
   Wrench,
   Clock,
-  Wheelchair,
+  Settings,
   ClipboardCheck,
   BookOpen,
   BarChart3,
   CalendarCheck,
-  Settings
+  Hammer
 } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -101,7 +101,7 @@ const equipmentGuidance = [
   {
     title: "Equipment Standards",
     description: "Equipment safety requirements",
-    icon: Wheelchair,
+    icon: Wrench,
     href: "/resources/documentation/equipment/standards"
   },
   {

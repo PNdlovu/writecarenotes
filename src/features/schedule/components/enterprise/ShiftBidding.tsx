@@ -5,11 +5,11 @@ import { ShiftBid } from '../../types/enterprise';
 import { Shift } from '../../../../types/schedule';
 import { Employee } from '../../../../types/employee';
 import { scheduleAPI } from '../../api/scheduleAPI';
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/Badge/Badge";
+import { Button } from "@/components/ui/Button/Button";
+import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/Card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/Dialog/Dialog";
 import { Textarea } from "@/components/ui/textarea";
 
 interface ShiftBiddingProps {

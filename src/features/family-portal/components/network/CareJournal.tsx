@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/form/textarea";
-import { Avatar } from "@/components/ui/avatar";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button/Button";
+import { Textarea } from "@/components/ui/Form/textarea";
+import { Avatar } from "@/components/ui/Avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface CareJournalProps {

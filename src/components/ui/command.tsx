@@ -7,7 +7,7 @@ import 'ninja-keys'
 import type { NinjaKeys } from 'ninja-keys'
 
 import { cn } from "@/lib/utils"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Dialog, DialogContent } from "@/components/ui/Dialog/Dialog"
 
 declare global {
   namespace JSX {

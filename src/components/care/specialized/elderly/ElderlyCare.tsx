@@ -1,5 +1,50 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Elderly care management component
+ * @version 1.0.0
+ * @created 2025-01-01
+ * @updated 2025-01-02
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A specialized component for managing elderly care services.
+ * Features include:
+ * - Mobility assessment tracking
+ * - End of life care planning
+ * - DNACPR status management
+ * - Care preferences handling
+ * - Mobility aids tracking
+ * - Comprehensive notes system
+ * - Fall risk assessment
+ * - Medication management
+ *
+ * Mobile-First Considerations:
+ * - Large touch targets
+ * - High contrast mode
+ * - Voice input support
+ * - Emergency buttons
+ * - Clear typography
+ * - Simple navigation
+ *
+ * Enterprise Features:
+ * - Care plan integration
+ * - Risk assessment
+ * - Family portal
+ * - Alert system
+ * - Compliance tracking
+ * - Outcome reporting
+ */
+
 import React from 'react';
+
+// Base Components
 import { BaseCareComponent, BaseCareProps } from '../../base/BaseCareComponent';
+
+// UI Components
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button/Button';
+import { Toggle } from '@/components/ui/toggle';
 
 interface ElderlyCareProps extends BaseCareProps {
   mobilityAssessment?: {

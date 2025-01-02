@@ -1,3 +1,40 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Brand guidelines and style guide component
+ * @version 1.0.0
+ * @created 2025-01-01
+ * @updated 2025-01-02
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A comprehensive brand guidelines component that showcases and documents
+ * the brand's visual identity. Features include:
+ * - Color palette visualization
+ * - Typography showcase and usage
+ * - Logo variations and guidelines
+ * - Interactive style guide
+ * - Brand asset examples
+ * - Usage documentation
+ * - Copy guidelines
+ *
+ * Mobile-First Considerations:
+ * - Responsive layout
+ * - Touch-friendly swatches
+ * - Dynamic type scaling
+ * - Optimized images
+ * - Smooth transitions
+ * - Gesture support
+ *
+ * Enterprise Features:
+ * - Version control
+ * - Change tracking
+ * - Export options
+ * - Search functionality
+ * - Integration APIs
+ * - Usage analytics
+ */
+
 'use client';
 
 import { colors, typography } from '@/styles/theme';
@@ -124,5 +161,3 @@ export function BrandGuidelines() {
     </div>
   );
 }
-
-

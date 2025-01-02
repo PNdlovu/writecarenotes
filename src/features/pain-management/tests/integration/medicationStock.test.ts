@@ -4,7 +4,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { PainMedicationStockService } from '../../services/painMedicationStock';
-import { StockManagementService } from '@/features/medications/services/stockManagement';
+import { StockService } from '@/features/medications/services/stockService';
 import { PrescriptionService } from '@/features/medications/services/prescriptionService';
 import { createTestTenant, createTestResident } from '@/lib/testing';
 import { ResidentPainAssessment, CareHomeInterventionType } from '../../types/care-home';
@@ -20,11 +20,11 @@ describe('Pain Medication Stock Management', () => {
     const resident = await createTestResident(tenantContext.tenantId);
     residentId = resident.id;
     
-    const stockManagement = new StockManagementService(tenantContext);
+    const stockService = new StockService(tenantContext);
     const prescriptionService = new PrescriptionService(tenantContext);
     stockService = new PainMedicationStockService(
       tenantContext,
-      stockManagement,
+      stockService,
       prescriptionService
     );
 

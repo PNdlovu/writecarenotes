@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/Toast/use-toast';
 import { useI18n } from '@/lib/i18n/config';
 
 interface ServiceWorkerState {

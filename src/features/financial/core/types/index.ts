@@ -20,10 +20,23 @@ export interface AuditMetadata {
   updatedBy: string;
 }
 
-export interface FinancialPeriod {
+export interface DateRange {
   start: Date;
   end: Date;
 }
+
+export interface FinancialPeriod extends DateRange {
+  organizationId: string;
+  type: 'daily' | 'weekly' | 'monthly' | 'quarterly' | 'annual';
+  metadata?: {
+    fiscalYear?: number;
+    quarter?: number;
+    month?: number;
+    week?: number;
+  };
+}
+
+export type PeriodGranularity = 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year';
 
 export type TransactionStatus = 'PENDING' | 'COMPLETED' | 'VOIDED' | 'FAILED';
 

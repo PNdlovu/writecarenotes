@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { formatCurrency } from '@/lib/utils/format';
 import { PayrollStats as PayrollStatsType } from '../../types/payroll.types';
 import { DollarSignIcon, UsersIcon, CalendarIcon, TrendingUpIcon } from 'lucide-react';

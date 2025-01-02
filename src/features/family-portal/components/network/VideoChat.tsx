@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button/Button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Select,
@@ -8,9 +8,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/form/input";
-import { Badge } from "@/components/ui/badge";
+} from "@/components/ui/Select/Select";
+import { Input } from "@/components/ui/Form/input";
+import { Badge } from "@/components/ui/Badge/Badge";
 
 interface VideoChatProps {
   residentId: string;

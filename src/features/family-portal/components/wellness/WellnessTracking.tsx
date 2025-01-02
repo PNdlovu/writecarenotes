@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge/Badge";
+import { Button } from "@/components/ui/Button/Button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   LineChart,
@@ -12,7 +12,7 @@ import {
   Tooltip,
   ResponsiveContainer
 } from 'recharts';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 import { Heart, Moon, Activity, Users, Calendar } from 'lucide-react';
 
 interface WellnessData {

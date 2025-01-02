@@ -22,6 +22,16 @@ interface AuditLogStats {
   actionCounts: Record<string, number>;
 }
 
+import { Table, TableHeader, TableBody, TableRow, TableCell, TableHead } from '@/components/ui/Table';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/Select';
+import { Card, CardHeader, CardContent } from '@/components/ui/Card';
+import { DatePicker } from '@/components/ui/DatePicker';
+import { Badge } from '@/components/ui/Badge';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/Alert';
+import { Pagination } from '@/components/ui/Pagination';
+
 export function AuditLogViewer() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [stats, setStats] = useState<AuditLogStats | null>(null);
@@ -162,7 +172,7 @@ export function AuditLogViewer() {
             <label className="block text-sm font-medium text-gray-700">
               Action
             </label>
-            <input
+            <Input
               type="text"
               value={filters.action || ''}
               onChange={(e) => handleFilterChange('action', e.target.value)}
@@ -173,7 +183,7 @@ export function AuditLogViewer() {
             <label className="block text-sm font-medium text-gray-700">
               User ID
             </label>
-            <input
+            <Input
               type="text"
               value={filters.userId || ''}
               onChange={(e) => handleFilterChange('userId', e.target.value)}
@@ -184,8 +194,7 @@ export function AuditLogViewer() {
             <label className="block text-sm font-medium text-gray-700">
               Start Date
             </label>
-            <input
-              type="date"
+            <DatePicker
               value={filters.startDate?.toISOString().split('T')[0] || ''}
               onChange={(e) => handleDateFilterChange('startDate', e.target.value)}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -195,8 +204,7 @@ export function AuditLogViewer() {
             <label className="block text-sm font-medium text-gray-700">
               End Date
             </label>
-            <input
-              type="date"
+            <DatePicker
               value={filters.endDate?.toISOString().split('T')[0] || ''}
               onChange={(e) => handleDateFilterChange('endDate', e.target.value)}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -204,64 +212,64 @@ export function AuditLogViewer() {
           </div>
         </div>
         <div className="mt-4 flex justify-end">
-          <button
+          <Button
             onClick={exportLogs}
             className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             Export Logs
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Logs Table */}
       <div className="bg-white shadow rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Timestamp
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              </TableCell>
+              <TableCell className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Action
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              </TableCell>
+              <TableCell className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 User ID
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              </TableCell>
+              <TableCell className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Description
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              </TableCell>
+              <TableCell className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
             {logs.map((log) => (
-              <tr key={log.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <TableRow key={log.id} className="hover:bg-gray-50">
+                <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {new Date(log.timestamp).toLocaleString()}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                </TableCell>
+                <TableCell className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                   {log.action}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                </TableCell>
+                <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {log.userId}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-500">
+                </TableCell>
+                <TableCell className="px-6 py-4 text-sm text-gray-500">
                   {log.description}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <button
+                </TableCell>
+                <TableCell className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <Button
                     onClick={() => setSelectedLog(log)}
                     className="text-blue-600 hover:text-blue-900"
                   >
                     View Details
-                  </button>
-                </td>
-              </tr>
+                  </Button>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
 
       {/* Pagination */}
@@ -269,38 +277,27 @@ export function AuditLogViewer() {
         <div className="text-sm text-gray-700">
           Page {currentPage} of {totalPages}
         </div>
-        <div className="space-x-2">
-          <button
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <button
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-            className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
-          >
-            Next
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       </div>
 
       {/* Log Details Modal */}
       {selectedLog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
-            <div className="flex justify-between items-start">
+          <Card className="bg-white rounded-lg p-6 max-w-2xl w-full">
+            <CardHeader>
               <h3 className="text-xl font-semibold">Audit Log Details</h3>
-              <button
+              <Button
                 onClick={() => setSelectedLog(null)}
                 className="text-gray-400 hover:text-gray-500"
               >
                 ×
-              </button>
-            </div>
-            <div className="mt-4 space-y-4">
+              </Button>
+            </CardHeader>
+            <CardContent className="mt-4 space-y-4">
               <div>
                 <h4 className="text-sm font-medium text-gray-500">Timestamp</h4>
                 <p className="mt-1">
@@ -325,8 +322,8 @@ export function AuditLogViewer() {
                   {JSON.stringify(selectedLog.metadata, null, 2)}
                 </pre>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
       )}
     </div>

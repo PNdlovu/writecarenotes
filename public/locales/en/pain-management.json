@@ -1,0 +1,18 @@
+{
+  "painScale": "Pain Scale",
+  "painScore": "Pain Score",
+  "painType": "Pain Type",
+  "location": "Pain Location",
+  "notes": "Notes",
+  "saving": "Saving...",
+  "saveAssessment": "Save Assessment",
+  "offlineMode": "You are currently working offline",
+  "pendingSyncCount": "{{count}} assessments pending sync",
+  "scales": {
+    "NUMERIC": "Numeric Scale (0-10)",
+    "VISUAL": "Visual Analog Scale",
+    "WONG_BAKER": "Wong-Baker FACES",
+    "ABBEY": "Abbey Pain Scale",
+    "PAINAD": "PAINAD Scale"
+  }
+} 

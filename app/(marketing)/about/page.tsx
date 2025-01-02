@@ -9,8 +9,8 @@
  */
 
 import { Metadata } from "next"
-import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/Badge/Badge"
+import { Card } from "@/components/ui/Card"
 import { 
   Building2, 
   HeartHandshake, 

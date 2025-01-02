@@ -9,7 +9,7 @@
 
 'use client';
 
-import { Card } from '@/components/ui/card/card';
+import { Card } from '@/components/ui/Card';
 import Link from 'next/link';
 import {
   Heart,
@@ -27,7 +27,7 @@ import {
   HeartPulse,
   Glasses
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 
 const careTypes = [
   {

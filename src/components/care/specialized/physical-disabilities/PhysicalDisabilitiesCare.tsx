@@ -1,113 +1,226 @@
 import React from 'react';
-import { BaseCareComponent, BaseCareProps } from '../../base/BaseCareComponent';
+import { Button } from "@/components/ui/Button/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import { BasePerson } from '@/types/care';
 
-interface PhysicalDisabilitiesCareProps extends BaseCareProps {
-  physicalAssessment?: {
-    primaryDisability: string;
-    mobilityStatus: string;
-    equipmentNeeds: string[];
-    adaptations: string[];
+interface PhysicalDisabilitiesCareProps {
+  person: BasePerson;
+  assessments?: {
+    mobility: {
+      status: string;
+      aids: string[];
+      notes: string;
+    };
+    activities: {
+      type: string;
+      independence: string;
+      support: string;
+    }[];
+    equipment: {
+      item: string;
+      status: string;
+      lastChecked: string;
+    }[];
   };
-  rehabilitationPlan?: {
+  rehabilitation?: {
+    goals: {
+      area: string;
+      description: string;
+      progress: string;
+      target: string;
+    }[];
     therapies: {
       type: string;
-      frequency: string;
       provider: string;
-      goals: string[];
-    }[];
-    exercises: {
-      name: string;
       frequency: string;
-      instructions: string;
+      notes: string;
     }[];
   };
 }
 
-export const PhysicalDisabilitiesCare: React.FC<PhysicalDisabilitiesCareProps> = (props) => {
-  const { physicalAssessment, rehabilitationPlan, ...baseProps } = props;
-
+export const PhysicalDisabilitiesCare: React.FC<PhysicalDisabilitiesCareProps> = ({
+  person,
+  assessments,
+  rehabilitation
+}) => {
   return (
     <div className="space-y-6">
-      <BaseCareComponent {...baseProps} />
-      
-      {/* Physical Disabilities specific components */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {physicalAssessment && (
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="font-medium mb-4">Physical Assessment</h3>
-            <dl className="space-y-2">
-              <div>
-                <dt className="text-sm text-gray-500">Primary Disability</dt>
-                <dd>{physicalAssessment.primaryDisability}</dd>
-              </div>
-              <div>
-                <dt className="text-sm text-gray-500">Mobility Status</dt>
-                <dd>{physicalAssessment.mobilityStatus}</dd>
-              </div>
-              <div>
-                <dt className="text-sm text-gray-500">Equipment Needs</dt>
-                <dd>
-                  <ul className="list-disc list-inside">
-                    {physicalAssessment.equipmentNeeds.map((need, index) => (
-                      <li key={index}>{need}</li>
-                    ))}
-                  </ul>
-                </dd>
-              </div>
-              <div>
-                <dt className="text-sm text-gray-500">Required Adaptations</dt>
-                <dd>
-                  <ul className="list-disc list-inside">
-                    {physicalAssessment.adaptations.map((adaptation, index) => (
-                      <li key={index}>{adaptation}</li>
-                    ))}
-                  </ul>
-                </dd>
-              </div>
-            </dl>
-          </div>
-        )}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Physical Support Plan</h1>
+          <p className="text-muted-foreground">
+            Manage physical support and rehabilitation for {person.firstName} {person.lastName}
+          </p>
+        </div>
+        <div className="flex space-x-2">
+          <Button variant="outline">Update Assessment</Button>
+          <Button>Add Progress Note</Button>
+        </div>
+      </div>
 
-        {rehabilitationPlan && (
-          <div className="bg-white p-4 rounded-lg shadow">
-            <h3 className="font-medium mb-4">Rehabilitation Plan</h3>
-            <dl className="space-y-4">
-              <div>
-                <dt className="text-sm text-gray-500 mb-2">Therapies</dt>
-                <dd>
-                  {rehabilitationPlan.therapies.map((therapy, index) => (
-                    <div key={index} className="mb-3">
-                      <h4 className="text-sm font-medium">{therapy.type}</h4>
-                      <p className="text-sm">Provider: {therapy.provider}</p>
-                      <p className="text-sm">Frequency: {therapy.frequency}</p>
-                      <div className="mt-1">
-                        <span className="text-sm text-gray-500">Goals:</span>
-                        <ul className="list-disc list-inside text-sm">
-                          {therapy.goals.map((goal, gIndex) => (
-                            <li key={gIndex}>{goal}</li>
+      <Tabs defaultValue="assessment" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="assessment">Assessments</TabsTrigger>
+          <TabsTrigger value="rehabilitation">Rehabilitation</TabsTrigger>
+          <TabsTrigger value="equipment">Equipment</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="assessment" className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Mobility Assessment</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {assessments?.mobility && (
+                  <dl className="space-y-2">
+                    <div>
+                      <dt className="text-sm font-medium">Current Status</dt>
+                      <dd className="text-sm text-muted-foreground">{assessments.mobility.status}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium">Required Aids</dt>
+                      <dd>
+                        <ul className="list-disc list-inside text-sm text-muted-foreground">
+                          {assessments.mobility.aids.map((aid, index) => (
+                            <li key={index}>{aid}</li>
                           ))}
                         </ul>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-sm font-medium">Notes</dt>
+                      <dd className="text-sm text-muted-foreground">{assessments.mobility.notes}</dd>
+                    </div>
+                  </dl>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Daily Activities</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {assessments?.activities && (
+                  <div className="space-y-4">
+                    {assessments.activities.map((activity, index) => (
+                      <div key={index} className="space-y-2">
+                        <h4 className="text-sm font-medium">{activity.type}</h4>
+                        <dl className="grid grid-cols-2 gap-2 text-sm">
+                          <div>
+                            <dt className="text-muted-foreground">Independence Level</dt>
+                            <dd>{activity.independence}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-muted-foreground">Support Required</dt>
+                            <dd>{activity.support}</dd>
+                          </div>
+                        </dl>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="rehabilitation" className="space-y-4">
+          {rehabilitation && (
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Rehabilitation Goals</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {rehabilitation.goals.map((goal, index) => (
+                      <div key={index} className="space-y-2">
+                        <h4 className="text-sm font-medium">{goal.area}</h4>
+                        <dl className="space-y-2 text-sm">
+                          <div>
+                            <dt className="text-muted-foreground">Goal</dt>
+                            <dd>{goal.description}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-muted-foreground">Progress</dt>
+                            <dd>{goal.progress}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-muted-foreground">Target Date</dt>
+                            <dd>{goal.target}</dd>
+                          </div>
+                        </dl>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Therapy Sessions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {rehabilitation.therapies.map((therapy, index) => (
+                      <div key={index} className="space-y-2">
+                        <h4 className="text-sm font-medium">{therapy.type}</h4>
+                        <dl className="space-y-2 text-sm">
+                          <div>
+                            <dt className="text-muted-foreground">Provider</dt>
+                            <dd>{therapy.provider}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-muted-foreground">Frequency</dt>
+                            <dd>{therapy.frequency}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-muted-foreground">Notes</dt>
+                            <dd>{therapy.notes}</dd>
+                          </div>
+                        </dl>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </TabsContent>
+
+        <TabsContent value="equipment" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Equipment Management</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {assessments?.equipment && (
+                <div className="space-y-4">
+                  {assessments.equipment.map((item, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 border rounded">
+                      <div className="space-y-1">
+                        <h4 className="text-sm font-medium">{item.item}</h4>
+                        <p className="text-sm text-muted-foreground">Last checked: {item.lastChecked}</p>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className={`text-sm ${
+                          item.status === 'Working' ? 'text-green-600' : 'text-red-600'
+                        }`}>
+                          {item.status}
+                        </span>
+                        <Button variant="outline" size="sm">Update</Button>
                       </div>
                     </div>
                   ))}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-sm text-gray-500 mb-2">Exercise Program</dt>
-                <dd>
-                  {rehabilitationPlan.exercises.map((exercise, index) => (
-                    <div key={index} className="mb-2">
-                      <h4 className="text-sm font-medium">{exercise.name}</h4>
-                      <p className="text-sm">Frequency: {exercise.frequency}</p>
-                      <p className="text-sm">{exercise.instructions}</p>
-                    </div>
-                  ))}
-                </dd>
-              </div>
-            </dl>
-          </div>
-        )}
-      </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

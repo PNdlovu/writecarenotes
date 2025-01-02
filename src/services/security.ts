@@ -1,171 +1,82 @@
-import { jwtDecode } from 'jwt-decode';
+/**
+ * @fileoverview Security Service
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @author Philani Ndlovu
+ * @copyright Write Care Notes Ltd
+ */
 
-interface Permission {
-  resource: string;
-  actions: ('create' | 'read' | 'update' | 'delete')[];
-}
+import { AccessManagementService } from '@/features/access-management/services/AccessManagementService';
+import { SecurityConfig } from '@/features/access-management/types';
 
-interface Role {
-  id: string;
-  name: string;
-  permissions: Permission[];
-}
+export class SecurityService {
+  private static instance: SecurityService;
+  private accessService: AccessManagementService;
 
-interface User {
-  id: string;
-  email: string;
-  roles: string[];
-  tenantId: string;
-  sessionData: {
-    lastLogin: Date;
-    deviceInfo: string;
-    ipAddress: string;
-  };
-}
+  private constructor() {
+    const config: SecurityConfig = {
+      algorithm: 'aes-256-gcm',
+      ivLength: 16,
+      encryptionKey: Buffer.from(process.env.ENCRYPTION_KEY || '', 'base64'),
+      tokenSecret: process.env.JWT_SECRET || '',
+      tokenExpiry: 24 * 60 * 60, // 24 hours
+      mfaEnabled: process.env.MFA_ENABLED === 'true',
+      passwordPolicy: {
+        minLength: 12,
+        requireNumbers: true,
+        requireSpecialChars: true,
+        requireUppercase: true,
+        requireLowercase: true,
+        expiryDays: 90,
+        preventReuse: 5
+      }
+    };
 
-class SecurityService {
-  private currentUser: User | null = null;
-  private roles: Map<string, Role> = new Map();
+    this.accessService = new AccessManagementService(config);
+  }
+
+  public static getInstance(): SecurityService {
+    if (!SecurityService.instance) {
+      SecurityService.instance = new SecurityService();
+    }
+    return SecurityService.instance;
+  }
 
   async initialize() {
-    // Load roles and permissions
-    const response = await fetch('/api/roles');
-    const roles: Role[] = await response.json();
-    roles.forEach(role => this.roles.set(role.id, role));
-
-    // Setup interceptors for API calls
-    this.setupInterceptors();
+    await this.accessService.initialize();
   }
 
-  async authenticate(token: string): Promise<User> {
-    try {
-      const decoded = jwtDecode(token);
-      // Validate token claims
-      this.validateTokenClaims(decoded);
-      
-      // Get user details
-      const response = await fetch('/api/users/me', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to fetch user details');
-      }
-
-      const user = await response.json();
-      this.currentUser = user;
-      
-      // Log authentication
-      await this.auditLog('AUTH', 'User authenticated', {
-        userId: user.id,
-        deviceInfo: navigator.userAgent,
-      });
-
-      return user;
-    } catch (error) {
-      throw new Error('Authentication failed');
-    }
+  async authenticate(token: string) {
+    return this.accessService.authenticate(token);
   }
 
-  hasPermission(resource: string, action: string): boolean {
-    if (!this.currentUser) return false;
-
-    return this.currentUser.roles.some(roleId => {
-      const role = this.roles.get(roleId);
-      return role?.permissions.some(
-        perm => perm.resource === resource && perm.actions.includes(action as any)
-      );
+  async checkAccess(userId: string, resourceType: string, resourceId: string, action: string) {
+    return this.accessService.checkAccess({
+      userId,
+      resourceType,
+      resourceId,
+      action
     });
   }
 
-  async auditLog(
-    action: string,
-    description: string,
-    metadata: Record<string, any>
-  ) {
-    try {
-      await fetch('/api/audit-logs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action,
-          description,
-          userId: this.currentUser?.id,
-          tenantId: this.currentUser?.tenantId,
-          timestamp: new Date(),
-          metadata: {
-            ...metadata,
-            userAgent: navigator.userAgent,
-            ipAddress: await this.getClientIP(),
-          },
-        }),
-      });
-    } catch (error) {
-      console.error('Failed to write audit log:', error);
-    }
+  async encryptData(data: Buffer) {
+    return this.accessService.encryptData(data);
   }
 
-  private validateTokenClaims(claims: any) {
-    const now = Math.floor(Date.now() / 1000);
-    
-    if (claims.exp && claims.exp < now) {
-      throw new Error('Token has expired');
-    }
-    
-    if (claims.nbf && claims.nbf > now) {
-      throw new Error('Token not yet valid');
-    }
-    
-    if (!claims.sub || !claims.tenantId) {
-      throw new Error('Token missing required claims');
-    }
+  async decryptData(encrypted: Buffer, iv: Buffer) {
+    return this.accessService.decryptData(encrypted, iv);
   }
 
-  private async getClientIP(): Promise<string> {
-    try {
-      const response = await fetch('https://api.ipify.org?format=json');
-      const data = await response.json();
-      return data.ip;
-    } catch {
-      return 'unknown';
-    }
-  }
-
-  private setupInterceptors() {
-    const originalFetch = window.fetch;
-    window.fetch = async (input: RequestInfo, init?: RequestInit) => {
-      if (typeof input === 'string' && input.startsWith('/api/')) {
-        // Add security headers
-        init = {
-          ...init,
-          headers: {
-            ...init?.headers,
-            'X-Tenant-ID': this.currentUser?.tenantId || '',
-            'X-Request-ID': crypto.randomUUID(),
-          },
-        };
-
-        // Check permissions
-        const resource = input.split('/')[2];
-        const method = (init?.method || 'GET').toLowerCase();
-        const action = method === 'post' ? 'create' :
-                      method === 'put' ? 'update' :
-                      method === 'delete' ? 'delete' : 'read';
-
-        if (!this.hasPermission(resource, action)) {
-          throw new Error('Permission denied');
-        }
-      }
-
-      return originalFetch(input, init);
-    };
+  async auditLog(action: string, description: string, userId: string, metadata: Record<string, any>) {
+    return this.accessService.auditLog({
+      action,
+      description,
+      userId,
+      tenantId: 'current-tenant-id', // Replace with actual tenant ID
+      timestamp: new Date(),
+      metadata
+    });
   }
 }
-
-export const securityService = new SecurityService();
 
 

@@ -1,5 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button/Button";
 import { AlertTriangle } from "lucide-react";
 import { captureException } from '@/lib/error-tracking';
 

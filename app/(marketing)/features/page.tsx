@@ -1,1063 +1,622 @@
+'use client';
+
 /**
  * WriteCareNotes.com
- * @fileoverview Features Page - Product features and capabilities
- * @version 1.0.0
+ * @fileoverview Features Page - Enterprise Care Home Management Platform
+ * @version 2.0.0
  * @created 2024-03-21
  * @updated 2024-03-21
  * @author Phibu Cloud Solutions Ltd
  * @copyright Phibu Cloud Solutions Ltd
  */
 
-import { Metadata } from "next"
-import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
+import { Badge } from "@/components/ui/Badge"
+import { Card } from "@/components/ui/Card"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger
+} from "@/components/ui/Tabs"
+import { FeatureCard } from '@/components/ui/FeatureCard'
 import { 
-  Bed,
-  CalendarClock,
-  ClipboardCheck,
-  Users,
-  FileText,
-  Bell,
-  Shield,
-  LineChart,
-  Stethoscope,
-  Building2,
-  Wallet,
-  UserCog,
-  BookOpen,
-  Laptop,
-  Clock,
-  CheckCircle2,
-  ArrowRight,
-  MessageSquare,
-  Tablets,
-  Activity,
-  Headphones,
-  Network,
-  KeyRound,
-  Cog,
-  Quote,
+  Stethoscope, 
+  Pill, 
+  Activity, 
+  Shield, 
+  FileCheck, 
+  Star, 
+  Users, 
+  Wallet, 
+  Building2, 
+  Network, 
+  BarChart,
+  Lock,
+  HeadphonesIcon,
+  GraduationCap,
   Heart,
-  Settings,
-  Zap,
-  Star,
-  LinkIcon,
-  Tablet,
-  Globe
+  Calendar,
+  FileText,
+  ClipboardCheck,
+  UserCog,
+  ClipboardList
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import { Features } from "@/components/marketing/Features"
-
-export const metadata: Metadata = {
-  title: "Features | Write Care Notes - Care Home Management Software",
-  description: "Explore the comprehensive features of Write Care Notes care home management software. From care planning to compliance management, discover how we help care homes deliver better care.",
-  keywords: "care home software features, care management features, healthcare software capabilities, care home compliance, care planning software",
-  openGraph: {
-    title: "Features | Write Care Notes",
-    description: "Comprehensive care home management features",
-    type: "website"
-  }
-}
 
 export default function FeaturesPage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
-      {/* Hero Section with Features Component */}
-      <Features />
-
-      {/* Core Features Overview - 3 cards */}
-      <section className="py-24 bg-gradient-to-br from-blue-50 to-white w-full">
+    <main className="flex min-h-screen flex-col" role="main">
+      {/* Hero Section */}
+      <section 
+        className="py-16 bg-gradient-to-br from-blue-50 to-white"
+        aria-labelledby="hero-heading"
+      >
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <Badge className="mb-4" variant="outline">Core Features</Badge>
-            <h2 className="text-3xl font-bold mb-4">Complete Care Home Management</h2>
-            <p className="text-gray-600">
-              An all-in-one solution designed to streamline your care home operations
+          <div className="max-w-4xl mx-auto text-center">
+            <Badge variant="outline" className="mb-4">Enterprise Platform</Badge>
+            <h1 
+              id="hero-heading"
+              className="text-4xl font-bold mb-6 tracking-tight"
+            >
+              Complete Care Home Management Platform
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8">
+              Supporting care providers across UK & Ireland with full regulatory compliance
             </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Resident Care */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <Heart className="h-10 w-10 text-rose-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Resident Care</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Care Planning & Assessments</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Medication Management (eMAR)</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Health Monitoring</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Incident Reporting</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Operations Management */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <Settings className="h-10 w-10 text-indigo-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Operations</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Staff Scheduling & Rota</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Bed Management</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Visitor Management</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Maintenance Tracking</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Administration */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <FileText className="h-10 w-10 text-emerald-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Administration</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Financial Management</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>HR & Training</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Document Management</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Compliance & Auditing</span>
-                </li>
-              </ul>
-            </Card>
           </div>
         </div>
       </section>
 
-      {/* Medication Management - 4 cards */}
-      <section className="py-24 bg-white w-full">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <Badge className="mb-4" variant="outline">Medication Management</Badge>
-            <h2 className="text-3xl font-bold mb-4">Advanced eMAR and Medication Safety</h2>
-            <p className="text-gray-600">
-              Comprehensive medication management with advanced safety features
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card className="p-6">
-              <div className="mb-4">
-                <Tablets className="h-10 w-10 text-purple-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Medication Safety</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Barcode verification</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Drug interactions</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Allergy alerts</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Photo identification</span>
-                </li>
-              </ul>
-            </Card>
+      {/* Feature Categories */}
+      <Tabs defaultValue="care" className="w-full">
+        <div className="container mx-auto px-4 py-8">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 mb-8">
+            <TabsTrigger value="care">Resident Management</TabsTrigger>
+            <TabsTrigger value="children">Children's Home</TabsTrigger>
+            <TabsTrigger value="clinical">Clinical</TabsTrigger>
+            <TabsTrigger value="staff">Staff Management</TabsTrigger>
+            <TabsTrigger value="compliance">Compliance</TabsTrigger>
+            <TabsTrigger value="enterprise">Enterprise</TabsTrigger>
+          </TabsList>
 
-            <Card className="p-6">
-              <div className="mb-4">
-                <ClipboardCheck className="h-10 w-10 text-teal-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Stock Control</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Stock levels</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Expiry tracking</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Reorder automation</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Waste management</span>
-                </li>
-              </ul>
-            </Card>
+          {/* Care Management Features */}
+          <TabsContent value="care">
+            <div className="max-w-3xl mx-auto text-center mb-8">
+              <h2 className="text-3xl font-bold mb-4">Resident Management</h2>
+              <p className="text-xl text-muted-foreground">
+                Comprehensive resident care and monitoring system
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <FeatureCard
+                icon={Users}
+                title="Core Management"
+                description="Comprehensive resident management features"
+                details={[
+                  "Digital resident profiles",
+                  "Care plan integration",
+                  "Capacity assessments",
+                  "Real-time dashboard",
+                  "Family portal access"
+                ]}
+                index={0}
+              />
+              <FeatureCard
+                icon={ClipboardCheck}
+                title="Daily Care"
+                description="Daily care and task management"
+                details={[
+                  "Digital care notes",
+                  "Task management",
+                  "Handover reports",
+                  "Incident logging",
+                  "Care reviews"
+                ]}
+                index={1}
+              />
+              <FeatureCard
+                icon={Shield}
+                title="Safety & Compliance"
+                description="Safety and compliance management"
+                details={[
+                  "DoLS management",
+                  "Restrictions logging",
+                  "Hospital passes",
+                  "Risk assessments",
+                  "Compliance tracking"
+                ]}
+                index={2}
+              />
+            </div>
+          </TabsContent>
 
-            <Card className="p-6">
-              <div className="mb-4">
-                <FileText className="h-10 w-10 text-cyan-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">eMAR Reporting</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>MAR charts</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Missed doses</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>PRN tracking</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Audit reports</span>
-                </li>
-              </ul>
-            </Card>
+          {/* Children's Home Features */}
+          <TabsContent value="children">
+            <div className="max-w-3xl mx-auto text-center mb-8">
+              <h2 className="text-3xl font-bold mb-4">Children's Home Management</h2>
+              <p className="text-xl text-muted-foreground">
+                Specialized tools for supporting young people's care and development
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <FeatureCard
+                icon={GraduationCap}
+                title="Education Support"
+                description="Comprehensive education support tracking"
+                details={[
+                  "School liaison tracking",
+                  "Education meeting records",
+                  "Academic progress tracking",
+                  "SEN documentation",
+                  "Homework support logs",
+                  "Educational needs notes",
+                  "School report storage",
+                  "Learning assessments"
+                ]}
+                index={0}
+              />
+              <FeatureCard
+                icon={Heart}
+                title="Young Person Care"
+                description="Complete young person care management"
+                details={[
+                  "Daily care records",
+                  "Behavioral monitoring",
+                  "Mental health support",
+                  "Medication management",
+                  "Health & wellbeing",
+                  "Life skills development",
+                  "Individual support plans",
+                  "Therapeutic interventions"
+                ]}
+                index={1}
+              />
+              <FeatureCard
+                icon={Users}
+                title="Placement Management"
+                description="Comprehensive placement management"
+                details={[
+                  "Placement records",
+                  "Placement history",
+                  "Transition planning",
+                  "Social worker updates",
+                  "Family contact logs",
+                  "Visit management",
+                  "Care authority liaison",
+                  "Outcome tracking"
+                ]}
+                index={2}
+              />
+              <FeatureCard
+                icon={Shield}
+                title="Safeguarding"
+                description="Complete safeguarding management"
+                details={[
+                  "Incident recording",
+                  "Risk management",
+                  "DBS verification",
+                  "Missing from care",
+                  "Safeguarding alerts",
+                  "Training records",
+                  "Policy compliance",
+                  "Audit trails"
+                ]}
+                index={3}
+              />
+              <FeatureCard
+                icon={Calendar}
+                title="Daily Living"
+                description="Daily living and activity management"
+                details={[
+                  "Activity planning",
+                  "Independent living",
+                  "House meetings",
+                  "Keyworker sessions",
+                  "Recreation tracking",
+                  "Life skills assessment",
+                  "Community engagement",
+                  "Personal development"
+                ]}
+                index={4}
+              />
+              <FeatureCard
+                icon={ClipboardList}
+                title="Care Planning"
+                description="Comprehensive care planning"
+                details={[
+                  "Care plans",
+                  "Placement goals",
+                  "Health records",
+                  "Therapeutic notes",
+                  "Progress reviews",
+                  "Development tracking",
+                  "Intervention plans",
+                  "Outcome measurements"
+                ]}
+                index={5}
+              />
+            </div>
 
-            <Card className="p-6">
-              <div className="mb-4">
-                <Shield className="h-10 w-10 text-amber-500" />
+            {/* Ofsted Compliance Banner */}
+            <div className="mt-12 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg p-6">
+              <div className="flex flex-col md:flex-row items-center justify-between">
+                <div className="flex items-center mb-4 md:mb-0">
+                  <Badge className="bg-indigo-100 text-indigo-700 mr-4">Ofsted Compliant</Badge>
+                  <p className="text-sm text-gray-600">
+                    Fully aligned with Children's Home Regulations 2015 and Quality Standards
+                  </p>
+                </div>
+                <Link href="/features/compliance">
+                  <Button
+                    variant="outline"
+                    className="border-indigo-200 text-indigo-700 hover:bg-indigo-50"
+                  >
+                    <FileText className="w-4 h-4 mr-2" />
+                    View Compliance Details
+                  </Button>
+                </Link>
               </div>
-              <h3 className="text-lg font-semibold mb-2">Access Control</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Role-based access</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Digital signatures</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Controlled drugs</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Emergency access</span>
-                </li>
-              </ul>
-            </Card>
-          </div>
+            </div>
+          </TabsContent>
+
+          {/* Clinical Features */}
+          <TabsContent value="clinical">
+            <div className="max-w-3xl mx-auto text-center mb-8">
+              <h2 className="text-3xl font-bold mb-4">Clinical Management</h2>
+              <p className="text-xl text-muted-foreground">
+                Advanced clinical and medication management tools
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <FeatureCard
+                icon={Pill}
+                title="Medication Management"
+                description="Advanced medication management system"
+                details={[
+                  "Digital MAR charts",
+                  "Medication tracking",
+                  "PRN protocols",
+                  "Stock management",
+                  "Pharmacy integration"
+                ]}
+                index={0}
+              />
+              <FeatureCard
+                icon={Activity}
+                title="Health Monitoring"
+                description="Comprehensive health monitoring tools"
+                details={[
+                  "Vital signs tracking",
+                  "Wound management",
+                  "Weight monitoring",
+                  "Nutrition tracking",
+                  "Health alerts"
+                ]}
+                index={1}
+              />
+              <FeatureCard
+                icon={FileText}
+                title="Documentation"
+                description="Clinical documentation management"
+                details={[
+                  "Care plan reviews",
+                  "Clinical assessments",
+                  "Healthcare records",
+                  "Treatment tracking",
+                  "Audit trails"
+                ]}
+                index={2}
+              />
+            </div>
+          </TabsContent>
+
+          {/* Staff Features */}
+          <TabsContent value="staff">
+            <div className="max-w-3xl mx-auto text-center mb-8">
+              <h2 className="text-3xl font-bold mb-4">Staff Management</h2>
+              <p className="text-xl text-muted-foreground">
+                Complete workforce and training management
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <FeatureCard
+                icon={UserCog}
+                title="Staff Administration"
+                description="Complete staff administration system"
+                details={[
+                  "Staff profiles",
+                  "Rota management",
+                  "Training records",
+                  "Performance tracking",
+                  "Document storage"
+                ]}
+              />
+              <FeatureCard
+                icon={GraduationCap}
+                title="Training & Development"
+                description="Comprehensive training and development tools"
+                details={[
+                  "Training matrix",
+                  "Certification tracking",
+                  "Skills assessment",
+                  "CPD monitoring",
+                  "Compliance training"
+                ]}
+              />
+              <FeatureCard
+                icon={ClipboardList}
+                title="Task Management"
+                description="Comprehensive task management system"
+                details={[
+                  "Task allocation",
+                  "Handover notes",
+                  "Daily schedules",
+                  "Team messaging",
+                  "Progress tracking"
+                ]}
+              />
+            </div>
+          </TabsContent>
+
+          {/* Compliance Features */}
+          <TabsContent value="compliance" className="space-y-8">
+            <div className="max-w-3xl mx-auto text-center mb-8">
+              <h2 className="text-3xl font-bold mb-4">Regulatory Compliance</h2>
+              <p className="text-xl text-muted-foreground">
+                Full compliance with UK & Ireland care regulations
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <FeatureCard
+                icon={Shield}
+                title="Compliance Management"
+                description="Complete compliance management system"
+                details={[
+                  "CQC evidence gathering",
+                  "HIQA compliance",
+                  "Audit trails",
+                  "Policy management",
+                  "Inspection readiness"
+                ]}
+                index={0}
+              />
+              <FeatureCard
+                icon={FileCheck}
+                title="Data Protection"
+                description="Comprehensive data protection features"
+                details={[
+                  "End-to-end encryption",
+                  "Access controls",
+                  "Data retention",
+                  "Subject access",
+                  "Audit logging"
+                ]}
+                index={1}
+              />
+              <FeatureCard
+                icon={Star}
+                title="Quality Assurance"
+                description="Quality assurance and improvement tools"
+                details={[
+                  "Quality metrics",
+                  "Feedback management",
+                  "Incident reporting",
+                  "Improvement plans",
+                  "Outcomes tracking"
+                ]}
+                index={2}
+              />
+            </div>
+          </TabsContent>
+
+          {/* Enterprise Features */}
+          <TabsContent value="enterprise" className="space-y-8">
+            <div className="max-w-3xl mx-auto text-center mb-8">
+              <h2 className="text-3xl font-bold mb-4">Enterprise Features</h2>
+              <p className="text-xl text-muted-foreground">
+                Advanced features for multi-site operations and enterprise management
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <FeatureCard
+                icon={Building2}
+                title="Multi-Site Management"
+                description="Enterprise multi-site management"
+                details={[
+                  "Centralized control",
+                  "Site-specific settings",
+                  "Cross-site reporting",
+                  "Resource sharing",
+                  "Performance analytics"
+                ]}
+                index={0}
+              />
+              <FeatureCard
+                icon={Shield}
+                title="Access Management"
+                description="Enterprise access control"
+                details={[
+                  "Role-based access",
+                  "Custom permissions",
+                  "Access audit logs",
+                  "Single sign-on",
+                  "Two-factor auth"
+                ]}
+                index={1}
+              />
+              <FeatureCard
+                icon={Activity}
+                title="Advanced Analytics"
+                description="Enterprise analytics and reporting"
+                details={[
+                  "Custom dashboards",
+                  "KPI tracking",
+                  "Trend analysis",
+                  "Financial insights",
+                  "Performance metrics"
+                ]}
+                index={2}
+              />
+              <FeatureCard
+                icon={Network}
+                title="Integration Hub"
+                description="Enterprise system integration"
+                details={[
+                  "API access",
+                  "Third-party integration",
+                  "Data import/export",
+                  "Custom workflows",
+                  "Automation tools"
+                ]}
+                index={3}
+              />
+              <FeatureCard
+                icon={FileCheck}
+                title="Documentation"
+                description="Enterprise documentation management"
+                details={[
+                  "Digital forms",
+                  "Template library",
+                  "Document workflow",
+                  "E-signatures",
+                  "Audit trails"
+                ]}
+                index={4}
+              />
+              <FeatureCard
+                icon={Stethoscope}
+                title="Telehealth"
+                description="Enterprise telehealth solutions"
+                details={[
+                  "Video consultations",
+                  "Remote monitoring",
+                  "Health tracking",
+                  "Secure messaging",
+                  "Family portal"
+                ]}
+                index={5}
+              />
+            </div>
+          </TabsContent>
         </div>
-      </section>
+      </Tabs>
 
-      {/* Portal Features - 4 cards */}
-      <section className="py-24 bg-gradient-to-br from-blue-50 to-white w-full">
+      {/* Offline Capabilities */}
+      <section 
+        className="py-16 bg-gradient-to-br from-slate-50 to-white"
+        aria-labelledby="offline-heading"
+      >
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <Badge className="mb-4" variant="outline">Portal Features</Badge>
-            <h2 className="text-3xl font-bold mb-4">Secure Multi-Portal Access</h2>
-            <p className="text-gray-600">
-              Dedicated portals for all stakeholders with enterprise-grade security
+          <div className="max-w-3xl mx-auto text-center mb-8">
+            <h2 id="offline-heading" className="text-3xl font-bold mb-4">
+              Offline Capabilities
+            </h2>
+            <p className="text-xl text-muted-foreground">
+              Continue working without internet connection
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="p-6">
-              <div className="mb-4">
-                <Users className="h-10 w-10 text-sky-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Family Portal</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Care updates</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Photo sharing</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Visit scheduling</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Message staff</span>
-                </li>
-              </ul>
+              <h3 className="text-lg font-semibold mb-2">Care Delivery</h3>
+              <p className="text-muted-foreground">Access care plans and record care notes offline</p>
             </Card>
-
             <Card className="p-6">
-              <div className="mb-4">
-                <Stethoscope className="h-10 w-10 text-emerald-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Professional Portal</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>GP access</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Clinical notes</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Test results</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Care collaboration</span>
-                </li>
-              </ul>
+              <h3 className="text-lg font-semibold mb-2">Medication</h3>
+              <p className="text-muted-foreground">Complete medication rounds without internet</p>
             </Card>
-
             <Card className="p-6">
-              <div className="mb-4">
-                <UserCog className="h-10 w-10 text-violet-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Staff Portal</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Shift management</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Training access</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Document library</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Performance reviews</span>
-                </li>
-              </ul>
+              <h3 className="text-lg font-semibold mb-2">Assessments</h3>
+              <p className="text-muted-foreground">Conduct and save assessments offline</p>
             </Card>
-
             <Card className="p-6">
-              <div className="mb-4">
-                <Shield className="h-10 w-10 text-orange-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Portal Security</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Role permissions</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Access controls</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Audit logging</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>2FA support</span>
-                </li>
-              </ul>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Integration Features - 3 cards */}
-      <section className="py-24 bg-white w-full">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <Badge className="mb-4" variant="outline">Integration</Badge>
-            <h2 className="text-3xl font-bold mb-4">Seamless Integration</h2>
-            <p className="text-gray-600">
-              Connect with your existing systems and third-party services
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="p-6">
-              <div className="mb-4">
-                <Network className="h-10 w-10 text-blue-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Healthcare Systems</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>NHS Integration</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>GP Systems</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Pharmacy Systems</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Lab Results</span>
-                </li>
-              </ul>
-            </Card>
-
-            <Card className="p-6">
-              <div className="mb-4">
-                <Wallet className="h-10 w-10 text-emerald-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Business Systems</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Accounting Software</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Payroll Systems</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>HR Platforms</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Analytics Tools</span>
-                </li>
-              </ul>
-            </Card>
-
-            <Card className="p-6">
-              <div className="mb-4">
-                <Cog className="h-10 w-10 text-indigo-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Custom Solutions</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>REST API</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Webhooks</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Data Export</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Custom Fields</span>
-                </li>
-              </ul>
+              <h3 className="text-lg font-semibold mb-2">Daily Records</h3>
+              <p className="text-muted-foreground">Record daily notes and observations offline</p>
             </Card>
           </div>
         </div>
       </section>
 
       {/* Trust Indicators */}
-      <section className="bg-white py-12 border-y border-gray-200 w-full">
+      <section className="py-16 bg-slate-50/50">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="flex flex-col items-center justify-center text-center">
-              <div className="text-4xl font-bold text-gray-900 mb-2">99.9%</div>
-              <div className="text-sm text-gray-600">Uptime</div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {/* Compliance */}
+            <div className="text-center">
+              <div className="mb-4 flex justify-center">
+                <Shield className="h-10 w-10 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Fully Compliant</h3>
+              <p className="text-sm text-muted-foreground">
+                CQC, CIW, Care Inspectorate, RQIA & HIQA approved
+              </p>
             </div>
-            <div className="flex flex-col items-center justify-center text-center">
-              <div className="text-4xl font-bold text-gray-900 mb-2">256-bit</div>
-              <div className="text-sm text-gray-600">Encryption</div>
+            {/* Security */}
+            <div className="text-center">
+              <div className="mb-4 flex justify-center">
+                <Lock className="h-10 w-10 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">Enterprise Security</h3>
+              <p className="text-sm text-muted-foreground">
+                ISO 27001 certified, GDPR compliant
+              </p>
             </div>
-            <div className="flex flex-col items-center justify-center text-center">
-              <div className="text-4xl font-bold text-gray-900 mb-2">24/7</div>
-              <div className="text-sm text-gray-600">Support</div>
+            {/* Support */}
+            <div className="text-center">
+              <div className="mb-4 flex justify-center">
+                <HeadphonesIcon className="h-10 w-10 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">24/7 Support</h3>
+              <p className="text-sm text-muted-foreground">
+                UK-based care home experts
+              </p>
             </div>
-            <div className="flex flex-col items-center justify-center text-center">
-              <div className="text-4xl font-bold text-gray-900 mb-2">GDPR</div>
-              <div className="text-sm text-gray-600">Certified</div>
+            {/* Reliability */}
+            <div className="text-center">
+              <div className="mb-4 flex justify-center">
+                <Activity className="h-10 w-10 text-blue-600" />
+              </div>
+              <h3 className="text-lg font-semibold mb-2">99.9% Uptime</h3>
+              <p className="text-sm text-muted-foreground">
+                Regional data centers for optimal performance
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Core Enterprise Features - 3 cards */}
-      <section className="py-24 bg-gradient-to-br from-blue-50 to-white w-full">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <Badge className="mb-4" variant="outline">Enterprise Platform</Badge>
-            <h2 className="text-3xl font-bold mb-4">Enterprise-Grade Care Management</h2>
-            <p className="text-gray-600">
-              Comprehensive solution designed for multi-site care organizations
+      {/* Call to Action */}
+      <section className="py-24 bg-gradient-to-br from-blue-600 to-blue-700 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grid-white/10 [mask-image:linear-gradient(0deg,transparent,black)] pointer-events-none" />
+        <div className="container mx-auto px-4 text-center relative z-10">
+          <div className="max-w-3xl mx-auto">
+            <Badge variant="outline" className="mb-4 border-white/30 text-white">Trusted by Leading Care Providers</Badge>
+            <h2 className="text-4xl font-bold mb-6 text-white tracking-tight">
+              Ready to Transform Your Care Home?
+            </h2>
+            <p className="text-xl mb-4 text-blue-100">
+              Join hundreds of care homes using Write Care Notes to deliver outstanding care
             </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Core Operations */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <Building2 className="h-10 w-10 text-violet-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Core Operations</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Multi-Site Management</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Advanced Bed Management</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Asset Tracking</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Incident Management</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Staff Management */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <Users className="h-10 w-10 text-teal-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Staff Management</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Advanced Scheduling</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Performance Tracking</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Training Management</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Compliance Monitoring</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Financial Management */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <Wallet className="h-10 w-10 text-amber-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Financial Suite</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Advanced Accounting</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Integrated Payroll</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Multi-Currency Support</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Financial Reporting</span>
-                </li>
-              </ul>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Clinical Features - 4 cards */}
-      <section className="py-24 bg-white w-full">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <Badge className="mb-4" variant="outline">Clinical Excellence</Badge>
-            <h2 className="text-3xl font-bold mb-4">Advanced Clinical Management</h2>
-            <p className="text-gray-600">
-              Comprehensive clinical tools for superior care delivery
+            <p className="text-sm mb-10 text-blue-100">
+              Available across England, Wales, Scotland, Northern Ireland, and Republic of Ireland
             </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Assessment Management */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <ClipboardCheck className="h-10 w-10 text-rose-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Assessment Suite</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Care Need Assessments</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Risk Assessments</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Custom Assessment Forms</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Progress Tracking</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Medication Management */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <Tablets className="h-10 w-10 text-sky-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Advanced eMAR</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Barcode Scanning</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Real-time Alerts</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Medication Reviews</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>PRN Protocols</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Wellness Management */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <Activity className="h-10 w-10 text-emerald-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Wellness Activities</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Activity Planning</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Health Monitoring</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Nutrition Tracking</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Wellness Reports</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Care Planning */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <FileText className="h-10 w-10 text-purple-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Care Planning</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Person-Centered Plans</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Dynamic Updates</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Family Collaboration</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Outcome Tracking</span>
-                </li>
-              </ul>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Enterprise Features - 4 cards */}
-      <section className="py-24 bg-gradient-to-br from-blue-50 to-white w-full">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <Badge className="mb-4" variant="outline">Enterprise Features</Badge>
-            <h2 className="text-3xl font-bold mb-4">Advanced Platform Capabilities</h2>
-            <p className="text-gray-600">
-              Enterprise-grade features for complex care organizations
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Access Management */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <KeyRound className="h-10 w-10 text-amber-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Access Management</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Role-Based Access</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Emergency Access</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Audit Logging</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>SSO Integration</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Customization */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <Settings className="h-10 w-10 text-violet-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Customization</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Brand Customization</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Email Templates</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Custom Reports</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Dark Mode Support</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Regional Support */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <Globe className="h-10 w-10 text-teal-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Regional Support</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>UK & Ireland Coverage</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Multi-Language Support</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Regional Compliance</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Local Support Teams</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Mobile Access */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <Tablet className="h-10 w-10 text-indigo-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Mobile & Offline</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Mobile Apps</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Tablet Optimization</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Offline Capability</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Auto-Sync</span>
-                </li>
-              </ul>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Integration & Security - 3 cards */}
-      <section className="py-24 bg-white w-full">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <Badge className="mb-4" variant="outline">Integration & Security</Badge>
-            <h2 className="text-3xl font-bold mb-4">Enterprise Integration</h2>
-            <p className="text-gray-600">
-              Secure integration with healthcare and business systems
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="p-6">
-              <div className="mb-4">
-                <Network className="h-10 w-10 text-sky-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Healthcare Systems</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>NHS Integration</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>GP Connect</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Pharmacy Systems</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Healthcare APIs</span>
-                </li>
-              </ul>
-            </Card>
-
-            <Card className="p-6">
-              <div className="mb-4">
-                <LinkIcon className="h-10 w-10 text-emerald-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Business Systems</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Accounting Software</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Payroll Integration</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>HR Systems</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>CRM Integration</span>
-                </li>
-              </ul>
-            </Card>
-
-            <Card className="p-6">
-              <div className="mb-4">
-                <Shield className="h-10 w-10 text-rose-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Security & Compliance</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>GDPR Compliance</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Data Encryption</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Regular Audits</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Backup & Recovery</span>
-                </li>
-              </ul>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Documentation Module - 4 cards */}
-      <section className="py-24 bg-gradient-to-br from-blue-50 to-white w-full">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center mb-16">
-            <Badge className="mb-4" variant="outline">Documentation</Badge>
-            <h2 className="text-3xl font-bold mb-4">Advanced Documentation Module</h2>
-            <p className="text-gray-600">
-              Comprehensive documentation management with regulatory compliance
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Care Documentation */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <FileText className="h-10 w-10 text-violet-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Care Documentation</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Care Plans & Reviews</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Risk Assessments</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Daily Notes & Handovers</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Incident Reports</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Compliance Records */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <BookOpen className="h-10 w-10 text-teal-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Compliance Records</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Regulatory Documentation</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Policy Management</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Audit Trail Records</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Inspection Reports</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Document Management */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <Laptop className="h-10 w-10 text-amber-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Document Management</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Version Control</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Digital Signatures</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Document Templates</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Secure Storage</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Advanced Features */}
-            <Card className="p-6">
-              <div className="mb-4">
-                <Zap className="h-10 w-10 text-sky-500" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Advanced Features</h3>
-              <ul className="space-y-2">
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Smart Forms & Templates</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Automated Workflows</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>Bulk Document Processing</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-500" />
-                  <span>AI-Powered Analytics</span>
-                </li>
-              </ul>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-blue-600 to-blue-700 text-white w-full">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Care Home?</h2>
-            <p className="text-xl mb-8 text-blue-100">
-              Join thousands of care homes already using our platform to deliver outstanding care
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" variant="secondary">
-                <Link href="/demo">Book a Demo</Link>
+            <div className="flex flex-wrap gap-6 justify-center">
+              <Button
+                asChild
+                size="lg"
+                variant="secondary"
+                className="min-w-[160px] text-blue-700 bg-white hover:bg-blue-50"
+              >
+                <Link href="/demo">Request Demo</Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="bg-transparent text-white hover:bg-blue-500">
-                <Link href="/contact">Contact Sales</Link>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="min-w-[160px] text-white border-white/30 hover:bg-white/10"
+              >
+                <Link href="/pricing">View Pricing</Link>
               </Button>
             </div>
           </div>
@@ -1065,4 +624,4 @@ export default function FeaturesPage() {
       </section>
     </main>
   )
-} 
+}

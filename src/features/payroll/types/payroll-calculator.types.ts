@@ -1,4 +1,4 @@
-import { Region, TaxYear, NICategory } from '@/lib/payroll/types';
+import { Region, TaxYear, NICategory } from '../lib/types';
 
 export interface PayrollFormData {
   employeeId: string;

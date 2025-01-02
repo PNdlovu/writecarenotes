@@ -15,7 +15,7 @@ import {
   AssessmentPriority
 } from '../types/assessment.types';
 import { validateAssessment } from '../utils/validation';
-import { useI18n } from '@/features/i18n/lib/config';
+import { useI18n } from '@/lib/i18n';
 import { withAudit } from '@/lib/audit';
 import { withCache } from '@/lib/cache';
 import { RequestContext } from '@/types/context';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertCircle } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { ErrorBoundary } from './ErrorBoundary';
 import { createErrorBoundaryHandler } from '../utils/errorReporting';
 

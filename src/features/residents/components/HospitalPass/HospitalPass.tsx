@@ -1,6 +1,6 @@
 import { FC } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useResidentTranslation } from '@/features/i18n/hooks';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { useResidentTranslation } from '@/lib/i18n/hooks';
 import { HospitalPassForm } from './HospitalPassForm';
 import { HospitalPassList } from './HospitalPassList';
 import { useHospitalPasses } from '../../hooks/useHospitalPasses';

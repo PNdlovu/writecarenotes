@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/ui/Card";
 import { Progress } from "@/components/ui/progress";
 import {
   Select,
@@ -7,7 +7,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Select/Select";
 
 interface CareAnalyticsProps {
   residentId: string;

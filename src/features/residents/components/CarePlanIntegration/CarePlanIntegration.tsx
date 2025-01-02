@@ -1,10 +1,10 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Separator } from '@/components/ui/separator';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button/Button';
+import { Badge } from '@/components/ui/Badge/Badge';
+import { ScrollArea } from '@/components/ui/ScrollArea';
+import { Alert, AlertDescription } from '@/components/ui/Alert';
+import { Separator } from '@/components/ui/Separator';
 import type { DoLS } from '../../types/dols.types';
 import type { Restriction } from '../RestrictionsLog/RestrictionsLog';
 

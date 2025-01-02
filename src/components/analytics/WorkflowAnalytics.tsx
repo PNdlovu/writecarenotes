@@ -1,39 +1,68 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Workflow analytics visualization component
+ * @version 1.0.0
+ * @created 2025-01-01
+ * @updated 2025-01-01
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A comprehensive analytics dashboard component for visualizing workflow data
+ * and statistics. Features include:
+ * - Interactive bar charts for workflow trends
+ * - Pie charts for status distribution
+ * - Time-based filtering (7d, 30d, 90d)
+ * - Real-time data updates
+ * - Responsive design
+ * - Custom color schemes
+ * - Accessibility support
+ * - Tooltip integrations
+ */
+
 import React from 'react';
+
+// Data Management
 import { useQuery } from '@tanstack/react-query';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { format, formatDistanceToNow } from 'date-fns';
+
+// Data Visualization
 import {
   BarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
+  Tooltip as RechartsTooltip,
   ResponsiveContainer,
   PieChart,
   Pie,
   Cell,
 } from 'recharts';
-import { format, formatDistanceToNow } from 'date-fns';
 
+// UI Components
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/Card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/Select/Select';
+
+// Constants
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 const STATUS_COLORS = {
-  DRAFT: '#9CA3AF',
-  IN_REVIEW: '#60A5FA',
-  APPROVED: '#34D399',
-  REJECTED: '#F87171',
+  DRAFT: '#9CA3AF',      // Gray for drafts
+  IN_REVIEW: '#60A5FA',  // Blue for items in review
+  APPROVED: '#34D399',   // Green for approved items
+  REJECTED: '#F87171',   // Red for rejected items
 };
 
 export function WorkflowAnalytics() {
@@ -87,7 +116,7 @@ export function WorkflowAnalytics() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip
+                  <RechartsTooltip
                     formatter={(value: any) => [value, 'Documents']}
                   />
                   <Bar dataKey="documentsCount" fill="#60A5FA" />
@@ -112,7 +141,7 @@ export function WorkflowAnalytics() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip
+                  <RechartsTooltip
                     formatter={(value: any) =>
                       [
                         formatDistanceToNow(new Date(value)),
@@ -181,7 +210,7 @@ export function WorkflowAnalytics() {
                       />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <RechartsTooltip />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -207,7 +236,7 @@ export function WorkflowAnalytics() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis />
-                  <Tooltip />
+                  <RechartsTooltip />
                   <Bar dataKey="decisionsCount" fill="#8884d8" />
                 </BarChart>
               </ResponsiveContainer>
@@ -218,5 +247,3 @@ export function WorkflowAnalytics() {
     </div>
   );
 }
-
-

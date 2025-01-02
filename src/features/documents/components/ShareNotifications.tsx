@@ -18,7 +18,7 @@ import {
   Calendar,
   Users,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 import {
   Card,
   CardContent,
@@ -26,11 +26,11 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+} from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge/Badge';
 import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/router';
-import { Select } from '@/components/ui/select';
+import { Select } from '@/components/ui/Select/Select';
 
 interface ShareNotificationsProps {
   limit?: number;

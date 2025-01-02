@@ -4,12 +4,12 @@
  * @created 2024-03-21
  */
 
+import { Logger } from '@/lib/logger';
+import { Metrics } from '@/lib/metrics';
 import { IndexedDB } from '../storage/indexedDB';
 import { NetworkMonitor } from '../network/networkMonitor';
 import { SyncQueue } from '../sync/syncQueue';
 import { ConflictResolver } from '../sync/conflictResolver';
-import { Logger } from '@/lib/logger';
-import { Metrics } from '@/lib/metrics';
 import { 
   OfflineConfig,
   SyncOperation,
@@ -17,9 +17,14 @@ import {
   NetworkStatus,
   SyncStatus,
   ConflictResolution,
-  SyncError,
-  StorageError
+  ConflictResolutionDetails,
+  ConflictStrategy,
+  ConflictDetails,
+  OperationalTransform,
+  MergeStrategy,
+  DiffResult
 } from '../types';
+import { StorageError, SyncError } from '../types/errors';
 
 export class OfflineService {
   private static instance: OfflineService;
@@ -55,7 +60,15 @@ export class OfflineService {
 
     try {
       this.config = config;
-      await this.db.initialize(config.storage);
+      
+      // Only initialize IndexedDB if we're in a browser environment
+      if (typeof window !== 'undefined') {
+        try {
+          await this.db.initialize(config.storage);
+        } catch (error) {
+          this.logger.warn('Failed to initialize IndexedDB, offline storage will not be available', { error });
+        }
+      }
       
       this.networkMonitor.initialize({
         pingEndpoint: config.network.pingEndpoint,
@@ -70,7 +83,9 @@ export class OfflineService {
       });
 
       // Setup periodic cleanup
-      setInterval(() => this.cleanupStorage(), config.storage.cleanupInterval);
+      if (typeof window !== 'undefined') {
+        setInterval(() => this.cleanupStorage(), config.storage.cleanupInterval);
+      }
 
       this.isInitialized = true;
       this.logger.info('Offline service initialized');
@@ -244,23 +259,25 @@ export class OfflineService {
       for (const item of expired) {
         await this.db.delete(item.id);
       }
-
-      // If still near quota, delete old low priority items
-      const quota = await this.getStorageQuota();
-      if (quota.percentage > 70) {
-        const oldItems = await this.db.getOldItems('low', 100);
-        for (const item of oldItems) {
-          await this.db.delete(item.id);
-        }
-      }
     } catch (error) {
-      this.logger.error('Storage cleanup failed', { error });
+      this.logger.error('Failed to cleanup storage', { error });
     }
   }
 
   async getStorageQuota(): Promise<StorageQuota> {
     this.checkInitialization();
     return await this.db.getQuota();
+  }
+
+  async getPendingChangesCount(module: string): Promise<number> {
+    this.checkInitialization();
+    try {
+      const operations = await this.syncQueue.getPendingOperations();
+      return operations.filter(op => op.resourceType === module).length;
+    } catch (error) {
+      this.logger.error('Failed to get pending changes count', { module, error });
+      return 0;
+    }
   }
 
   private checkInitialization(): void {

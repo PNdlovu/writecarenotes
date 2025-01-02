@@ -14,10 +14,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/DropdownMenu';
+import { Button } from '@/components/ui/Button/Button';
 import { MoreVertical, Pencil, Trash } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/Badge/Badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { HospitalPass } from '../../types/hospitalPass';
 import { useHospitalPasses } from '../../hooks/useHospitalPasses';

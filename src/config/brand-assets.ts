@@ -1,11 +1,11 @@
 export const brandAssets = {
-  guidelines: {
+  brandGuidelines: {
     current: '/assets/brand/guidelines/write-care-notes-brand-guidelines-v1.pdf',
     versions: [
       {
-        version: '1.0',
+        version: 'v1',
         path: '/assets/brand/guidelines/write-care-notes-brand-guidelines-v1.pdf',
-        releaseDate: '2024-12-09',
+        date: '2023-12-23',
         description: 'Initial brand guidelines including color palette, typography, and logo usage',
       },
     ],
@@ -33,5 +33,3 @@ export const brandAssets = {
     },
   },
 } as const;
-
-

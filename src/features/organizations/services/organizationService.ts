@@ -18,15 +18,24 @@ import type {
   UpdateOrganizationInput,
   OrganizationQueryParams,
   OrganizationStats,
-  ComplianceFramework
-} from '../types/organization.types';
-import { OrganizationRepository } from '../repositories/organizationRepository';
+  ComplianceFramework,
+  TenantContext
+} from '../types';
+
+import { OrganizationRepository } from './repositories/organizationRepository';
+import { TenantService } from './tenantService';
+import { SecurityService } from './securityService';
+import { AuditService } from './auditService';
+import { AnalyticsService } from './analyticsService';
+import { validateOrganization } from '../utils/validations/organizationValidation';
+import { OrganizationProvider } from '../utils/providers/OrganizationProvider';
+import { securityMiddleware } from '../utils/middleware/security';
+import { offlineStore } from '../utils/lib/offline/organizationOfflineStore';
 import { slugify } from '@/lib/utils';
 import { ApiError } from '@/lib/errors';
 import { auditService } from '@/lib/audit';
 import { offlineSync } from '@/lib/offline';
 import { validateRegionalCompliance } from '@/lib/compliance';
-import { TenantContext } from '@/lib/tenant';
 import { DatabaseError } from '@/lib/errors';
 
 export class OrganizationService {

@@ -1,3 +1,19 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Advanced incident management and analytics service
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @updated 2024-03-21
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * Advanced incident service providing complex incident management features
+ * including medication incident handling, trend analysis, and preventive
+ * measures generation. Extends core incident functionality with advanced
+ * reporting capabilities and integration with other care services.
+ */
+
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../../../utils/logger';
 import { NotificationService } from '../../../services/notificationService';

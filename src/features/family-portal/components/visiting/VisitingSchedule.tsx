@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button/Button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
@@ -9,18 +9,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/form/input";
-import { Label } from "@/components/ui/form/label";
-import { Textarea } from "@/components/ui/form/textarea";
+} from "@/components/ui/Dialog/Dialog";
+import { Input } from "@/components/ui/Form/input";
+import { Label } from "@/components/ui/Form/label";
+import { Textarea } from "@/components/ui/Form/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
+} from "@/components/ui/Select/Select";
+import { Badge } from "@/components/ui/Badge/Badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface Visit {

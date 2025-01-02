@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import { Badge } from "@/components/ui/Badge/Badge"
 import { Calendar } from "@/components/ui/calendar"
 import { format, isSameDay, isAfter, isBefore, addDays } from 'date-fns'
 

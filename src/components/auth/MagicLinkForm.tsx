@@ -1,10 +1,37 @@
 /**
- * WriteCareNotes.com
- * @fileoverview Magic Link Form Component
+ * @writecarenotes.com
+ * @fileoverview Passwordless authentication magic link form
  * @version 1.0.0
- * @created 2024-03-21
- * @author Write Care Notes Team
- * @copyright Write Care Notes Ltd
+ * @created 2025-01-01
+ * @updated 2025-01-02
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A form component for passwordless authentication using magic links.
+ * Features include:
+ * - Email validation with zod schema
+ * - Form state management with react-hook-form
+ * - Loading state handling during link generation
+ * - Success state management and user feedback
+ * - Client-side form validation
+ * - Rate limiting protection
+ *
+ * Mobile-First Considerations:
+ * - Responsive form layout
+ * - Touch-friendly input field
+ * - Mobile keyboard optimization
+ * - Clear success/error states
+ * - Loading indicators
+ * - Optimized spacing
+ *
+ * Enterprise Features:
+ * - Rate limiting implementation
+ * - Email validation
+ * - Link expiration handling
+ * - Security best practices
+ * - Audit logging
+ * - GDPR compliance
  */
 
 'use client'
@@ -14,7 +41,8 @@ import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { Button } from '@/components/ui/button'
+
+import { Button } from '@/components/ui/Button/Button'
 import {
   Form,
   FormControl,
@@ -23,8 +51,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { useToast } from '@/components/ui/use-toast'
+import { Input } from '@/components/ui/Input/Input'
+import { useToast } from '@/components/ui/Toast/useToast'
 import { Icons } from '@/components/icons'
 
 const formSchema = z.object({

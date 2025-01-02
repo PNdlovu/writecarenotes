@@ -5,25 +5,26 @@ import * as z from 'zod';
 import { MedicationUnit } from '../types/mar';
 import { Region } from '@/types/region';
 import { useRegionalSettings } from '@/hooks/useRegionalSettings';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+} from '@/components/ui/Form';
+import { Input } from '@/components/ui/Input/Input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { DatePicker } from '@/components/ui/date-picker';
+} from '@/components/ui/Select/Select';
+import { Switch } from '@/components/ui/Switch';
+import { DatePicker } from '@/components/ui/DatePicker';
 
 interface MedicationFormData {
   id?: string;

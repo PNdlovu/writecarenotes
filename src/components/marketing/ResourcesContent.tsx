@@ -1,6 +1,6 @@
 'use client';
 
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/Card';
 import Link from 'next/link';
 import {
   BookOpen,

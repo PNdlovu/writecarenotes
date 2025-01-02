@@ -1,7 +1,7 @@
 import { HandoverNote, HandoverSession, HandoverTask, HandoverAttachment, ComplianceStatus } from '../types/handover';
 
 class HandoverService {
-  private readonly baseUrl = '/api/organizations/[id]/care-homes/[careHomeId]/handovers';
+  private readonly baseUrl = '/api/organizations/[organizationId]/care-homes/[careHomeId]/handovers';
 
   // Session Management
   async getCurrentHandoverSession(): Promise<HandoverSession | null> {

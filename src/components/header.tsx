@@ -1,3 +1,20 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Dashboard header component with flexible content layout
+ * @version 1.0.0
+ * @created 2025-01-01
+ * @updated 2025-01-01
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A reusable header component for dashboard pages that provides a consistent
+ * layout for page titles, descriptions, and optional action items. Features
+ * flexible content composition through children props and responsive design.
+ */
+
+import * as React from "react"
+
 interface DashboardHeaderProps {
   heading: string
   text?: string
@@ -18,4 +35,4 @@ export function DashboardHeader({
       {children}
     </div>
   )
-} 
+}

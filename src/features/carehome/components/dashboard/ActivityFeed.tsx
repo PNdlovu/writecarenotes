@@ -1,8 +1,8 @@
 // src/features/carehome/components/dashboard/ActivityFeed.tsx
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Card } from '@/components/ui/Card';
+import { ScrollArea } from '@/components/ui/ScrollArea';
 
 interface Activity {
   id: string;

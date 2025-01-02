@@ -1,10 +1,10 @@
 import React from 'react'
 import { useSession } from 'next-auth/react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Card } from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button/Button'
+import { Textarea } from '@/components/ui/Textarea'
+import { ScrollArea } from '@/components/ui/ScrollArea'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar'
 import type { HandoverNote } from '../../types/handover'
 
 interface HandoverNotesProps {

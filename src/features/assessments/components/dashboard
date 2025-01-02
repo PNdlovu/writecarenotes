@@ -1,212 +1,285 @@
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { useAssessment } from '../../context/AssessmentContext';
+import * as assessmentApi from '../../api/assessmentApi';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/Table';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/Alert';
+import { Badge } from '@/components/ui/Badge';
+import { Card, CardHeader, CardContent } from '@/components/ui/Card';
+import { DateRangePicker } from '@/components/ui/DateRangePicker';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/DropdownMenu';
+import { 
+  PlusIcon, 
+  FilterIcon, 
+  SearchIcon,
   ClipboardList,
   Clock,
   AlertCircle,
   CheckCircle2,
   Calendar,
   Filter,
-} from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-
-interface Assessment {
-  id: string;
-  title: string;
-  residentId: string;
-  residentName: string;
-  type: string;
-  dueDate: string;
-  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'OVERDUE' | 'REQUIRES_REVIEW';
-  priority: 'HIGH' | 'MEDIUM' | 'LOW';
-  completedBy?: {
-    id: string;
-    name: string;
-  };
-  completedAt?: string;
-  lastUpdated: string;
-}
+} from '@heroicons/react/24/outline';
 
 interface AssessmentDashboardProps {
-  assessments: Assessment[];
   onCreateAssessment: () => void;
-  onViewAssessment: (id: string) => void;
-  onFilterChange: (filters: AssessmentFilters) => void;
 }
 
-interface AssessmentFilters {
-  status?: string;
-  priority?: string;
-  type?: string;
-  timeframe?: string;
-}
+export function AssessmentDashboard({ onCreateAssessment }: AssessmentDashboardProps) {
+  const router = useRouter();
+  const { state, dispatch } = useAssessment();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [dateRange, setDateRange] = useState<{ from: Date; to: Date } | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+  const [filters, setFilters] = useState<Record<string, string>>({});
 
-const statusColors = {
-  PENDING: 'bg-blue-100 text-blue-800',
-  IN_PROGRESS: 'bg-yellow-100 text-yellow-800',
-  COMPLETED: 'bg-green-100 text-green-800',
-  OVERDUE: 'bg-red-100 text-red-800',
-  REQUIRES_REVIEW: 'bg-purple-100 text-purple-800',
-};
+  useEffect(() => {
+    loadAssessments();
+  }, []);
 
-export function AssessmentDashboard({
-  assessments,
-  onCreateAssessment,
-  onViewAssessment,
-  onFilterChange,
-}: AssessmentDashboardProps) {
-  const [filters, setFilters] = React.useState<AssessmentFilters>({});
-
-  const handleFilterChange = (key: keyof AssessmentFilters, value: string) => {
-    const newFilters = { ...filters, [key]: value };
-    setFilters(newFilters);
-    onFilterChange(newFilters);
+  const loadAssessments = async () => {
+    try {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      const assessments = await assessmentApi.fetchAssessments();
+      dispatch({ type: 'SET_ASSESSMENTS', payload: assessments });
+    } catch (error) {
+      dispatch({
+        type: 'SET_ERROR',
+        payload: 'Failed to load assessments. Please try again.',
+      });
+    }
   };
 
-  const getStatusIcon = (status: Assessment['status']) => {
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) {
+      await loadAssessments();
+      return;
+    }
+
+    try {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      const results = await assessmentApi.searchAssessments(searchQuery);
+      dispatch({ type: 'SET_ASSESSMENTS', payload: results });
+    } catch (error) {
+      dispatch({
+        type: 'SET_ERROR',
+        payload: 'Failed to search assessments. Please try again.',
+      });
+    }
+  };
+
+  const handleDateRangeChange = async (range: { from: Date; to: Date } | null) => {
+    setDateRange(range);
+    if (!range) {
+      await loadAssessments();
+      return;
+    }
+
+    try {
+      dispatch({ type: 'SET_LOADING', payload: true });
+      const results = await assessmentApi.fetchAssessmentsByDateRange(
+        range.from,
+        range.to
+      );
+      dispatch({ type: 'SET_ASSESSMENTS', payload: results });
+    } catch (error) {
+      dispatch({
+        type: 'SET_ERROR',
+        payload: 'Failed to filter assessments by date. Please try again.',
+      });
+    }
+  };
+
+  const handleExport = async (id: string) => {
+    try {
+      setIsExporting(true);
+      const blob = await assessmentApi.exportAssessmentPDF(id);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `assessment-${id}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      dispatch({
+        type: 'SET_ERROR',
+        payload: 'Failed to export assessment. Please try again.',
+      });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleArchive = async (id: string) => {
+    try {
+      const updated = await assessmentApi.archiveAssessment(id);
+      dispatch({ type: 'UPDATE_ASSESSMENT', payload: updated });
+    } catch (error) {
+      dispatch({
+        type: 'SET_ERROR',
+        payload: 'Failed to archive assessment. Please try again.',
+      });
+    }
+  };
+
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  };
+
+  const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'PENDING':
-        return <Clock className="h-4 w-4" />;
-      case 'IN_PROGRESS':
-        return <ClipboardList className="h-4 w-4" />;
-      case 'COMPLETED':
-        return <CheckCircle2 className="h-4 w-4" />;
-      case 'OVERDUE':
-        return <AlertCircle className="h-4 w-4" />;
-      case 'REQUIRES_REVIEW':
-        return <ClipboardList className="h-4 w-4" />;
+      case 'completed':
+        return <Badge variant="success">Completed</Badge>;
+      case 'draft':
+        return <Badge variant="warning">Draft</Badge>;
+      case 'archived':
+        return <Badge variant="secondary">Archived</Badge>;
+      default:
+        return <Badge>{status}</Badge>;
     }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Assessments Dashboard</h1>
+        <h1 className="text-2xl font-bold">Assessments Dashboard</h1>
         <Button onClick={onCreateAssessment}>
           <ClipboardList className="h-4 w-4 mr-2" />
           New Assessment
         </Button>
       </div>
 
-      <Card className="p-4">
-        <div className="flex items-center space-x-4 mb-6">
-          <div className="flex items-center space-x-2">
-            <Filter className="h-4 w-4 text-gray-500" />
-            <span className="text-sm font-medium">Filters:</span>
-          </div>
-          
-          <Select
-            value={filters.status}
-            onValueChange={(value) => handleFilterChange('status', value)}
-          >
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">All Statuses</SelectItem>
-              <SelectItem value="PENDING">Pending</SelectItem>
-              <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
-              <SelectItem value="COMPLETED">Completed</SelectItem>
-              <SelectItem value="OVERDUE">Overdue</SelectItem>
-              <SelectItem value="REQUIRES_REVIEW">Requires Review</SelectItem>
-            </SelectContent>
-          </Select>
+      {state.error && (
+        <Alert variant="destructive">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{state.error}</AlertDescription>
+        </Alert>
+      )}
 
-          <Select
-            value={filters.priority}
-            onValueChange={(value) => handleFilterChange('priority', value)}
-          >
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Priority" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">All Priorities</SelectItem>
-              <SelectItem value="HIGH">High</SelectItem>
-              <SelectItem value="MEDIUM">Medium</SelectItem>
-              <SelectItem value="LOW">Low</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select
-            value={filters.timeframe}
-            onValueChange={(value) => handleFilterChange('timeframe', value)}
-          >
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Timeframe" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">All Time</SelectItem>
-              <SelectItem value="TODAY">Today</SelectItem>
-              <SelectItem value="THIS_WEEK">This Week</SelectItem>
-              <SelectItem value="THIS_MONTH">This Month</SelectItem>
-              <SelectItem value="OVERDUE">Overdue</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <ScrollArea className="h-[600px]">
-          <div className="space-y-4">
-            {assessments.map((assessment) => (
-              <Card
-                key={assessment.id}
-                className="p-4 hover:bg-gray-50 cursor-pointer"
-                onClick={() => onViewAssessment(assessment.id)}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center space-x-4">
+            <div className="flex-1">
+              <div className="relative">
+                <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  type="search"
+                  placeholder="Search assessments..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            <DateRangePicker
+              value={dateRange}
+              onChange={handleDateRangeChange}
+              placeholder="Filter by date"
+            />
+            <div className="flex items-center space-x-2">
+              <Filter className="h-4 w-4 text-gray-500" />
+              <span className="text-sm font-medium">Filters:</span>
+              <Select
+                value={filters.status}
+                onValueChange={(value) => handleFilterChange('status', value)}
               >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <h3 className="font-medium">{assessment.title}</h3>
-                      <Badge
-                        className={`${
-                          statusColors[assessment.status]
-                        } flex items-center space-x-1`}
-                      >
-                        {getStatusIcon(assessment.status)}
-                        <span>{assessment.status.replace('_', ' ')}</span>
-                      </Badge>
-                      {assessment.priority === 'HIGH' && (
-                        <Badge variant="destructive">High Priority</Badge>
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Resident: {assessment.residentName}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <div className="flex items-center space-x-2">
-                      <Calendar className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">
-                        Due: {new Date(assessment.dueDate).toLocaleDateString()}
-                      </span>
-                    </div>
-                    {assessment.completedBy && (
-                      <p className="text-sm text-gray-500 mt-1">
-                        Completed by: {assessment.completedBy.name}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
-                  <span>Type: {assessment.type}</span>
-                  <span>
-                    Last updated:{' '}
-                    {new Date(assessment.lastUpdated).toLocaleDateString()}
-                  </span>
-                </div>
-              </Card>
-            ))}
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="draft">Draft</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="archived">Archived</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
-        </ScrollArea>
+        </CardHeader>
+        <CardContent>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Resident</TableHead>
+                  <TableHead>Date Created</TableHead>
+                  <TableHead>Last Modified</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Assessor</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {state.assessments.map((assessment) => (
+                  <TableRow key={assessment.id}>
+                    <TableCell>{assessment.residentId}</TableCell>
+                    <TableCell>
+                      {new Date(assessment.dateCreated).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      {new Date(assessment.lastModified).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>{getStatusBadge(assessment.status)}</TableCell>
+                    <TableCell>{assessment.assessorId}</TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="sm">
+                            Actions
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={() =>
+                              router.push(`/assessments/${assessment.id}`)
+                            }
+                          >
+                            View
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              router.push(`/assessments/${assessment.id}/edit`)
+                            }
+                          >
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleExport(assessment.id)}
+                            disabled={isExporting}
+                          >
+                            Export PDF
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleArchive(assessment.id)}
+                            disabled={assessment.status === 'archived'}
+                          >
+                            Archive
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
       </Card>
     </div>
   );

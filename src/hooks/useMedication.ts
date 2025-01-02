@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/UseToast';
 import { medicationService } from '@/services/medicationService';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { MedicationFormData, MedicationWithResident } from '@/types/medication';

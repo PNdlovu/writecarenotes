@@ -5,7 +5,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from '@/components/ui/Card';
 import {
   Form,
   FormControl,
@@ -14,7 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from '@/components/ui/Form';
 import {
   Dialog,
   DialogContent,
@@ -22,14 +22,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+} from '@/components/ui/Dialog/Dialog';
+import { Button } from '@/components/ui/Button/Button';
+import { Input } from '@/components/ui/Form/Input';
+import { Textarea } from '@/components/ui/Form/Textarea';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useChildrenInCareTranslation } from '@/features/i18n/hooks/useChildrenInCareTranslation';
+import { useChildrenInCareTranslation } from '@/lib/i18n/hooks/useChildrenInCareTranslation';
 
 const placementFormSchema = z.object({
   startDate: z.string().min(1, 'Start date is required'),

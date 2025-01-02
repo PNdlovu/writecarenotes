@@ -1,104 +1,59 @@
-import { CareHomeType } from './compliance';
-import { Verification } from './verification';
+/**
+ * @writecarenotes.com
+ * @fileoverview MAR Type Definitions
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @updated 2024-03-21
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * Type definitions for Medication Administration Records (MAR).
+ */
 
-export type MedicationStatus = 
-  | 'GIVEN' 
-  | 'MISSED' 
-  | 'PENDING' 
-  | 'REFUSED' 
-  | 'SCHEDULED'
-  | 'PENDING_SYNC' // For offline mode
-  | 'SYNC_FAILED';  // For offline mode
-
-export type MedicationUnit = 'mg' | 'ml' | 'tablet' | 'capsule' | 'patch' | 'injection';
-
-export type MedicationRoute = 
-  | 'ORAL' 
-  | 'TOPICAL' 
-  | 'INJECTION' 
-  | 'INHALED' 
-  | 'SUBLINGUAL'
-  | 'RECTAL'
-  | 'OTHER';
-
-export interface MedicationSchedule {
-  id: string;
-  times: string[];
-  frequency: string;
-  startDate: string;
-  endDate?: string;
-  asNeeded: boolean;
-  instructions?: string;
-}
-
-export interface MAREntry {
+export interface MedicationAdministration {
   id: string;
   medicationId: string;
   residentId: string;
+  scheduleId: string;
+  administeredBy: string;
+  witnessId?: string;
+  status: AdministrationStatus;
   scheduledTime: string;
-  status: MedicationStatus;
-  administeredBy?: {
-    id: string;
-    name: string;
-    role: string;
-  };
-  administeredAt?: string;
+  administeredTime?: string;
+  dose: string;
   notes?: string;
-  verifications: Verification[];
-  offlineSync?: {
-    status: 'PENDING' | 'SYNCED' | 'FAILED';
-    lastSyncAttempt?: string;
-    syncError?: string;
-    localChanges?: {
-      timestamp: string;
-      changes: Partial<MAREntry>;
-    }[];
-  };
-  compliance: {
-    requiresWitness: boolean;
-    requiresHealthcarePlan: boolean;
-    requiresParentalConsent: boolean;
-    verificationStatus: {
-      witness?: boolean;
-      healthcarePlan?: boolean;
-      parentalConsent?: boolean;
-    };
-  };
+  batchNumber: string;
+  isPRN: boolean;
+  requiresDoubleCheck: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export interface Medication {
+export enum AdministrationStatus {
+  PENDING = 'PENDING',
+  COMPLETED = 'COMPLETED',
+  MISSED = 'MISSED',
+  REFUSED = 'REFUSED',
+  WITHHELD = 'WITHHELD'
+}
+
+export interface MARSignature {
   id: string;
-  name: string;
-  dosage: number;
-  unit: MedicationUnit;
-  route: MedicationRoute;
-  schedule: MedicationSchedule;
-  isControlledDrug: boolean;
-  requiresWitness: boolean;
-  barcode?: string;
-  stockLevel?: number;
-  reorderLevel?: number;
-  compliance: {
-    requiresWitness: boolean;
-    requiresHealthcarePlan: boolean;
-    requiresParentalConsent: boolean;
-    careHomeTypes: CareHomeType[];
-  };
+  administrationId: string;
+  staffId: string;
+  type: 'ADMINISTRATOR' | 'WITNESS';
+  signedAt: string;
+  pinHash: string;
 }
 
-export interface MARChart {
-  residentId: string;
-  medications: Medication[];
-  entries: MAREntry[];
-  offlineEnabled: boolean;
-  lastSyncTime?: string;
-}
-
-export interface MARValidationError {
-  code: string;
-  message: string;
-  field?: string;
-  details?: any;
+export interface MARHistory {
+  id: string;
+  administrationId: string;
+  type: 'CREATED' | 'UPDATED' | 'SIGNED' | 'WITNESSED';
+  staffId: string;
+  timestamp: string;
+  details: string;
 }
 
 

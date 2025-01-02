@@ -7,16 +7,16 @@
  */
 
 import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/Card';
+import { Input } from '@/components/ui/Input/Input';
+import { Button } from '@/components/ui/Button/Button';
 import { 
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue 
-} from '@/components/ui/select';
+} from '@/components/ui/Select/Select';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
 import { Icons } from '@/components/ui/icons';
 import { 

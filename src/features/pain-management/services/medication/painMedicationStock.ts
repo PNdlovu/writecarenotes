@@ -4,7 +4,7 @@
  * @created 2024-03-21
  */
 
-import { StockManagementService } from '@/features/medications/services/stockManagement';
+import { StockService } from '@/features/medications/services/stockService';
 import { PrescriptionService } from '@/features/medications/services/prescriptionService';
 import { TenantContext } from '@/lib/multi-tenant/types';
 import { ResidentPainAssessment, CareHomeInterventionType } from '../types/care-home';
@@ -12,7 +12,7 @@ import { ResidentPainAssessment, CareHomeInterventionType } from '../types/care-
 export class PainMedicationStockService {
   constructor(
     private tenantContext: TenantContext,
-    private stockService: StockManagementService,
+    private stockService: StockService,
     private prescriptionService: PrescriptionService
   ) {}
 

@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Resident, ResidentCreateDTO, ResidentUpdateDTO } from '../types';
 import { apiClient } from '@/lib/api/apiClient';
-import { useToast } from '@/components/ui/toast';
+import { useToast } from '@/components/ui/Toast';
 import { useTranslation } from 'next-i18next';
 import { useOfflineSync } from '@/lib/offline/useOfflineSync';
 

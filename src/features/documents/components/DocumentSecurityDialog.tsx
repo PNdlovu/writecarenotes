@@ -5,10 +5,10 @@ import { useTranslation } from 'next-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Document } from '@prisma/client';
 import { useToast } from '@/hooks/useToast';
-import { Dialog } from '@/components/ui/Dialog';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
+import { Dialog } from '@/components/ui/Dialog/Dialog';
+import { Button } from '@/components/ui/Button/Button';
+import { Input } from '@/components/ui/Input/Input';
+import { Select } from '@/components/ui/Select/Select';
 import { Switch } from '@/components/ui/Switch';
 
 interface DocumentSecurityDialogProps {

@@ -7,7 +7,9 @@
 'use client';
 
 import React from 'react';
-import { useOffline } from '../hooks/useOffline';
+import { WifiOff, CloudSync, Check } from 'lucide-react';
+import { useOffline } from '../../hooks/useOffline';
+import { cn } from '@/lib/utils';
 import { NetworkStatus, SyncStatus, StorageQuota } from '../types';
 
 export interface OfflineIndicatorProps {
@@ -41,7 +43,7 @@ export function OfflineIndicator({
       <div className="offline-indicator__network">
         <div className={`offline-indicator__status ${state.isOnline ? 'online' : 'offline'}`}>
           <span className="offline-indicator__icon">
-            {state.isOnline ? '🟢' : '🔴'}
+            {state.isOnline ? <Check /> : <WifiOff />}
           </span>
           <span className="offline-indicator__text">
             {state.isOnline ? 'Online' : 'Offline'}
@@ -54,13 +56,13 @@ export function OfflineIndicator({
         <div className="offline-indicator__sync">
           {state.isSyncing ? (
             <div className="offline-indicator__syncing">
-              <span className="offline-indicator__icon">🔄</span>
+              <span className="offline-indicator__icon"><CloudSync /></span>
               <span className="offline-indicator__text">Syncing...</span>
             </div>
           ) : state.lastSyncStatus && (
             <div className="offline-indicator__last-sync">
               <span className="offline-indicator__icon">
-                {state.lastSyncStatus.status === 'completed' ? '✅' : '⚠️'}
+                {state.lastSyncStatus.status === 'completed' ? <Check /> : <WifiOff />}
               </span>
               <span className="offline-indicator__text">
                 {state.lastSyncStatus.status === 'completed'
@@ -115,17 +117,17 @@ export function OfflineIndicator({
           <div className="offline-indicator__sw-status">
             {state.serviceWorkerStatus.active ? (
               <span className="offline-indicator__sw-active">
-                <span className="offline-indicator__icon">✅</span>
+                <span className="offline-indicator__icon"><Check /></span>
                 <span className="offline-indicator__text">Service Worker Active</span>
               </span>
             ) : state.serviceWorkerStatus.installing ? (
               <span className="offline-indicator__sw-installing">
-                <span className="offline-indicator__icon">🔄</span>
+                <span className="offline-indicator__icon"><CloudSync /></span>
                 <span className="offline-indicator__text">Installing Service Worker...</span>
               </span>
             ) : (
               <span className="offline-indicator__sw-inactive">
-                <span className="offline-indicator__icon">⚠️</span>
+                <span className="offline-indicator__icon"><WifiOff /></span>
                 <span className="offline-indicator__text">Service Worker Inactive</span>
               </span>
             )}

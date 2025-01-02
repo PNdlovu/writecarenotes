@@ -13,24 +13,24 @@ import {
   RotateCcw,
   UserPlus,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/ui/Dialog';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/components/ui/use-toast';
-import { Badge } from '@/components/ui/badge';
+} from '@/components/ui/Select';
+import { Textarea } from '@/components/ui/Form/Textarea';
+import { useToast } from '@/components/ui/UseToast';
+import { Badge } from '@/components/ui/Badge';
 import {
   Table,
   TableBody,
@@ -38,7 +38,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/Table';
+import { Input } from "@/components/ui/Form/Input";
+import { Label } from "@/components/ui/Form/Label";
+import { ScrollArea } from "@/components/ui/ScrollArea";
+import { Separator } from "@/components/ui/Separator";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 
 interface DocumentWorkflowProps {
   documentId: string;

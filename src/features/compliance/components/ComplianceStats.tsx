@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/components/ui/Badge/Badge"
 import { ArrowUpIcon, ArrowDownIcon, MinusIcon } from "lucide-react"
 import { ComplianceData } from '../types'
 

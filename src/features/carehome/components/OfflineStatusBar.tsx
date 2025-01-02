@@ -1,7 +1,7 @@
 import React from 'react';
 import { useOfflineSync } from '../hooks/useOfflineSync';
-import { Button } from '@/components/ui/button';
-import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/Button/Button';
+import { Alert } from '@/components/ui/Alert';
 import { Icon } from '@/components/ui/icon';
 
 interface OfflineStatusBarProps {

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge/Badge';
 import Link from 'next/link';
 import { 
   BookOpen, 
@@ -20,7 +20,7 @@ import {
   Award,
   CheckCircle2
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 
 export const metadata: Metadata = {
   title: 'Care Documentation Resources | Write Care Notes',

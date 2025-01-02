@@ -13,7 +13,7 @@ import { AuditFilter } from './filters/AuditFilter';
 import { AuditDetails } from './details/AuditDetails';
 import { AuditExport } from './export/AuditExport';
 import { AuditPagination } from './tables/AuditPagination';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 import { Icons } from '@/components/ui/icons';
 import { useToast } from '@/components/ui/use-toast';
 import type {

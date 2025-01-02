@@ -1,15 +1,15 @@
 // src/features/carehome/components/floorplan/FloorPlanViewer.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/Card';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/Select';
+import { Button } from '@/components/ui/Button';
 import { 
   ZoomInIcon, 
   ZoomOutIcon, 

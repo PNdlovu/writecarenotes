@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/ui/Input/Input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/Select/Select';
+import { Calendar } from '@/components/ui/Calendar';
+import { Button } from '@/components/ui/Button/Button';
 import { addMonths } from 'date-fns';
 
 interface RecurringPattern {

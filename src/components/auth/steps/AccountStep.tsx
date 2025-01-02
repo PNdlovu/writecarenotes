@@ -1,11 +1,48 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Account setup step component for user registration
+ * @version 1.0.0
+ * @created 2025-01-02
+ * @updated 2025-01-02
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A form component for the account creation step of the registration process.
+ * Features include:
+ * - Email validation with format checking
+ * - Password strength requirements
+ * - Real-time validation feedback
+ * - Password confirmation matching
+ * - Form state management
+ * - Error handling and display
+ * - Accessibility support
+ *
+ * Mobile-First Considerations:
+ * - Responsive form layout
+ * - Touch-friendly input fields
+ * - Dynamic keyboard handling
+ * - Optimized input spacing
+ * - Visible validation feedback
+ * - Smooth transitions
+ *
+ * Enterprise Features:
+ * - Password strength validation
+ * - Email format validation
+ * - Error boundary implementation
+ * - Form state persistence
+ * - Security best practices
+ * - GDPR compliance
+ */
+
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card } from '@/components/ui/card'
-import { Icons } from '@/components/ui/icons'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Form/Input'
+import { Label } from '@/components/ui/Form/Label'
+import { Card } from '@/components/ui/Card'
+import { Icons } from '@/components/ui/Icons'
 import { cn } from '@/lib/utils'
 import { z } from 'zod'
 

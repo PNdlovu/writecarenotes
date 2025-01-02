@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
+import { Button } from '@/components/ui/Button'
+import { Card } from '@/components/ui/Card'
+import { Label } from '@/components/ui/Form/Label'
 import { cn } from '@/lib/utils'
 import { z } from 'zod'
 import {
@@ -14,8 +14,8 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/form/radio-group"
+} from "@/components/ui/Form/Select"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/Form/RadioGroup"
 
 const ORGANIZATIONS = [
   {

@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/Toast/use-toast';
 import { useI18n } from '../i18n/config';
+import { Button } from "@/components/ui/Button/Button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/Dialog";
+import { Progress } from "@/components/ui/Progress";
 
 interface OfflineContextType {
   isOnline: boolean;

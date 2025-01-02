@@ -2,10 +2,10 @@
 
 import dynamic from 'next/dynamic'
 import { PricingPlans } from "./PricingPlans"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Card } from "@/components/ui/Card"
+import { Badge } from "@/components/ui/Badge/Badge"
+import { Button } from "@/components/ui/Button/Button"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/Accordion/Accordion"
 import Link from "next/link"
 import { 
   Zap, 

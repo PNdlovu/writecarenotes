@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { OrganizationAnalyticsService } from '../services/analyticsService'
-import type { OrganizationMetrics, CareHomeMetricsSummary } from '../repositories/analyticsRepository'
+import type { OrganizationMetrics, CareHomeMetricsSummary } from '../services/analytics/types'
 
 export function useOrganizationAnalytics(organizationId: string) {
   const [data, setData] = useState<{

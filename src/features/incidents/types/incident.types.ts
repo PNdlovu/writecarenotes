@@ -1,10 +1,17 @@
-// src/features/incidents/types/incident.types.ts
 /**
- * @fileoverview Core incident type definitions
+ * @writecarenotes.com
+ * @fileoverview Type definitions for incident management system
  * @version 1.0.0
- * @created 2024-12-14
- * @author Write Care Notes Team
- * @copyright Write Care Notes Ltd
+ * @created 2024-03-21
+ * @updated 2024-03-21
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * Core type definitions for the incident management system including
+ * enums for incident types, status, and severity levels. Contains
+ * interfaces for incidents, investigations, attachments, and related
+ * entities. Supports type safety across the incident management module.
  */
 
 import { Organization } from '@/types/organization';

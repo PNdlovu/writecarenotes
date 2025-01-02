@@ -2,15 +2,15 @@
  * Tenant Service
  * Handles business logic for tenant management
  */
-import { 
+import type { 
   Tenant,
   TenantSettings,
   TenantType,
   TenantStatus 
-} from '../types/tenant.types'
-import { TenantRepository } from '../repositories/tenantRepository'
+} from '../types'
+import { TenantRepository } from './repositories/tenantRepository'
 import { OrganizationService } from './organizationService'
-import { OrganizationError, OrganizationErrorCode } from '../types/errors'
+import type { OrganizationError, OrganizationErrorCode } from '../types'
 
 interface ServiceContext {
   userId: string

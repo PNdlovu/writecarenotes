@@ -3,7 +3,13 @@
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
+import { Card, CardHeader, CardContent } from '@/components/ui/Card';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/Alert';
+import { Calendar } from '@/components/ui/Calendar';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/Select';
+import { Input } from '@/components/ui/Input';
+import { Badge } from '@/components/ui/Badge';
 import { CalendarPlusIcon } from '@heroicons/react/24/outline';
 import { AppProviders } from '@/components/providers/AppProviders';
 import { useActivities } from '../hooks/useActivities';

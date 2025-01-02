@@ -1,11 +1,17 @@
 /**
- * WriteCareNotes.com
- * @fileoverview Icons - Shared icon components
+ * @writecarenotes.com
+ * @fileoverview Centralized icon exports for consistent icon usage
  * @version 1.0.0
- * @created 2024-03-21
- * @updated 2024-03-21
- * @author Phibu Cloud Solutions Ltd
+ * @created 2025-01-01
+ * @updated 2025-01-01
+ * @author Write Care Notes team
  * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A centralized collection of icon components used throughout the application.
+ * Re-exports icons from Lucide React with consistent naming conventions and
+ * organization. Helps maintain icon consistency and simplifies icon management
+ * across the application.
  */
 
 import {
@@ -36,4 +42,4 @@ export const Icons = {
   multisite: Building,
   integration: Network,
   analytics: BarChart
-} 
+}

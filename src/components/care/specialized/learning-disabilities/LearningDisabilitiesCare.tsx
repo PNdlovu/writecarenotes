@@ -1,5 +1,52 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Learning disabilities care management component
+ * @version 1.0.0
+ * @created 2025-01-01
+ * @updated 2025-01-02
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A specialized component for managing care services for individuals with
+ * learning disabilities. Features include:
+ * - Learning needs assessment
+ * - Development plan tracking
+ * - Communication methods management
+ * - Skills progress monitoring
+ * - Support level tracking
+ * - Activity planning
+ * - Support worker assignment
+ * - Goal achievement tracking
+ * - Behavioral monitoring
+ *
+ * Mobile-First Considerations:
+ * - Simple interface design
+ * - Picture-based navigation
+ * - Audio feedback
+ * - Large buttons
+ * - Color-coded elements
+ * - Consistent layout
+ *
+ * Enterprise Features:
+ * - Progress analytics
+ * - Staff coordination
+ * - Training tracking
+ * - Incident reporting
+ * - Outcome measurement
+ * - Service planning
+ */
+
 import React from 'react';
+
+// Base Components
 import { BaseCareComponent, BaseCareProps } from '../../base/BaseCareComponent';
+
+// UI Components
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button/Button';
+import { Progress } from '@/components/ui/Progress';
+import { Select } from '@/components/ui/select';
 
 interface LearningDisabilitiesCareProps extends BaseCareProps {
   learningAssessment?: {

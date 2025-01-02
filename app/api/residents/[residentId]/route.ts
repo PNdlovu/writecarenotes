@@ -1,5 +1,5 @@
 /**
- * @fileoverview Resident API routes
+ * @fileoverview Resident management API routes
  * @version 1.0.0
  * @created 2024-03-21
  * @author Write Care Notes Team
@@ -8,48 +8,23 @@
 
 import { NextResponse } from 'next/server';
 import { validateRequest } from '@/lib/api';
-import prisma from '@/lib/prisma';
+import { residentService } from '../service';
 
 export async function GET(
   request: Request,
   { params }: { params: { residentId: string } }
 ) {
   try {
-    // 1. Validate request & auth
     const { user } = await validateRequest(request);
-
-    // 2. Get resident
-    const resident = await prisma.resident.findFirst({
-      where: {
-        id: params.residentId,
-        organizationId: user.organizationId,
-      },
-    });
+    const resident = await residentService.getResident(params.residentId);
 
     if (!resident) {
-      return NextResponse.json(
-        { error: 'Resident not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: 'Resident not found' }, { status: 404 });
     }
 
-    // 3. Format response
-    const formattedResident = {
-      id: resident.id,
-      name: resident.name,
-      dateOfBirth: resident.dateOfBirth.toISOString(),
-      room: resident.room,
-      careLevel: resident.careLevel,
-      status: resident.status,
-      admissionDate: resident.admissionDate.toISOString(),
-      medicalHistory: resident.medicalHistory,
-      emergencyContact: resident.emergencyContact,
-      notes: resident.notes,
-    };
-
-    return NextResponse.json(formattedResident);
+    return NextResponse.json(resident);
   } catch (error) {
-    console.error('Error in GET /api/residents/[residentId]:', error);
+    console.error(`Error in GET /api/residents/${params.residentId}:`, error);
     
     if (error.name === 'UnauthorizedError') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -62,53 +37,20 @@ export async function GET(
   }
 }
 
-export async function PATCH(
+export async function PUT(
   request: Request,
   { params }: { params: { residentId: string } }
 ) {
   try {
-    // 1. Validate request & auth
     const { user, body } = await validateRequest(request);
+    const resident = await residentService.updateResident(params.residentId, body);
 
-    // 2. Update resident
-    const resident = await prisma.resident.update({
-      where: {
-        id: params.residentId,
-        organizationId: user.organizationId,
-      },
-      data: {
-        ...body,
-        updatedById: user.id,
-      },
-    });
-
-    // 3. Format response
-    const formattedResident = {
-      id: resident.id,
-      name: resident.name,
-      dateOfBirth: resident.dateOfBirth.toISOString(),
-      room: resident.room,
-      careLevel: resident.careLevel,
-      status: resident.status,
-      admissionDate: resident.admissionDate.toISOString(),
-      medicalHistory: resident.medicalHistory,
-      emergencyContact: resident.emergencyContact,
-      notes: resident.notes,
-    };
-
-    return NextResponse.json(formattedResident);
+    return NextResponse.json(resident);
   } catch (error) {
-    console.error('Error in PATCH /api/residents/[residentId]:', error);
+    console.error(`Error in PUT /api/residents/${params.residentId}:`, error);
     
     if (error.name === 'UnauthorizedError') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    
-    if (error.code === 'P2025') {
-      return NextResponse.json(
-        { error: 'Resident not found' },
-        { status: 404 }
-      );
     }
     
     return NextResponse.json(
@@ -123,30 +65,15 @@ export async function DELETE(
   { params }: { params: { residentId: string } }
 ) {
   try {
-    // 1. Validate request & auth
     const { user } = await validateRequest(request);
-
-    // 2. Delete resident
-    await prisma.resident.delete({
-      where: {
-        id: params.residentId,
-        organizationId: user.organizationId,
-      },
-    });
+    await residentService.deleteResident(params.residentId);
 
     return new NextResponse(null, { status: 204 });
   } catch (error) {
-    console.error('Error in DELETE /api/residents/[residentId]:', error);
+    console.error(`Error in DELETE /api/residents/${params.residentId}:`, error);
     
     if (error.name === 'UnauthorizedError') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    
-    if (error.code === 'P2025') {
-      return NextResponse.json(
-        { error: 'Resident not found' },
-        { status: 404 }
-      );
     }
     
     return NextResponse.json(

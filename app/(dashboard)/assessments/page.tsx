@@ -12,7 +12,7 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { AssessmentList } from '@/features/assessments/components/assessment-list';
-import { fetchAssessments } from '@/features/assessments/api/assessment-service';
+import { assessmentApi } from '@/features/assessments/api/assessment-service';
 
 export default function AssessmentsPage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,7 +20,10 @@ export default function AssessmentsPage() {
 
   const { data: assessments, isLoading } = useQuery({
     queryKey: ['assessments', searchQuery, selectedCategory],
-    queryFn: () => fetchAssessments({ search: searchQuery, category: selectedCategory }),
+    queryFn: () => assessmentApi.fetchAssessments({ 
+      search: searchQuery, 
+      category: selectedCategory 
+    }),
   });
 
   const handleReset = () => {
@@ -30,7 +33,7 @@ export default function AssessmentsPage() {
 
   return (
     <AssessmentList
-      assessments={assessments}
+      assessments={assessments?.assessments || []}
       isLoading={isLoading}
       searchQuery={searchQuery}
       selectedCategory={selectedCategory}

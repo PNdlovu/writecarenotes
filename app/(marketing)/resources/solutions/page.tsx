@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/ui/Card';
 import Link from 'next/link';
 import { ChevronRight, Heart, ClipboardList, Users, Brain, Clock, Shield, Star } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 
 export const metadata: Metadata = {
   title: 'Care Documentation Solutions | Write Care Notes',

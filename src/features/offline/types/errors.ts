@@ -298,3 +298,25 @@ export class InitializationError extends OfflineError {
     this.name = 'InitializationError';
   }
 }
+
+/**
+ * Error for compression operations
+ */
+export class CompressionError extends OfflineError {
+  constructor(
+    message: string,
+    options: {
+      cause?: Error;
+      code?: string;
+      details?: {
+        originalSize?: number;
+        compressedSize?: number;
+        algorithm?: string;
+        format?: string;
+      };
+    } = {}
+  ) {
+    super(message, options);
+    this.name = 'CompressionError';
+  }
+}

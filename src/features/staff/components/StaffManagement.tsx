@@ -1,14 +1,20 @@
 'use client';
 
+import React from 'react';
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { StaffOnboardingForm } from './StaffOnboardingForm';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { UserPlusIcon } from '@heroicons/react/24/outline';
 import { AppProviders } from '../providers/AppProviders';
 import { cn } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+import { Badge } from '@/components/ui/Badge';
+import { Progress } from '@/components/ui/Progress';
 
 export function StaffManagement() {
   const { data: session } = useSession();

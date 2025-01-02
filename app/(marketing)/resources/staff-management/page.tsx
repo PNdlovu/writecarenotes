@@ -9,7 +9,7 @@
  */
 
 import { Metadata } from "next"
-import { Button } from "@/src/components/ui/button"
+import { Button } from "@/components/ui/Button/Button"
 import Link from "next/link"
 import { 
   Users,
@@ -19,7 +19,7 @@ import {
   Award,
   FileText,
   Clock,
-  ChartBar,
+  BarChart3,
   UserPlus,
   BookOpen,
   Medal
@@ -47,7 +47,7 @@ const staffingTools = [
   {
     title: "Performance Management",
     description: "Tools for staff appraisals and performance tracking",
-    icon: ChartBar,
+    icon: BarChart3,
     href: "/resources/staff-management/performance"
   },
   {

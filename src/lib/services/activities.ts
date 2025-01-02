@@ -10,7 +10,7 @@ import {
   ActivityAchievement
 } from '@/types/activities';
 
-class ActivitiesService {
+export class ActivitiesService {
   /**
    * Creates a new activity
    */
@@ -373,6 +373,7 @@ class ActivitiesService {
   }
 }
 
+// Export a singleton instance
 export const activitiesService = new ActivitiesService(); 
 
 

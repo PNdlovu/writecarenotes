@@ -1,17 +1,17 @@
 import React from 'react'
 import { useSession } from 'next-auth/react'
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Card } from '@/components/ui/Card'
+import { Button } from '@/components/ui/Button/Button'
+import { Input } from '@/components/ui/Input/Input'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
+} from '@/components/ui/Select/Select'
+import { ScrollArea } from '@/components/ui/ScrollArea'
+import { Badge } from '@/components/ui/Badge/Badge'
 import { 
   DocumentIcon, 
   PhotoIcon, 

@@ -1,23 +1,26 @@
 /**
- * WriteCareNotes.com
- * @fileoverview Sign Up Form Component
+ * @writecarenotes.com
+ * @fileoverview Multi-step sign up form component
  * @version 1.0.0
- * @created 2024-03-21
- * @author Write Care Notes Team
- * @copyright Write Care Notes Ltd
+ * @created 2025-01-02
+ * @updated 2025-01-02
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A multi-step registration form that guides users through the account creation process.
+ * Includes steps for account details, personal information, organization setup,
+ * subscription selection, and final review.
  */
 
 'use client'
 
 import { useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useToast } from '@/components/ui/use-toast'
 import { AccountStep } from './steps/AccountStep'
 import { PersonalStep } from './steps/PersonalStep'
 import { OrganizationStep } from './steps/OrganizationStep'
 import { SubscriptionStep } from './steps/SubscriptionStep'
 import { ReviewStep } from './steps/ReviewStep'
-import Link from 'next/link'
 
 interface SignUpData {
   email: string
@@ -26,157 +29,84 @@ interface SignUpData {
   lastName: string
   organization: string
   region: string
-  careGroup: string
+  serviceType: string
+  operatingHours: {
+    twentyFourHour: boolean
+    weekends: boolean
+    bankHolidays: boolean
+  }
   subscription: string
   dataMigration: boolean
 }
 
 export function SignUpForm() {
-  const router = useRouter()
-  const { toast } = useToast()
-  const [isLoading, setIsLoading] = useState(false)
   const [step, setStep] = useState(1)
-  const [formData, setFormData] = useState<SignUpData>({
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
-    organization: '',
-    region: '',
-    careGroup: 'independent',
-    subscription: 'starter',
-    dataMigration: false,
-  })
-  const searchParams = useSearchParams()
-  const selectedPlan = searchParams.get('plan')
+  const [formData, setFormData] = useState<Partial<SignUpData>>({})
 
-  const handleNext = (data: Partial<SignUpData>) => {
+  const handleAccountStep = (data: Pick<SignUpData, 'email' | 'password'>) => {
     setFormData(prev => ({ ...prev, ...data }))
-    setStep(prev => prev + 1)
+    setStep(2)
   }
 
-  const handleBack = () => {
-    setStep(prev => prev - 1)
+  const handlePersonalStep = (data: Pick<SignUpData, 'firstName' | 'lastName'>) => {
+    setFormData(prev => ({ ...prev, ...data }))
+    setStep(3)
   }
 
-  const handleSubmit = async () => {
-    setIsLoading(true)
+  const handleOrganizationStep = (data: Pick<SignUpData, 'organization' | 'region' | 'serviceType' | 'operatingHours'>) => {
+    setFormData(prev => ({ ...prev, ...data }))
+    setStep(4)
+  }
+
+  const handleSubscriptionStep = (data: Pick<SignUpData, 'subscription' | 'dataMigration'>) => {
+    setFormData(prev => ({ ...prev, ...data }))
+    setStep(5)
+  }
+
+  const handleReviewStep = async () => {
     try {
-      const payload = {
-        ...formData,
-        careGroup: formData.careGroup || 'independent',
-        subscription: formData.subscription || 'starter',
-        dataMigration: formData.dataMigration || false,
-      }
-
-      console.log('Submitting signup data:', payload)
-
-      const response = await fetch('/api/auth/dev-signup', {
+      // Submit registration data
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(formData),
       })
-
-      const data = await response.json()
 
       if (!response.ok) {
-        console.error('Signup error:', data)
-        throw new Error(data.error || data.details || 'Failed to create account')
+        throw new Error('Registration failed')
       }
 
-      // Show success message
-      toast({
-        title: "Account created successfully!",
-        description: "You can now sign in with your credentials.",
-      })
-
-      // Redirect to signin page
-      router.push('/auth/signin')
+      // Handle successful registration
+      // Redirect to dashboard or show success message
     } catch (error) {
-      console.error('Signup error:', error)
-      toast({
-        title: "Error creating account",
-        description: error instanceof Error ? error.message : "Something went wrong",
-        variant: "destructive",
-      })
-    } finally {
-      setIsLoading(false)
+      // Handle registration error
+      console.error('Registration error:', error)
     }
   }
 
-  const totalSteps = 5
-
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <AccountStep
-            onNext={(data) => handleNext({ ...data })}
-          />
-        )
-      case 2:
-        return (
-          <PersonalStep
-            onNext={(data) => handleNext({ ...data })}
-            onBack={handleBack}
-          />
-        )
-      case 3:
-        return (
-          <OrganizationStep
-            onNext={(data) => handleNext({ ...data })}
-            onBack={handleBack}
-          />
-        )
-      case 4:
-        return (
-          <SubscriptionStep
-            onNext={(data) => handleNext({ ...data })}
-            onBack={handleBack}
-          />
-        )
-      case 5:
-        return (
-          <ReviewStep
-            formData={formData as Required<SignUpData>}
-            onBack={handleBack}
-            onSubmit={handleSubmit}
-            isLoading={isLoading}
-          />
-        )
-      default:
-        return null
-    }
+  const handleBack = () => {
+    setStep(prev => Math.max(1, prev - 1))
   }
 
   return (
-    <div className="space-y-6 max-w-[440px] mx-auto">
-      <div className="text-center space-y-1">
-        <p className="text-sm text-muted-foreground">
-          Step {step} of {totalSteps}
-        </p>
-      </div>
-
-      {renderStep()}
-
-      <div className="text-sm text-center text-muted-foreground">
-        By creating an account, you agree to our{' '}
-        <Link
-          href="/terms-of-service"
-          className="font-medium text-[#34B5B5] hover:underline"
-        >
-          Terms of Service
-        </Link>{' '}
-        and{' '}
-        <Link
-          href="/privacy-policy"
-          className="font-medium text-[#34B5B5] hover:underline"
-        >
-          Privacy Policy
-        </Link>
-      </div>
+    <div className="w-full max-w-md mx-auto">
+      {step === 1 && (
+        <AccountStep onNext={handleAccountStep} />
+      )}
+      {step === 2 && (
+        <PersonalStep onNext={handlePersonalStep} onBack={handleBack} />
+      )}
+      {step === 3 && (
+        <OrganizationStep onNext={handleOrganizationStep} onBack={handleBack} />
+      )}
+      {step === 4 && (
+        <SubscriptionStep onNext={handleSubscriptionStep} onBack={handleBack} />
+      )}
+      {step === 5 && (
+        <ReviewStep data={formData as SignUpData} onSubmit={handleReviewStep} onBack={handleBack} />
+      )}
     </div>
   )
 }

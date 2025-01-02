@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { Button } from '@/components/ui/Button/Button';
+import { ThemeToggle } from '@/features/theme';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,11 +11,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+} from '@/components/ui/DropdownMenu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { useSession, signOut } from 'next-auth/react';
 import { Bell, Settings, LogOut, HelpCircle, Menu } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/ui/Badge/Badge';
 
 interface LoggedInNavProps {
   onMenuClick?: () => void;

@@ -14,7 +14,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { ErrorBoundary } from '@/error/components/ErrorBoundary';
 import { cn } from "@/lib/utils";
 
@@ -22,6 +22,7 @@ const navigation = [
   { name: 'Features', href: '/features' },
   { name: 'Pricing', href: '/pricing' },
   { name: 'Resources', href: '/resources' },
+  { name: 'Blog', href: '/blog' },
   { name: 'Support', href: '/support' },
   { name: 'Branding', href: '/brand/guidelines' },
 ];
@@ -31,7 +32,7 @@ export function MarketingNavbar() {
 
   return (
     <ErrorBoundary componentName="Navbar">
-      <header className="sticky top-0 w-full py-4 bg-white/95 backdrop-blur-sm shadow-sm z-50">
+      <header className="fixed top-0 left-0 right-0 w-full py-4 bg-white border-b border-gray-200 shadow-sm z-[100]">
         <div className="container mx-auto px-4 max-w-7xl">
           <nav className="flex items-center justify-between space-x-4" aria-label="Global">
             {/* Logo */}
@@ -58,8 +59,8 @@ export function MarketingNavbar() {
                   className={cn(
                     "text-sm font-medium transition-colors hover:text-primary",
                     pathname === item.href
-                      ? "text-primary"
-                      : "text-muted-foreground"
+                      ? "text-primary font-semibold"
+                      : "text-gray-600"
                   )}
                 >
                   {item.name}
@@ -83,6 +84,8 @@ export function MarketingNavbar() {
           </nav>
         </div>
       </header>
+      {/* Spacer to prevent content from going under fixed navbar */}
+      <div className="h-[72px]" />
     </ErrorBoundary>
   );
 }

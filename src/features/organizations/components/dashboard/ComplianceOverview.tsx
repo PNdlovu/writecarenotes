@@ -7,8 +7,8 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts'
-import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
+import { Badge } from '@/components/ui/Badge/Badge'
+import { Progress } from '@/components/ui/Progress'
 import { ArrowUp, ArrowDown, Minus } from 'lucide-react'
 
 interface ComplianceOverviewProps {

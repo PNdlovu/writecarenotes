@@ -1,6 +1,6 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/Button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert"
 import { CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 
 interface Step {

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button/Button';
+import { Badge } from '@/components/ui/Badge/Badge';
+import { ScrollArea } from '@/components/ui/ScrollArea';
+import { Separator } from '@/components/ui/Separator';
 import {
   CalendarIcon,
   Clock,
@@ -19,6 +19,7 @@ import {
 import { format } from 'date-fns';
 import { Assessment, AssessmentStatus } from '../../types/assessment.types';
 import { calculateCompletionPercentage } from '../../utils/assessmentHelpers';
+import { assessmentApi } from '@/api/assessments/assessmentApi';
 
 export interface AssessmentViewerProps {
   assessment: Assessment;
@@ -201,5 +202,3 @@ export function AssessmentViewer({
     </Card>
   );
 }
-
-

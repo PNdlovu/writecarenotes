@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from '@/components/ui/Dialog/Dialog';
 import {
   Form,
   FormControl,
@@ -22,10 +22,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Input } from '@/components/ui/form/input';
-import { Textarea } from '@/components/ui/form/textarea';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/Select/Select';
+import { Input } from '@/components/ui/Form/input';
+import { Textarea } from '@/components/ui/Form/textarea';
+import { Button } from '@/components/ui/Button/Button';
 import { DocumentTemplate, DocumentCategory } from '@/features/staff/types';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 

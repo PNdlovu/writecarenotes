@@ -1,7 +1,9 @@
 {
   "Common": {
     "selectLanguage": "Select language",
-    "region": "Region"
+    "region": "Region",
+    "selectRegion": "Select region",
+    "retry": "Try again"
   },
   "StaffOnboarding": {
     "title": "Staff Registration",
@@ -98,5 +100,12 @@
         "minQualification": "QQI Level 5 in Healthcare Support required"
       }
     }
+  },
+  "Offline": {
+    "errorTitle": "Offline Mode",
+    "errorMessage": "You are currently offline. Some features may be limited until your connection is restored.",
+    "status": "Offline",
+    "syncing": "Syncing...",
+    "lastSync": "Last synced: {{time}}"
   }
 }

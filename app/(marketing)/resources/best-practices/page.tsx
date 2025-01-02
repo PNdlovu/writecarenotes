@@ -1,5 +1,5 @@
 import { Metadata } from "next"
-import { Card } from "@/components/ui/card"
+import { Card } from "@/components/ui/Card"
 import { CheckCircle, ArrowRight } from "lucide-react"
 import Link from "next/link"
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button/Button';
 import {
   BarChart,
   Calendar as CalendarIcon,
@@ -13,8 +13,8 @@ import {
   CheckCircle2,
   XCircle,
 } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/ScrollArea';
+import { Badge } from '@/components/ui/Badge/Badge';
 import { format } from 'date-fns';
 import {
   Tooltip,

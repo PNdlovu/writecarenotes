@@ -13,13 +13,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Input } from '@/components/ui/input';
+} from '@/components/ui/Dialog/Dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
+import { Input } from '@/components/ui/Input/Input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Button } from '@/components/ui/button';
-import { Select } from '@/components/ui/select';
+import { Button } from '@/components/ui/Button/Button';
+import { Select } from '@/components/ui/Select/Select';
 import { format } from 'date-fns';
 import {
   ExportFormat,

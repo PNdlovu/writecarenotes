@@ -1,11 +1,11 @@
 import React from 'react';
 import { useRegionalCompliance } from '../../hooks/useRegionalCompliance';
 import { Region, ComplianceStatus } from '../../types/compliance';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button/Button';
+import { Badge } from '@/components/ui/Badge/Badge';
 import { Icon } from '@/components/ui/icon';
-import { Progress } from '@/components/ui/progress';
+import { Progress } from '@/components/ui/Progress';
 
 interface ComplianceStatusProps {
   careHomeId: string;

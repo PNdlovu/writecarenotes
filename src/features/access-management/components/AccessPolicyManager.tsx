@@ -10,6 +10,16 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AccessManagementContext } from '../context/AccessManagementContext';
 import { AccessPolicy } from '../types';
 
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/Select';
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/Card';
+import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/Form';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/Dialog';
+import { Table, TableHeader, TableBody, TableRow, TableCell, TableHead } from '@/components/ui/Table';
+import { Badge } from '@/components/ui/Badge';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/Alert';
+
 interface AccessPolicyFormData {
   name: string;
   description: string;
@@ -136,7 +146,7 @@ export function AccessPolicyManager() {
             <label className="block text-sm font-medium text-gray-700">
               Name
             </label>
-            <input
+            <Input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -161,7 +171,7 @@ export function AccessPolicyManager() {
             <label className="block text-sm font-medium text-gray-700">
               Roles (comma-separated)
             </label>
-            <input
+            <Input
               type="text"
               value={formData.roles.join(', ')}
               onChange={(e) => setFormData({
@@ -177,7 +187,7 @@ export function AccessPolicyManager() {
             <label className="block text-sm font-medium text-gray-700">
               Resources (comma-separated)
             </label>
-            <input
+            <Input
               type="text"
               value={formData.resources.join(', ')}
               onChange={(e) => setFormData({
@@ -193,7 +203,7 @@ export function AccessPolicyManager() {
             <label className="block text-sm font-medium text-gray-700">
               Actions (comma-separated)
             </label>
-            <input
+            <Input
               type="text"
               value={formData.actions.join(', ')}
               onChange={(e) => setFormData({
@@ -206,20 +216,20 @@ export function AccessPolicyManager() {
           </div>
 
           <div className="flex justify-end space-x-3">
-            <button
+            <Button
               type="button"
               onClick={resetForm}
               className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               type="submit"
               disabled={isLoading}
               className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               {isLoading ? 'Saving...' : selectedPolicy ? 'Update Policy' : 'Create Policy'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>
@@ -253,12 +263,12 @@ export function AccessPolicyManager() {
                     </p>
                   </div>
                 </div>
-                <button
+                <Button
                   onClick={() => handleEdit(policy)}
                   className="text-blue-600 hover:text-blue-800"
                 >
                   Edit
-                </button>
+                </Button>
               </div>
             </div>
           ))}

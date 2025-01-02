@@ -26,9 +26,9 @@ import {
   GraduationCap,
   type LucideIcon,
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
+import { Button } from '@/components/ui/Button/Button';
+import { ScrollArea } from '@/components/ui/ScrollArea';
+import { Separator } from '@/components/ui/Separator';
 import { SidebarItem } from './SidebarItem';
 
 interface SidebarProps {
@@ -64,6 +64,12 @@ const sidebarItems: NavSection[] = [
         href: '/carehomes',
         icon: Building2,
         description: 'Manage care home properties',
+      },
+      {
+        name: 'Blog',
+        href: '/blog/manage',
+        icon: BookOpen,
+        description: 'Manage blog posts and content',
       },
     ],
   },

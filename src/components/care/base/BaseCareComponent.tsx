@@ -1,7 +1,48 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Base care component template
+ * @version 1.0.0
+ * @created 2025-01-01
+ * @updated 2025-01-02
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A foundational care component that serves as a template for all specialized
+ * care components. Features include:
+ * - Standard care information display
+ * - Common UI elements and layouts
+ * - Type-safe props interface
+ * - Consistent styling across care types
+ * - Extensible component structure
+ * - Error boundary integration
+ * - Performance optimizations
+ *
+ * Mobile-First Considerations:
+ * - Responsive base layout
+ * - Touch-friendly elements
+ * - Flexible containers
+ * - Dynamic spacing
+ * - Loading states
+ * - Gesture support
+ *
+ * Enterprise Features:
+ * - Type safety
+ * - Error handling
+ * - Performance monitoring
+ * - Accessibility base
+ * - Analytics hooks
+ * - Testing support
+ */
+
 import React from 'react';
+
+// Types
 import { BasePerson, CareType } from '../../../types/care';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+
+// UI Components
+import { Button } from '@/components/ui/Button/Button';
+import { Card } from '@/components/ui/Card';
 
 export interface BaseCareProps {
   person: BasePerson;

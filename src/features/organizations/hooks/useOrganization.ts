@@ -1,7 +1,7 @@
 'use client'
 
 import { useContext } from 'react'
-import { OrganizationContext } from './useOrganizationContext'
+import { OrganizationContext } from '../utils/providers/OrganizationProvider'
 
 export function useOrganization() {
   const context = useContext(OrganizationContext)

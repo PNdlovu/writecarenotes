@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import PayrollCalculator from '../../../app/[region]/financial/payroll/components/PayrollCalculator';
+import PayrollCalculator from '@/features/payroll/components/PayrollCalculator';
 
 // Mock the tenant context
 jest.mock('../../../src/lib/tenant/TenantContext', () => ({
@@ -37,7 +37,7 @@ jest.mock('../../../lib/storage/indexed-db', () => ({
 
 // Mock the PayrollService
 const mockCalculatePayroll = jest.fn();
-jest.mock('../../../lib/payroll/services/payroll-service', () => ({
+jest.mock('@/features/payroll/services/payroll-service', () => ({
   PayrollService: jest.fn().mockImplementation(() => ({
     calculatePayroll: mockCalculatePayroll
   }))

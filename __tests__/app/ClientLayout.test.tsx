@@ -3,16 +3,16 @@ import { render, screen } from '@testing-library/react';
 import { ClientLayout } from '@/app/client-layout';
 
 // Mock the components used in ClientLayout
-jest.mock('@/components/theme/region-selector', () => ({
-  RegionSelector: () => <div data-testid="region-selector">Region Selector</div>
+jest.mock('@/features/theme/components/RegionSelector', () => ({
+  RegionSelector: () => <div data-testid="mock-region-selector">Region Selector</div>
 }));
 
-jest.mock('@/components/theme/accessibility-settings', () => ({
-  AccessibilitySettings: () => <div data-testid="accessibility-settings">Accessibility Settings</div>
+jest.mock('@/features/theme/components/AccessibilitySettings', () => ({
+  AccessibilitySettings: () => <div data-testid="mock-accessibility-settings">Accessibility Settings</div>
 }));
 
-jest.mock('@/components/theme/theme-toggle', () => ({
-  ThemeToggle: () => <div data-testid="theme-toggle">Theme Toggle</div>
+jest.mock('@/features/theme/components/ThemeToggle', () => ({
+  ThemeToggle: () => <div data-testid="mock-theme-toggle">Theme Toggle</div>
 }));
 
 jest.mock('@/components/offline/offline-status', () => ({

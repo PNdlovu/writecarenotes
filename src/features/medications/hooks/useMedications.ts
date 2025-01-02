@@ -15,13 +15,30 @@ import type {
   MedicationStatistics,
   MedicationAdministration
 } from '../types';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/UseToast';
 import { useOrganization } from '@/hooks/useOrganization';
 
-export function useMedications() {
+interface SearchFilters {
+  form?: string;
+  route?: string;
+  controlled?: boolean;
+}
+
+export function useMedications(medicationId?: string) {
   const { organization } = useOrganization();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Fetch single medication
+  const { 
+    data: medication,
+    isLoading: medicationLoading,
+    error: medicationError
+  } = useQuery({
+    queryKey: ['medication', medicationId],
+    queryFn: () => medicationService.getMedication(medicationId!),
+    enabled: !!medicationId
+  });
 
   // Fetch statistics
   const { 
@@ -132,15 +149,21 @@ export function useMedications() {
     },
   });
 
+  // Search medications
+  const searchMedications = async (query: string, filters?: SearchFilters) => {
+    return medicationService.searchMedications(query, filters);
+  };
+
   return {
     // Data
+    medication,
     statistics,
     
     // Loading states
-    isLoading: statisticsLoading,
+    isLoading: medicationId ? medicationLoading : statisticsLoading,
     
     // Error states
-    error: statisticsError,
+    error: medicationId ? medicationError : statisticsError,
     
     // Mutations
     createMedication: createMutation.mutate,
@@ -148,6 +171,7 @@ export function useMedications() {
     recordAdministration: administrationMutation.mutate,
     createSchedule: scheduleMutation.mutate,
     updateStock: stockMutation.mutate,
+    searchMedications,
     
     // Mutation states
     isCreating: createMutation.isLoading,

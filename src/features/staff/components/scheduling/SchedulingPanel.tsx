@@ -3,22 +3,22 @@
 import React, { useState } from 'react';
 import { useCreateSchedule } from '../../hooks';
 import { getShiftTimes, getDateRange } from '../../utils';
-import { Calendar } from "@/components/ui/calendar";
-import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/Calendar";
+import { Button } from "@/components/ui/Button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/Dialog/Dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/Select/Select";
 import { StaffSchedule, ShiftType } from '../../types';
 import { StaffSchedulesView } from './StaffSchedulesView';
 

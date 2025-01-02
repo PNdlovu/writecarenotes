@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { staffService } from '@/services/staffService';
 import { StaffMember, StaffRole, EmploymentStatus } from '@/features/staff/types';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/components/ui/UseToast';
 import { format } from 'date-fns';
 import { 
   Dialog, 
@@ -12,18 +12,18 @@ import {
   DialogHeader, 
   DialogTitle, 
   DialogTrigger 
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/form/input';
-import { Label } from '@/components/ui/form/label';
+} from '@/components/ui/Dialog';
+import { Input } from '@/components/ui/Form/Input';
+import { Label } from '@/components/ui/Form/Label';
 import { 
   Select, 
   SelectContent, 
   SelectItem, 
   SelectTrigger, 
   SelectValue 
-} from '@/components/ui/select';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+} from '@/components/ui/Select';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
 import { 
   Table, 
   TableBody, 
@@ -31,8 +31,8 @@ import {
   TableHead, 
   TableHeader, 
   TableRow 
-} from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/Table';
+import { Button } from '@/components/ui/Button';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 export const StaffDirectoryPanel: React.FC = () => {

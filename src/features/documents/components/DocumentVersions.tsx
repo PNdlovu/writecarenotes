@@ -5,14 +5,14 @@ import { format } from 'date-fns';
 import { DocumentVersion } from '@prisma/client';
 import { useSession } from 'next-auth/react';
 import { Clock, ArrowLeftRight, RotateCcw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from '@/components/ui/Dialog/Dialog';
 import {
   Table,
   TableBody,
@@ -21,7 +21,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ScrollArea } from '@/components/ui/ScrollArea';
 import { useToast } from '@/components/ui/use-toast';
 import { DiffViewer } from './DiffViewer';
 

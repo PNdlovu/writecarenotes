@@ -5,8 +5,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import type { Session } from 'next-auth';
 import { DashboardMetrics } from './DashboardMetrics';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/Alert';
+import { Skeleton } from '@/components/ui/Skeleton';
 
 async function fetchRegionalMetrics(region?: string) {
   const params = new URLSearchParams();

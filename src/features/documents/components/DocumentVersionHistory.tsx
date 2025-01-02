@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'next-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
-import { Dialog } from '@/components/ui/Dialog';
+import { Dialog } from '@/components/ui/Dialog/Dialog';
 
 interface Version {
   id: string;

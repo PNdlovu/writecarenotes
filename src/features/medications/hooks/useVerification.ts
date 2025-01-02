@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { verificationService } from '../services/verificationService';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/UseToast';
 import { VerificationStatus, VerificationErrorType } from '../types';
 
 export function useVerification() {

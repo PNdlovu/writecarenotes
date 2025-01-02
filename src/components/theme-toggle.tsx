@@ -1,16 +1,32 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Theme toggle component for light/dark mode switching
+ * @version 1.0.0
+ * @created 2025-01-01
+ * @updated 2025-01-01
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A client-side component that provides theme switching functionality between
+ * light, dark, and system preferences. Features include persistent theme
+ * storage, system theme detection, and smooth theme transitions. Implements
+ * next-themes for robust theme management.
+ */
+
 'use client';
 
 import * as React from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button/Button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/ui/DropdownMenu';
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -50,4 +66,4 @@ export function ThemeToggle() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-} 
+}

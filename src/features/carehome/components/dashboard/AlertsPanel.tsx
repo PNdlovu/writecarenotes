@@ -1,9 +1,9 @@
 // src/features/carehome/components/dashboard/AlertsPanel.tsx
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge/Badge';
+import { ScrollArea } from '@/components/ui/ScrollArea';
 import { 
   ExclamationTriangleIcon, 
   ExclamationCircleIcon,

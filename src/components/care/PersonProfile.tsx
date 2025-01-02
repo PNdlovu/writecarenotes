@@ -1,3 +1,40 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Person profile display component
+ * @version 1.0.0
+ * @created 2025-01-01
+ * @updated 2025-01-02
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ *
+ * Description:
+ * A versatile profile component for displaying person information in care
+ * settings. Features include:
+ * - Adaptive display based on person type (adult/child)
+ * - Profile photo integration
+ * - Comprehensive personal details display
+ * - Care-specific information rendering
+ * - Responsive layout design
+ * - Privacy controls
+ * - Data masking options
+ *
+ * Mobile-First Considerations:
+ * - Responsive grid layout
+ * - Touch-friendly controls
+ * - Image optimization
+ * - Dynamic text sizing
+ * - Gesture support
+ * - Offline display
+ *
+ * Enterprise Features:
+ * - Data protection
+ * - Access control
+ * - Audit logging
+ * - Privacy compliance
+ * - Error handling
+ * - Analytics tracking
+ */
+
 import React from 'react';
 import { BasePerson, isChildPerson } from '../../types/care';
 

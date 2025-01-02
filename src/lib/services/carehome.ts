@@ -412,6 +412,72 @@ export class CareHomeService {
     }
   });
 
+  /**
+   * Get all care homes for an organization
+   * @param {string} organizationId - Organization identifier
+   * @returns {Promise<Array>} List of care homes
+   */
+  static async getCareHomes(organizationId: string) {
+    try {
+      logger.info('Fetching care homes', { organizationId });
+      
+      const careHomes = await prisma.careHome.findMany({
+        where: { organizationId },
+        include: {
+          departments: true,
+          staff: {
+            select: {
+              id: true,
+              name: true,
+              role: true,
+              status: true
+            }
+          }
+        }
+      });
+
+      return careHomes;
+    } catch (error) {
+      logger.error('Error fetching care homes', { organizationId, error });
+      throw new CareHomeError('Failed to fetch care homes', { organizationId, cause: error });
+    }
+  }
+
+  /**
+   * Create a new care home
+   * @param {string} organizationId - Organization identifier
+   * @param {object} data - Care home data
+   * @returns {Promise<object>} Created care home
+   */
+  static async createCareHome(organizationId: string, data: any) {
+    try {
+      logger.info('Creating care home', { organizationId });
+
+      // Validate care home data
+      const validated = await careHomeSchema.parseAsync(data);
+
+      const careHome = await prisma.careHome.create({
+        data: {
+          ...validated,
+          organizationId,
+          status: 'active',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+      });
+
+      logger.info('Care home created successfully', {
+        organizationId,
+        careHomeId: careHome.id
+      });
+
+      return careHome;
+    } catch (error) {
+      logger.error('Error creating care home', { organizationId, error });
+      throw new CareHomeError('Failed to create care home', { organizationId, cause: error });
+    }
+  }
+
   // Private helper methods with proper error handling
   private static async calculateResourceUtilization(careHomeId: string): Promise<number> {
     try {

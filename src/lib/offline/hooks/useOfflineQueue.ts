@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { openDB } from 'idb';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/Toast/use-toast';
 import { DB_NAME, DB_VERSION, STORE_NAMES } from '../constants';
 import type { OfflineDBSchema, OfflineQueueItem } from '../types';
 

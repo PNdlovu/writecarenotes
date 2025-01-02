@@ -1,28 +1,43 @@
-/**
- * WriteCareNotes.com
- * @fileoverview UI Component Exports
- * @version 1.0.0
- * @created 2024-03-21
- * @author Phibu Cloud Solutions Ltd
- * @copyright Phibu Cloud Solutions Ltd
- */
-
-export * from "./button"
-export * from "./card"
-export * from "./badge"
-export * from "./input"
-export * from "./label"
-export * from "./select"
-export * from "./textarea"
-export * from "./checkbox"
-export * from "./form/radio-group"
-export * from "./tabs/tabs"
-export * from "./calendar"
-export * from "./avatar"
-export * from "./dropdown-menu"
-export * from "./accordion"
-export * from "./form"
-export * from "./table"
-export * from "./toast"
-export * from "./popover"
-export * from "./command"
+// Export components from their respective directories
+export * from './Accordion/Accordion'
+export * from './Alert'
+export * from './Avatar/Avatar'
+export * from './Badge/Badge'
+export * from './Button/Button'
+export * from './Calendar'
+export * from './Card'
+export * from './ColorPalette'
+export * from './Command'
+export * from './ComingSoon'
+export * from './DataTable'
+export * from './DevNotice'
+export * from './Dialog/Dialog'
+export * from './DropdownMenu'
+export * from './ExpandableSection'
+export * from './FeatureCard'
+export * from './FileUpload'
+export * from './Form/Form'
+export * from './Form/Input'
+export * from './Form/Label'
+export * from './Icons'
+export * from './Logo'
+export * from './ModuleHero'
+export * from './ModuleNavigation'
+export * from './NavigationMenu'
+export * from './Pagination'
+export * from './PlaceholderImage'
+export * from './Popover'
+export * from './Progress'
+export * from './RegionBadge'
+export * from './ScrollArea'
+export * from './SectionHeading'
+export * from './SectionTitle'
+export * from './Separator'
+export * from './Sheet'
+export * from './Skeleton'
+export * from './Slider'
+export * from './Table'
+export * from './Tabs/Tabs'
+export * from './Toast/Toast'
+export { Tooltip } from "./Tooltip";
+export * from './Typography' 
