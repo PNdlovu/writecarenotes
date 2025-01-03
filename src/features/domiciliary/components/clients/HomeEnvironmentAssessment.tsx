@@ -17,8 +17,8 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
-import { Select } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
+import { Select } from '@/components/ui/Select';
+import { Switch } from '@/components/ui/Switch';
 import { useAssessment } from '@/features/assessments/hooks/useAssessment';
 import type { Assessment, Client } from '@/types';
 

@@ -45,8 +45,8 @@ import { careLevelColors, careLevelSizes } from "./variants";
 import type { CareLevelBadgeProps } from "./types";
 
 // UI Components
-import { Badge } from "@/components/ui/badge";
-import { Tooltip } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/Badge";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 export function CareLevelBadge({
   level,

@@ -1,32 +1,34 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { Toaster } from "@/components/ui/Toast/Toaster";
-import { AuthProvider } from '@/components/providers/AuthProvider';
-import { Providers } from './providers';
-import './globals.css';
+/**
+ * @writecarenotes.com
+ * @fileoverview Root layout component
+ * @version 1.0.0
+ * @created 2024-01-03
+ * @updated 2024-01-03
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ */
 
-const inter = Inter({ subsets: ['latin'] });
+import { Inter } from "next/font/google"
+import { Providers } from "@/components/providers/Providers"
+import "./globals.css"
 
-export const metadata: Metadata = {
-  title: 'Care Home Management System',
-  description: 'A comprehensive care home management solution',
-};
+const inter = Inter({ subsets: ["latin"] })
+
+export const metadata = {
+  title: "Write Care Notes",
+  description: "Enterprise-grade care home management platform",
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} min-h-screen bg-gradient-to-b from-[#f0f9ff] to-[#f0fdf9]`}>
-        <Providers>
-          <AuthProvider>
-            {children}
-          </AuthProvider>
-          <Toaster />
-        </Providers>
+      <body className={inter.className}>
+        <Providers>{children}</Providers>
       </body>
     </html>
-  );
+  )
 }

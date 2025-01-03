@@ -54,7 +54,7 @@ import {
   TabsList, 
   TabsTrigger, 
   TabsContent 
-} from '@/components/ui/tabs';
+} from '@/components/ui/Tabs';
 import { 
   Table,
   TableBody,
@@ -62,9 +62,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/Progress';
+} from '@/components/ui/Table';
+import { Badge } from '@/components/ui/Badge';
+import { Progress } from '@/components/ui/Progress/Progress';
 import { Calendar } from '@/components/ui/Calendar';
 
 // Types

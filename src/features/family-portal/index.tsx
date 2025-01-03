@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs/Tabs";
+import { Card } from "@/components/ui/Card/Card";
+import { Button } from "@/components/ui/Button/Button";
 
 import { FamilyNetwork } from './components/network/FamilyNetwork';
 import { DocumentCenter } from './components/documents/DocumentCenter';

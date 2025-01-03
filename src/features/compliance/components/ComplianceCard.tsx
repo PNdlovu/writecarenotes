@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
-import { Progress } from "@/components/ui/progress"
+import { Progress } from "@/components/ui/Progress/Progress"
 import { Badge } from "@/components/ui/Badge/Badge"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/Tooltip"
 
 interface ComplianceCardProps {
   title: string

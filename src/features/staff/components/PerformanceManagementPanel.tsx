@@ -22,7 +22,7 @@ import {
   GoalStatus,
 } from '@/features/staff/types';
 import { Badge } from '@/components/ui/Badge';
-import { Progress } from '@/components/ui/Progress';
+import { Progress } from '@/components/ui/Progress/Progress';
 import { formatDate } from '@/lib/utils';
 import ReviewDialog from './performance/ReviewDialog';
 import GoalDialog from './performance/GoalDialog';

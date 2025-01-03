@@ -12,7 +12,9 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { Check } from 'lucide-react'
-import { Button, Badge, Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui'
+import { Button } from '@/components/ui/Button/Button'
+import { Badge } from '@/components/ui/Badge/Badge'
+import { Card } from '@/components/ui/Card'
 
 export function PricingPlans() {
   const [residents, setResidents] = useState<string>('')

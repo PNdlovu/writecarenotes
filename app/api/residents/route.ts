@@ -1,61 +1,67 @@
 import { NextResponse } from 'next/server';
-import { validateRequest, createSuccessResponse, createErrorResponse } from '@/lib/api';
-import prisma from '@/lib/prisma';
+import { validateRequest } from '@/lib/api';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(request: Request) {
   try {
     // 1. Validate request & auth
-    const { user, query } = await validateRequest(request);
+    const { user } = await validateRequest(request);
 
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('search');
-    const careLevel = searchParams.get('careLevel');
+    const careHomeId = user.careHomeId;
 
     // 2. Build query filters
     const where = {
-      organizationId: user.organizationId,
+      careHomeId,
       ...(search
         ? {
             OR: [
-              { name: { contains: search, mode: 'insensitive' } },
-              { id: { contains: search, mode: 'insensitive' } },
+              { firstName: { contains: search, mode: 'insensitive' } },
+              { lastName: { contains: search, mode: 'insensitive' } },
+              { nhsNumber: { contains: search } },
+              { roomNumber: { contains: search } },
             ],
           }
         : {}),
-      ...(careLevel ? { careLevel } : {}),
     };
 
     // 3. Execute query
     const residents = await prisma.resident.findMany({
       where,
       orderBy: {
-        createdAt: 'desc',
+        lastName: 'asc',
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        dateOfBirth: true,
+        nhsNumber: true,
+        roomNumber: true,
+        admissionDate: true,
       },
     });
 
     // 4. Format response
     const formattedResidents = residents.map((resident) => ({
-      id: resident.id,
-      name: resident.name,
+      ...resident,
       dateOfBirth: resident.dateOfBirth.toISOString(),
-      room: resident.room,
-      careLevel: resident.careLevel,
-      status: resident.status,
       admissionDate: resident.admissionDate.toISOString(),
-      medicalHistory: resident.medicalHistory,
-      emergencyContact: resident.emergencyContact,
-      notes: resident.notes,
     }));
 
-    return createSuccessResponse(formattedResidents);
+    return NextResponse.json(formattedResidents);
   } catch (error) {
     console.error('Error in GET /api/residents:', error);
     
     if (error.name === 'UnauthorizedError') {
-      return createErrorResponse('Unauthorized', 401);
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     
-    return createErrorResponse('Internal server error', 500);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
 
@@ -68,33 +74,38 @@ export async function POST(request: Request) {
     const resident = await prisma.resident.create({
       data: {
         ...body,
-        organizationId: user.organizationId,
+        careHomeId: user.careHomeId,
         createdById: user.id,
+      },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        dateOfBirth: true,
+        nhsNumber: true,
+        roomNumber: true,
+        admissionDate: true,
       },
     });
 
     // 3. Format response
     const formattedResident = {
-      id: resident.id,
-      name: resident.name,
+      ...resident,
       dateOfBirth: resident.dateOfBirth.toISOString(),
-      room: resident.room,
-      careLevel: resident.careLevel,
-      status: resident.status,
       admissionDate: resident.admissionDate.toISOString(),
-      medicalHistory: resident.medicalHistory,
-      emergencyContact: resident.emergencyContact,
-      notes: resident.notes,
     };
 
-    return createSuccessResponse(formattedResident, 201);
+    return NextResponse.json(formattedResident, { status: 201 });
   } catch (error) {
     console.error('Error in POST /api/residents:', error);
     
     if (error.name === 'UnauthorizedError') {
-      return createErrorResponse('Unauthorized', 401);
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
     
-    return createErrorResponse('Internal server error', 500);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }

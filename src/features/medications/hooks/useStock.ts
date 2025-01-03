@@ -13,7 +13,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/UseToast';
 import { StockService } from '../services/stockService';
 import type {
   MedicationStock,

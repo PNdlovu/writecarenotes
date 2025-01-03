@@ -3,14 +3,15 @@
 import React, { useState } from 'react';
 import { useCreateSchedule } from '../../hooks';
 import { getShiftTimes, getDateRange } from '../../utils';
-import { Calendar } from "@/components/ui/Calendar";
-import { Button } from "@/components/ui/Button";
+import { Calendar } from "@/components/ui/Calendar/Calendar";
+import { Button } from "@/components/ui/Button/Button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  DialogFooter,
+  DialogDescription,
 } from "@/components/ui/Dialog/Dialog";
 import {
   Select,

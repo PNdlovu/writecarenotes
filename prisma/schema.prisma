@@ -10,266 +10,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Blog Post
-model Post {
-  id              String      @id @default(cuid())
-  title           String
-  slug            String      @unique
-  content         String      @db.Text
-  excerpt         String?     @db.Text
-  featuredImage   String?
-  status          PostStatus  @default(DRAFT)
-  region          Region[]    @default([])
-  regulatoryBodies RegulatoryBody[] @default([])
-  publishedAt     DateTime?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
-  author          User        @relation(fields: [authorId], references: [id])
-  authorId        String
-  categories      Category[]
-  comments        Comment[]
-  metadata        Json?
-
-  @@index([status])
-  @@index([authorId])
-  @@index([slug])
-}
-
-// Blog Category
-model Category {
-  id          String        @id @default(cuid())
-  name        String
-  slug        String        @unique
-  type        CategoryType
-  description String?       @db.Text
-  posts       Post[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-
-  @@index([type])
-  @@index([slug])
-}
-
-// Blog Comment
-model Comment {
-  id          String    @id @default(cuid())
-  content     String    @db.Text
-  status      CommentStatus @default(PENDING)
-  post        Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId      String
-  author      User      @relation(fields: [authorId], references: [id])
-  authorId    String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@index([postId])
-  @@index([authorId])
-  @@index([status])
-}
-
-// User (Author)
-model User {
-  id          String    @id @default(cuid())
-  name        String
-  email       String    @unique
-  avatar      String?
-  role        UserRole  @default(USER)
-  expertise   String[]
-  posts       Post[]
-  comments    Comment[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@index([email])
-  @@index([role])
-
-  // Knowledge Base relations
-  knowledgeBaseArticles        KnowledgeBaseArticle[]
-  knowledgeBaseComments       KnowledgeBaseComment[]
-  knowledgeBaseReactions      KnowledgeBaseReaction[]
-  knowledgeBaseHistory        KnowledgeBaseArticleHistory[]
-  knowledgeBaseExports        KnowledgeBaseExport[]
-  knowledgeBaseActivities     KnowledgeBaseActivity[]
-}
-
-// Knowledge Base Models
-model KnowledgeBaseArticle {
-  id        String      @id @default(uuid())
-  slug      String      @unique
-  title     String
-  excerpt   String?     @db.Text
-  content   String      @db.Text
-  status    String      @default("DRAFT") // DRAFT, PUBLISHED, ARCHIVED, SCHEDULED
-  views     Int         @default(0)
-  metadata  Json?
-  
-  categoryId String
-  category   KnowledgeBaseCategory @relation(fields: [categoryId], references: [id])
-  
-  authorId  String
-  author    User     @relation(fields: [authorId], references: [id])
-  
-  comments  KnowledgeBaseComment[]
-  reactions KnowledgeBaseReaction[]
-  history   KnowledgeBaseArticleHistory[]
-  exports   KnowledgeBaseExport[]
-  activities KnowledgeBaseActivity[]
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([categoryId])
-  @@index([authorId])
-  @@index([status])
-  @@index([createdAt])
-}
-
-model KnowledgeBaseCategory {
-  id          String      @id @default(uuid())
-  slug        String      @unique
-  name        String
-  description String?     @db.Text
-  metadata    Json?
-  
-  parentId    String?
-  parent      KnowledgeBaseCategory?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
-  children    KnowledgeBaseCategory[] @relation("CategoryHierarchy")
-  
-  articles    KnowledgeBaseArticle[]
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([parentId])
-}
-
-model KnowledgeBaseComment {
-  id        String   @id @default(uuid())
-  content   String   @db.Text
-  
-  articleId String
-  article   KnowledgeBaseArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  
-  authorId  String
-  author    User     @relation(fields: [authorId], references: [id])
-  
-  parentId  String?
-  parent    KnowledgeBaseComment?  @relation("CommentReplies", fields: [parentId], references: [id])
-  replies   KnowledgeBaseComment[] @relation("CommentReplies")
-  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([articleId])
-  @@index([authorId])
-  @@index([parentId])
-}
-
-model KnowledgeBaseReaction {
-  id        String   @id @default(uuid())
-  type      String   // LIKE, HELPFUL, BOOKMARK
-  
-  articleId String
-  article   KnowledgeBaseArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  
-  createdAt DateTime @default(now())
-
-  @@unique([articleId, userId, type])
-  @@index([articleId])
-  @@index([userId])
-}
-
-model KnowledgeBaseArticleHistory {
-  id        String   @id @default(uuid())
-  
-  articleId String
-  article   KnowledgeBaseArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  
-  editorId  String
-  editor    User     @relation(fields: [editorId], references: [id])
-  
-  title     String
-  content   String   @db.Text
-  metadata  Json?
-  
-  createdAt DateTime @default(now())
-
-  @@index([articleId])
-  @@index([editorId])
-  @@index([createdAt])
-}
-
-model KnowledgeBaseExport {
-  id        String   @id @default(uuid())
-  
-  articleId String
-  article   KnowledgeBaseArticle @relation(fields: [articleId], references: [id], onDelete: Cascade)
-  
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  
-  format    String   // PDF, WORD, MARKDOWN, HTML
-  content   String   @db.Text
-  status    String   @default("PENDING") // PENDING, COMPLETED, FAILED
-  
-  createdAt DateTime @default(now())
-
-  @@index([articleId])
-  @@index([userId])
-  @@index([status])
-}
-
-model KnowledgeBaseActivity {
-  id        String   @id @default(uuid())
-  type      String   // VIEW, SEARCH, COMMENT, REACT, EXPORT
-  
-  articleId String?
-  article   KnowledgeBaseArticle? @relation(fields: [articleId], references: [id], onDelete: SetNull)
-  
-  userId    String?
-  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  
-  metadata  Json?
-  
-  createdAt DateTime @default(now())
-
-  @@index([articleId])
-  @@index([userId])
-  @@index([type])
-  @@index([createdAt])
-}
-
-// Enums
-enum PostStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
-}
-
-enum CategoryType {
-  REGULATION
-  BEST_PRACTICE
-  NEWS
-  TRAINING
-  WEBINAR
-  CASE_STUDY
-  INTERVIEW
-}
-
-enum CommentStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
-
 enum UserRole {
   USER
-  AUTHOR
-  EDITOR
+  STAFF
+  NURSE
+  MANAGER
   ADMIN
+  SUPER_ADMIN
+}
+
+enum CareHomeType {
+  RESIDENTIAL
+  NURSING
+  DEMENTIA
+  LEARNING_DISABILITIES
+  MENTAL_HEALTH
+  CHILDREN
+  SUPPORTED_LIVING
 }
 
 enum Region {
@@ -289,419 +46,143 @@ enum RegulatoryBody {
   RQIA
 }
 
-// Knowledge Base Enums
-enum KBArticleType {
-  GUIDE
-  DOCUMENTATION
-  TUTORIAL
-  FAQ
+model User {
+  id                String       @id @default(cuid())
+  name              String
+  email             String       @unique
+  hashedPassword    String?
+  emailVerified     DateTime?
+  avatar            String?
+  role              UserRole     @default(USER)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  organizationId    String?
+  organization      Organization? @relation(fields: [organizationId], references: [id])
+  careHomeId        String?
+  careHome          CareHome?    @relation(fields: [careHomeId], references: [id])
+  staffProfile      Staff?
+  posts             Post[]
+
+  @@index([email])
+  @@index([role])
+  @@index([organizationId])
+  @@index([careHomeId])
 }
 
-enum KBArticleAccess {
-  PUBLIC
-  ORGANIZATION
-  ROLE_BASED
+model Organization {
+  id              String      @id @default(cuid())
+  name            String
+  code            String      @unique
+  type            String
+  address         String
+  phone           String
+  email           String
+  website         String?
+  status          String      @default("ACTIVE")
+  region          Region
+  regulatoryBody  RegulatoryBody
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  users           User[]
+  careHomes       CareHome[]
+  staff           Staff[]
+
+  @@index([code])
+  @@index([status])
+  @@index([region])
 }
 
-enum KBArticleStatus {
-  DRAFT
-  REVIEW
-  PUBLISHED
-  ARCHIVED
-}
-
-model MedicationSupplier {
-  id             String           @id @default(cuid())
-  name           String
-  accountNumber  String?
-  email          String
-  phone          String
-  website        String?
-  address        String
-  orderMethods   String[]         // Stored as JSON array of OrderMethod enum values
-  notes          String?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  deletedAt      DateTime?
-  organizationId String
-  organization   Organization     @relation(fields: [organizationId], references: [id])
-  contacts       SupplierContact[]
-  medications    Medication[]
+model CareHome {
+  id              String       @id @default(cuid())
+  name            String
+  type            CareHomeType
+  capacity        Int
+  address         String
+  phone           String
+  email           String
+  status          String       @default("ACTIVE")
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  users           User[]
+  staff           Staff[]
+  residents       Resident[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 
   @@index([organizationId])
-  @@index([name])
-  @@index([accountNumber])
-  @@map("medication_suppliers")
-}
-
-model SupplierContact {
-  id             String            @id @default(cuid())
-  name           String
-  role           String
-  email          String
-  phone          String
-  isMain         Boolean           @default(false)
-  supplierId     String
-  supplier       MedicationSupplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
-
-  @@index([supplierId])
-  @@map("supplier_contacts")
-}
-
-model MedicationStock {
-  id             String           @id @default(cuid())
-  medicationId   String
-  medication     Medication       @relation(fields: [medicationId], references: [id])
-  batchNumber    String
-  expiryDate     DateTime
-  quantity       Int
-  reorderLevel   Int
-  criticalLevel  Int
-  location       String?
-  notes          String?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  organizationId String
-  organization   Organization     @relation(fields: [organizationId], references: [id])
-  transactions   StockTransaction[]
-
-  @@unique([medicationId, batchNumber])
-  @@index([medicationId])
-  @@index([organizationId])
-  @@index([batchNumber])
-  @@index([expiryDate])
-  @@map("medication_stock")
-}
-
-model StockTransaction {
-  id             String           @id @default(cuid())
-  stockId        String
-  stock          MedicationStock  @relation(fields: [stockId], references: [id])
-  type           String           // RECEIPT, ADJUSTMENT, ADMINISTRATION
-  quantity       Int
-  batchNumber    String
-  expiryDate     DateTime?
-  reason         String?
-  notes          String?
-  performedById  String
-  performedBy    User             @relation(fields: [performedById], references: [id])
-  supplierId     String?
-  supplier       MedicationSupplier? @relation(fields: [supplierId], references: [id])
-  createdAt      DateTime         @default(now())
-  organizationId String
-  organization   Organization     @relation(fields: [organizationId], references: [id])
-
-  @@index([stockId])
+  @@index([status])
   @@index([type])
-  @@index([performedById])
-  @@index([supplierId])
-  @@index([organizationId])
-  @@index([createdAt])
-  @@map("stock_transactions")
 }
 
 model Staff {
-  id              String    @id @default(cuid())
-  userId          String    @unique
+  id              String       @id @default(cuid())
+  userId          String       @unique
+  user            User         @relation(fields: [userId], references: [id])
   organizationId  String
-  isActive        Boolean   @default(true)
-  region          Region    @default(ENGLAND)  // Regional support
-  primaryLanguage String    @default("en-GB")  // Primary language
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  lastSyncedAt    DateTime  @default(now())    // For offline support
-  syncStatus      SyncStatus @default(SYNCED)  // For offline support
-  version         Int       @default(1)        // For offline conflict resolution
-
-  // Relations
-  user            User      @relation(fields: [userId], references: [id])
   organization    Organization @relation(fields: [organizationId], references: [id])
-  domiciliaryStaff DomiciliaryStaff?
-  availability    StaffAvailability[]
-  documents       StaffDocument[]
-  activities      StaffActivity[]
-  alertAcknowledgments StaffAlertAcknowledgment[]
-  offlineChanges  StaffOfflineChange[]
+  careHomeId      String
+  careHome        CareHome     @relation(fields: [careHomeId], references: [id])
+  position        String
+  startDate       DateTime
+  endDate         DateTime?
+  isActive        Boolean      @default(true)
+  qualifications  String[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 
+  @@index([userId])
   @@index([organizationId])
-  @@index([region])
-  @@index([syncStatus])
+  @@index([careHomeId])
 }
 
-model DomiciliaryStaff {
-  id                String    @id @default(cuid())
-  staffId           String    @unique
-  maxTravelDistance Int?
-  preferredAreas    String[]
-  specialties       String[]
-  languages         String[]  // Supported languages for service delivery
-  drivingLicense    Boolean   @default(false)
-  hasVehicle        Boolean   @default(false)
-  vehicleDetails    Json?
-  clientPreferences Json?
-  regionalSettings  Json?     // Region-specific settings and compliance
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  lastSyncedAt      DateTime  @default(now())
-  syncStatus        SyncStatus @default(SYNCED)
-  version           Int       @default(1)
+model Resident {
+  id              String       @id @default(cuid())
+  careHomeId      String
+  careHome        CareHome     @relation(fields: [careHomeId], references: [id])
+  firstName       String
+  lastName        String
+  dateOfBirth     DateTime
+  nhsNumber       String?
+  roomNumber      String?
+  admissionDate   DateTime
+  dischargeDate   DateTime?
+  status          String       @default("ACTIVE")
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 
-  // Relations
-  staff             Staff     @relation(fields: [staffId], references: [id])
-
-  @@index([staffId])
-  @@index([syncStatus])
-}
-
-// New model for offline support
-model StaffOfflineChange {
-  id          String    @id @default(cuid())
-  staffId     String
-  changeType  String    // CREATE, UPDATE, DELETE
-  entityType  String    // Staff, DomiciliaryStaff, Availability, etc.
-  entityId    String
-  changes     Json      // The actual changes
-  createdAt   DateTime  @default(now())
-  syncedAt    DateTime?
-  status      SyncStatus @default(PENDING)
-  retryCount  Int       @default(0)
-  errorLog    String?
-
-  // Relations
-  staff       Staff     @relation(fields: [staffId], references: [id])
-
-  @@index([staffId])
+  @@index([careHomeId])
   @@index([status])
-  @@index([createdAt])
-}
-
-model StaffAvailability {
-  id          String    @id @default(cuid())
-  staffId     String
-  startTime   DateTime
-  endTime     DateTime
-  notes       String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  // Relations
-  staff       Staff     @relation(fields: [staffId], references: [id])
-
-  @@index([staffId])
-  @@index([startTime, endTime])
-}
-
-model StaffDocument {
-  id          String    @id @default(cuid())
-  staffId     String
-  type        String    // e.g., 'DBS_CHECK', 'TRAINING_CERTIFICATE'
-  fileUrl     String
-  expiryDate  DateTime?
-  isVerified  Boolean   @default(false)
-  verifiedBy  String?
-  verifiedAt  DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  // Relations
-  staff       Staff     @relation(fields: [staffId], references: [id])
-
-  @@index([staffId])
-  @@index([type])
-}
-
-model StaffActivity {
-  id          String    @id @default(cuid())
-  staffId     String
-  type        String    // e.g., 'PROFILE_UPDATE', 'DOCUMENT_UPDATE'
-  description String
-  createdBy   String
-  createdAt   DateTime  @default(now())
-
-  // Relations
-  staff       Staff     @relation(fields: [staffId], references: [id])
-
-  @@index([staffId])
-  @@index([createdAt])
-}
-
-model StaffAlertAcknowledgment {
-  id            String    @id @default(cuid())
-  staffId       String
-  alertType     String
-  acknowledgedBy String
-  acknowledgedAt DateTime
-  createdAt     DateTime  @default(now())
-
-  // Relations
-  staff         Staff     @relation(fields: [staffId], references: [id])
-
-  @@index([staffId])
-  @@index([alertType])
-  @@index([acknowledgedAt])
-}
-
-// Add to existing enums
-enum SyncStatus {
-  SYNCED
-  PENDING
-  FAILED
-  CONFLICT
-}
-
-// Regional compliance requirements
-model RegionalCompliance {
-  id          String    @id @default(cuid())
-  region      Region
-  requirements Json     // Region-specific compliance requirements
-  updatedAt   DateTime  @updatedAt
-  version     Int       @default(1)
-
-  @@unique([region])
-}
-
-model DomiciliaryMedicationSchedule {
-  id            String    @id @default(cuid())
-  visitId       String
-  clientId      String
-  medicationId  String
-  scheduledTime DateTime
-  status        String    @default("PENDING") // PENDING, COMPLETED, MISSED
-  notes         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  lastSyncedAt  DateTime  @default(now())
-  syncStatus    SyncStatus @default(SYNCED)
-  version       Int       @default(1)
-
-  // Relations
-  visit         DomiciliaryVisit @relation(fields: [visitId], references: [id])
-  client        Client           @relation(fields: [clientId], references: [id])
-  medication    Medication       @relation(fields: [medicationId], references: [id])
-  administration DomiciliaryMedicationAdministration?
-
-  @@index([visitId])
-  @@index([clientId])
-  @@index([medicationId])
-  @@index([scheduledTime])
-  @@index([status])
-  @@index([syncStatus])
-}
-
-model DomiciliaryMedicationAdministration {
-  id            String    @id @default(cuid())
-  scheduleId    String    @unique
-  staffId       String
-  administeredAt DateTime
-  status        String    // ADMINISTERED, REFUSED, UNAVAILABLE
-  notes         String?
-  witness       String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  lastSyncedAt  DateTime  @default(now())
-  syncStatus    SyncStatus @default(SYNCED)
-  version       Int       @default(1)
-
-  // Relations
-  schedule      DomiciliaryMedicationSchedule @relation(fields: [scheduleId], references: [id])
-  staff         Staff     @relation(fields: [staffId], references: [id])
-
-  @@index([scheduleId])
-  @@index([staffId])
-  @@index([administeredAt])
-  @@index([status])
-  @@index([syncStatus])
-}
-
-model DomiciliaryVisit {
-  id            String    @id @default(cuid())
-  clientId      String
-  staffId       String
-  startTime     DateTime
-  endTime       DateTime
-  status        String    @default("SCHEDULED") // SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED
-  notes         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  lastSyncedAt  DateTime  @default(now())
-  syncStatus    SyncStatus @default(SYNCED)
-  version       Int       @default(1)
-
-  // Relations
-  client        Client    @relation(fields: [clientId], references: [id])
-  staff         Staff     @relation(fields: [staffId], references: [id])
-  medications   DomiciliaryMedicationSchedule[]
-
-  @@index([clientId])
-  @@index([staffId])
-  @@index([startTime])
-  @@index([endTime])
-  @@index([status])
-  @@index([syncStatus])
-}
-
-model Client {
-  id            String    @id @default(cuid())
-  organizationId String
-  name          String
-  dateOfBirth   DateTime
-  gender        String
-  address       String
-  phone         String?
-  email         String?
-  nhsNumber     String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  // Relations
-  organization  Organization @relation(fields: [organizationId], references: [id])
-  visits        DomiciliaryVisit[]
-  medications   DomiciliaryMedicationSchedule[]
-
-  @@index([organizationId])
   @@index([nhsNumber])
 }
 
-enum SyncStatus {
-  PENDING
-  COMPLETED
-  FAILED
-}
+model Post {
+  id              String       @id @default(cuid())
+  title           String
+  slug            String       @unique
+  content         String
+  excerpt         String?
+  featuredImage   String?
+  status          String       @default("DRAFT")
+  publishedAt     DateTime?
+  authorId        String
+  author          User         @relation(fields: [authorId], references: [id])
+  categories      Category[]
+  regions         String[]
+  regulatoryBodies String[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
 
-model LocationVerification {
-  id              String   @id @default(cuid())
-  scheduleId      String
-  verifiedLocation Json    // { latitude: number, longitude: number, accuracy: number, timestamp: number }
-  distance        Float    // Distance in meters
-  verified        Boolean
-  verifiedAt      DateTime
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  schedule        MedicationSchedule @relation(fields: [scheduleId], references: [id])
-
-  @@index([scheduleId])
-  @@index([verifiedAt])
-}
-
-model OfflineAdministrationQueue {
-  id          String     @id @default(cuid())
-  scheduleId  String
-  staffId     String
-  notes       String?
-  location    Json       // { latitude: number, longitude: number, accuracy: number, timestamp: number }
-  status      SyncStatus
-  error       String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  schedule    MedicationSchedule @relation(fields: [scheduleId], references: [id])
-  staff       Staff             @relation(fields: [staffId], references: [id])
-
-  @@index([scheduleId])
-  @@index([staffId])
+  @@index([authorId])
   @@index([status])
-  @@index([createdAt])
+  @@index([slug])
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  type      String
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
 }

@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/Dialog/Dialog";
 import { Input } from "@/components/ui/Form/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui/Label";
 import {
   Select,
   SelectContent,

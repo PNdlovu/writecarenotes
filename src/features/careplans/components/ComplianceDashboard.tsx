@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/Button/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge/Badge";
-import { Progress } from "@/components/ui/progress";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Progress } from "@/components/ui/Progress/Progress";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 import { 
   MoreVertical, 
   Download, 

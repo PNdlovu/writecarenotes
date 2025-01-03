@@ -5,7 +5,7 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button/Button';
 import { Badge } from '@/components/ui/Badge/Badge';
 import { Icon } from '@/components/ui/icon';
-import { Progress } from '@/components/ui/Progress';
+import { Progress } from '@/components/ui/Progress/Progress';
 
 interface ComplianceStatusProps {
   careHomeId: string;

@@ -2,18 +2,18 @@ import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import { ReportingService, HandoverReport } from '../../services/reporting-service';
 import { PrintService } from '../../services/print-service';
 import { HandoverSession, HandoverTask, Staff } from '../../types/handover';
-import { ComplianceService } from '../../services/compliance-service';
+import { OnCallComplianceService } from '@/app/api/oncall/services/ComplianceService';
 
 describe('Reporting Integration Tests', () => {
   let reportingService: ReportingService;
   let printService: PrintService;
-  let complianceService: ComplianceService;
+  let complianceService: OnCallComplianceService;
   let mockSession: HandoverSession;
 
   beforeEach(() => {
     reportingService = new ReportingService();
     printService = new PrintService();
-    complianceService = new ComplianceService();
+    complianceService = OnCallComplianceService.getInstance();
 
     // Setup mock session data
     mockSession = {

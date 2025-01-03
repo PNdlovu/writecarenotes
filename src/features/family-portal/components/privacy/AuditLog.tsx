@@ -5,7 +5,7 @@
  */
 
 import React, { useState } from 'react';
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card/Card";
 import { Button } from "@/components/ui/Button/Button";
 import { Badge } from "@/components/ui/Badge/Badge";
 import {
@@ -16,10 +16,10 @@ import {
   SelectValue,
 } from "@/components/ui/Select/Select";
 import { useAuditLog } from '../../hooks/useAuditLog';
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea/ScrollArea";
 import { format } from 'date-fns';
 import { Input } from '@/components/ui/Input/Input';
-import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { DateRangePicker } from "@/components/ui/DateRangePicker/DateRangePicker";
 import { useI18n } from '@/lib/i18n/lib/config';
 import { useNetworkStatus } from '@/lib/offline/hooks';
 import { AuditEntry, PrivacyComponentProps } from '../../types/privacy';

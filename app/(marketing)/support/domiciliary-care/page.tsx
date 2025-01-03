@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * @writecarenotes.com
  * @fileoverview Marketing page for domiciliary care services
@@ -11,43 +13,19 @@
  * Marketing landing page for domiciliary care services showcasing key features,
  * benefits, and service offerings. Implements mobile-first design principles
  * and enterprise-grade UI components for optimal user experience.
- *
- * Features:
- * - Responsive grid layout
- * - Interactive service cards
- * - Animated UI elements
- * - Accessibility-compliant design
- * - Regional compliance information
- *
- * Mobile-First Considerations:
- * - Touch-friendly components
- * - Fluid typography
- * - Responsive grid system
- * - Optimized images
- * - Performance-focused animations
- *
- * Enterprise Features:
- * - SEO optimization
- * - Analytics tracking
- * - Performance monitoring
- * - Accessibility compliance
- * - Brand consistency
  */
 
-'use client';
-
 // React and Framework imports
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 import Link from 'next/link';
-import { Metadata } from 'next';
 
 // UI Components
-import { Button } from '@/components/ui/Button/Button';
+import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
+import { ShareButtons } from '@/components/marketing/ShareButtons';
 
-// Analytics and SEO
-import { useAnalytics } from '@/hooks/useAnalytics';
-import { useSEO } from '@/hooks/useSEO';
+// Analytics hooks
+import { usePathname } from 'next/navigation';
 
 // Icons
 import {
@@ -88,13 +66,6 @@ const STYLE_CONSTANTS = {
   headingLarge: "text-4xl md:text-5xl font-bold",
   headingMedium: "text-2xl md:text-3xl font-bold",
 } as const;
-
-// SEO metadata
-export const metadata: Metadata = {
-  title: 'Domiciliary Care Services | Write Care Notes',
-  description: 'Professional care services delivered in the comfort of your own home, supporting independence and quality of life.',
-  keywords: 'domiciliary care, home care, personal care, medication support, household support',
-};
 
 // Constants and configurations
 const features: Feature[] = [
@@ -164,19 +135,36 @@ const ActionButton: FC<ButtonProps> = ({ href, children, variant = 'primary', cl
   </Button>
 );
 
+// Analytics hook implementation
+const useAnalytics = () => {
+  const trackPageView = (page: string) => {
+    // Implement your analytics tracking here
+    console.log(`Page view tracked: ${page}`);
+  };
+
+  const trackCTAClick = (page: string, ctaType: string) => {
+    // Implement your CTA click tracking here
+    console.log(`CTA clicked: ${ctaType} on ${page}`);
+  };
+
+  return { trackPageView, trackCTAClick };
+};
+
 const DomiciliaryCarePage: FC = () => {
   // Analytics hooks
   const { trackPageView, trackCTAClick } = useAnalytics();
-  const { updateMetadata } = useSEO();
 
   // Track page view on mount
-  React.useEffect(() => {
+  useEffect(() => {
     trackPageView('domiciliary-care');
-    updateMetadata(metadata);
   }, []);
 
   const handleCTAClick = (ctaType: string) => {
     trackCTAClick('domiciliary-care', ctaType);
+  };
+
+  const handleShare = (platform: string) => {
+    trackCTAClick('domiciliary-care', `share_${platform}`);
   };
 
   return (
@@ -193,9 +181,16 @@ const DomiciliaryCarePage: FC = () => {
                 Domiciliary Care Services
               </span>
             </h1>
-            <p className="text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto mb-8">
               Professional care services delivered in the comfort of your own home, supporting independence and quality of life.
             </p>
+            <ShareButtons 
+              url={typeof window !== 'undefined' ? window.location.href : 'https://writecarenotes.com/support/domiciliary-care'}
+              title="Domiciliary Care Services | Write Care Notes"
+              description="Professional care services delivered in the comfort of your own home, supporting independence and quality of life."
+              className="justify-center"
+              onShare={handleShare}
+            />
           </div>
         </div>
       </section>

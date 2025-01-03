@@ -39,9 +39,9 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/Button/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/Label";
+import { Checkbox } from "@/components/ui/Checkbox";
+import { Textarea } from "@/components/ui/Textarea";
 import { specializedCare } from '@/lib/services/specialized-care';
 import type { EndOfLifeCareRequirements } from '@/types/specialized-care';
 

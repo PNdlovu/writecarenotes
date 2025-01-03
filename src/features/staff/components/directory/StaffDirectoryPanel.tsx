@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { staffService } from '@/services/staffService';
+import { OnCallStaffService } from '../../../../app/api/oncall/services/StaffService';
 import { StaffMember, StaffRole, EmploymentStatus } from '@/features/staff/types';
 import { toast } from '@/components/ui/UseToast';
 import { format } from 'date-fns';
@@ -34,6 +34,8 @@ import {
 } from '@/components/ui/Table';
 import { Button } from '@/components/ui/Button';
 import { PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+
+const staffService = OnCallStaffService.getInstance();
 
 export const StaffDirectoryPanel: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');

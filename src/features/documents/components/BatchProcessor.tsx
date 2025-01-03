@@ -23,9 +23,9 @@ import {
 } from '@/components/ui/Dialog/Dialog';
 import { Button } from '@/components/ui/Button/Button';
 import { Input } from '@/components/ui/Input/Input';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/components/ui/Label';
 import { Badge } from '@/components/ui/Badge/Badge';
-import { Progress } from '@/components/ui/Progress';
+import { Progress } from '@/components/ui/Progress/Progress';
 import {
   Select,
   SelectContent,
@@ -33,7 +33,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select/Select';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/UseToast';
 import {
   Table,
   TableBody,
@@ -41,7 +41,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/Table';
 import { ScrollArea } from '@/components/ui/ScrollArea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 

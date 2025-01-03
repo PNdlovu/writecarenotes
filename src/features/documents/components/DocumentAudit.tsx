@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/Dialog/Dialog';
 import { Button } from '@/components/ui/Button/Button';
 import { Input } from '@/components/ui/Input/Input';
-import { Label } from '@/components/ui/label';
+import { Label } from '@/components/ui/Label';
 import { Badge } from '@/components/ui/Badge/Badge';
 import {
   Select,
@@ -41,7 +41,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/Table';
 import { ScrollArea } from '@/components/ui/ScrollArea';
 import {
   Popover,

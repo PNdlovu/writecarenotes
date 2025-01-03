@@ -13,7 +13,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/Button/Button"
 import { Card } from "@/components/ui/Card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table"
 import { 
   Check, 
   Minus, 

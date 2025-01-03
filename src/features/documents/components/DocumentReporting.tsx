@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/Button/Button';
 import { Input } from '@/components/ui/Input/Input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/Badge/Badge';
-import { Progress } from '@/components/ui/Progress';
+import { Progress } from '@/components/ui/Progress/Progress';
 import {
   Select,
   SelectContent,

@@ -17,8 +17,8 @@ import { useTranslation } from '@/i18n'
 import { useCategory } from '../hooks/useCategory'
 import { type Category } from '../types'
 import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/Button'
+import { Input } from '@/components/ui/Input'
 import {
   ContextMenu,
   ContextMenuContent,
@@ -33,8 +33,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
-import { ScrollArea } from '@/components/ui/scroll-area'
+} from '@/components/ui/Dialog'
+import { ScrollArea } from '@/components/ui/ScrollArea'
 import { Icons } from '@/components/icons'
 import { DndProvider, useDrag, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/Button/Button";
-import { Card } from "@/components/ui/Card";
-import { Input } from "@/components/ui/Input/Input";
-import { Label } from "@/components/ui/Form/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/Card/Card";
+import { Input } from "@/components/ui/Form/Input";
+import { Label } from "@/components/ui/Form/Label";
+import { Textarea } from "@/components/ui/Form/Textarea";
 import {
   Select,
   SelectContent,
@@ -21,8 +21,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/Dialog/Dialog";
 import { Badge } from "@/components/ui/Badge/Badge";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Icons } from "@/components/ui/icons";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert/Alert";
+import { Icons } from "@/components/ui/Icons";
 
 interface EmergencyContact {
   id: string;

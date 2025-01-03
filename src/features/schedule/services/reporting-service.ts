@@ -1,5 +1,5 @@
 import { HandoverSession, HandoverTask, Staff } from '../types/handover';
-import { ComplianceService } from './compliance-service';
+import { OnCallComplianceService } from '@/app/api/oncall/services/ComplianceService';
 
 interface TaskMetrics {
   total: number;
@@ -51,10 +51,10 @@ export interface HandoverReport {
 }
 
 export class ReportingService {
-  private complianceService: ComplianceService;
+  private complianceService: OnCallComplianceService;
 
   constructor() {
-    this.complianceService = new ComplianceService();
+    this.complianceService = OnCallComplianceService.getInstance();
   }
 
   async generateSessionReport(session: HandoverSession): Promise<HandoverReport> {

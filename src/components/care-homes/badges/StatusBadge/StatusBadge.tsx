@@ -45,8 +45,8 @@ import { statusColors } from "./variants";
 import type { StatusBadgeProps } from "./types";
 
 // UI Components
-import { Badge } from "@/components/ui/badge";
-import { Tooltip } from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/Badge";
+import { Tooltip } from "@/components/ui/Tooltip";
 
 export function StatusBadge({
   status,

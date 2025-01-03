@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card/Card";
 import { Button } from "@/components/ui/Button/Button";
-import { Progress } from "@/components/ui/progress";
+import { Progress } from "@/components/ui/Progress/Progress";
 import { Badge } from "@/components/ui/Badge/Badge";
 import {
   Dialog,
@@ -12,9 +12,9 @@ import {
   DialogTitle,
 } from "@/components/ui/Dialog/Dialog";
 import { Input } from "@/components/ui/Form/input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui/Label";
 import { Textarea } from "@/components/ui/Form/textarea";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar } from "@/components/ui/Calendar/Calendar";
 
 interface WellnessGoalsProps {
   residentId: string;

@@ -11,7 +11,7 @@ import { Card } from '@/components/ui/Card';
 import { Select } from '@/components/ui/Select/Select';
 import { Button } from '@/components/ui/Button/Button';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
-import { Icons } from '@/components/ui/icons';
+import { Icons } from '@/components/ui/Icons';
 import { useToast } from '@/components/ui/use-toast';
 import { AuditService } from '../../services/auditService';
 import { 

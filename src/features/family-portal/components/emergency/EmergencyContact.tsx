@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card/Card";
 import { Button } from "@/components/ui/Button/Button";
-import { Input } from "@/components/ui/Form/input";
-import { Label } from "@/components/ui/Form/label";
+import { Input } from "@/components/ui/Form/Input";
+import { Label } from "@/components/ui/Form/Label";
 import { Badge } from "@/components/ui/Badge/Badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea/ScrollArea";
 import {
   Dialog,
   DialogContent,

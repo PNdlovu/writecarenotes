@@ -24,7 +24,7 @@ import {
   SaveIcon, 
   AddIcon, 
   DeleteIcon 
-} from '@/components/ui/icons';
+} from '@/components/ui/Icons';
 import { monitoring, METRIC_TYPES } from '../../lib/monitoring';
 
 interface ThresholdConfig {

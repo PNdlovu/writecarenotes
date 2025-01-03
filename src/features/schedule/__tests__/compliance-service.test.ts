@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { ComplianceService } from '../services/compliance-service';
+import { OnCallComplianceService } from '@/app/api/oncall/services/ComplianceService';
 import { HandoverTask } from '../types/handover';
 
-describe('Compliance Service', () => {
-  let complianceService: ComplianceService;
+describe('OnCallComplianceService', () => {
+  let complianceService: OnCallComplianceService;
 
   beforeEach(() => {
-    complianceService = new ComplianceService();
+    complianceService = OnCallComplianceService.getInstance();
   });
 
   describe('Regional Compliance Validation', () => {

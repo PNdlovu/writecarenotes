@@ -4,9 +4,9 @@
  */
 
 import React, { useState } from 'react';
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card/Card";
 import { Button } from "@/components/ui/Button/Button";
-import { Switch } from "@/components/ui/switch";
+import { Switch } from "@/components/ui/Form/Switch";
 import { Badge } from "@/components/ui/Badge/Badge";
 import {
   Dialog,
@@ -24,7 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/Select/Select";
 import { usePermissions } from '../../hooks/usePermissions';
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 
 interface PermissionManagerProps {

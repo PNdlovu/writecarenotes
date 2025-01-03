@@ -1,4 +1,5 @@
 /**
+ * @writecarenotes.com
  * @fileoverview Central service exports
  * @version 1.0.0
  * @created 2024-03-21
@@ -23,9 +24,6 @@ export { careHomeValidation } from './careHomeValidation';
 export { careLevelTransition } from './careLevelTransition';
 export { dietaryService } from './dietaryService';
 
-// Compliance services
-export { complianceService } from './complianceService';
-
 // Emergency services
 export { emergencyService } from './emergencyService';
 export { emergencyResponse } from './emergencyResponse';
@@ -39,8 +37,9 @@ export { medicationService } from './medicationService';
 export { roomMedicationService } from './roomMedicationService';
 
 // Staff services
-export { staffService } from './staffService';
-export { staffingRequirements } from './staffingRequirements';
+export { StaffManagement } from '@/features/staff/services/staffManagement';
+export { OnCallStaffService } from '@/app/api/oncall/services/StaffService';
+export { OnCallComplianceService } from '@/app/api/oncall/services/ComplianceService';
 
 // Tenant services
 export { tenantService } from './tenantService';

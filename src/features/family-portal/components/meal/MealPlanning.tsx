@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card/Card";
 import { Badge } from "@/components/ui/Badge/Badge";
 import { Button } from "@/components/ui/Button/Button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea/ScrollArea";
 import { 
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/Table";
 import {
   Dialog,
   DialogContent,
@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog/Dialog";
-import { Textarea } from "@/components/ui/Form/textarea";
+import { Textarea } from "@/components/ui/Form/Textarea";
 import { 
   Select,
   SelectContent,

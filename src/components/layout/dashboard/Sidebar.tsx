@@ -1,3 +1,13 @@
+/**
+ * @writecarenotes.com
+ * @fileoverview Main sidebar navigation component
+ * @version 1.0.0
+ * @created 2024-03-21
+ * @updated 2024-03-21
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ */
+
 'use client';
 
 import * as React from 'react';
@@ -24,6 +34,21 @@ import {
   FileBarChart,
   BookOpen,
   GraduationCap,
+  Heart,
+  Briefcase,
+  BadgeHelp,
+  Scale,
+  Phone,
+  Users2,
+  Calculator,
+  AlertTriangle,
+  Droplets,
+  BedDouble,
+  Brain,
+  HeartPulse,
+  UserPlus,
+  Receipt,
+  PoundSterling,
   type LucideIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button/Button';
@@ -36,166 +61,315 @@ interface SidebarProps {
   setOpen: (open: boolean) => void;
 }
 
-type NavItem = {
+interface NavItem {
   name: string;
   href: string;
   icon: LucideIcon;
   description: string;
-};
+  color?: string;
+  bgColor?: string;
+}
 
-type NavSection = {
+interface NavSection {
   category: string;
+  description: string;
   items: NavItem[];
-};
+}
 
 const sidebarItems: NavSection[] = [
   // Core Modules
   {
-    category: 'Core',
+    category: 'Overview',
+    description: 'Core system features',
     items: [
       {
         name: 'Dashboard',
         href: '/dashboard',
         icon: LayoutDashboard,
-        description: 'Overview and analytics',
+        description: 'Key metrics and analytics',
+        color: 'text-blue-600',
+        bgColor: 'bg-blue-50'
       },
       {
         name: 'Care Homes',
-        href: '/carehomes',
+        href: '/care-homes',
         icon: Building2,
         description: 'Manage care home properties',
+        color: 'text-violet-600',
+        bgColor: 'bg-violet-50'
       },
       {
-        name: 'Blog',
-        href: '/blog/manage',
-        icon: BookOpen,
-        description: 'Manage blog posts and content',
+        name: 'Smart Alerts',
+        href: '/alerts',
+        icon: Bell,
+        description: 'Critical care alerts and notifications',
+        color: 'text-amber-600',
+        bgColor: 'bg-amber-50'
       },
     ],
   },
   // Resident Care
   {
     category: 'Resident Care',
+    description: 'Primary resident care management',
     items: [
       {
         name: 'Residents',
         href: '/residents',
         icon: Users,
-        description: 'Resident management',
+        description: 'Resident profiles and records',
+        color: 'text-pink-600',
+        bgColor: 'bg-pink-50'
       },
       {
         name: 'Care Plans',
         href: '/care-plans',
         icon: ClipboardList,
-        description: 'Care planning and assessments',
+        description: 'Individual care planning',
+        color: 'text-orange-600',
+        bgColor: 'bg-orange-50'
       },
+      {
+        name: 'Pain Management',
+        href: '/pain-management',
+        icon: Brain,
+        description: 'Pain assessment and management',
+        color: 'text-red-600',
+        bgColor: 'bg-red-50'
+      },
+      {
+        name: 'Nutrition & Fluids',
+        href: '/nutrition',
+        icon: Droplets,
+        description: 'Liquid and nutrition tracking',
+        color: 'text-emerald-600',
+        bgColor: 'bg-emerald-50'
+      },
+      {
+        name: 'Bed Management',
+        href: '/bed-management',
+        icon: BedDouble,
+        description: 'Bed allocation and transfers',
+        color: 'text-indigo-600',
+        bgColor: 'bg-indigo-50'
+      },
+    ],
+  },
+  // Clinical Management
+  {
+    category: 'Clinical Care',
+    description: 'Medical and clinical operations',
+    items: [
       {
         name: 'Medical Records',
         href: '/medical-records',
         icon: Stethoscope,
         description: 'Health records and history',
+        color: 'text-cyan-600',
+        bgColor: 'bg-cyan-50'
       },
       {
         name: 'Medications',
         href: '/medications',
         icon: Pill,
         description: 'Medication management',
+        color: 'text-purple-600',
+        bgColor: 'bg-purple-50'
+      },
+      {
+        name: 'On-Call',
+        href: '/oncall',
+        icon: HeartPulse,
+        description: 'On-call staff and emergency care',
+        color: 'text-red-600',
+        bgColor: 'bg-red-50'
+      },
+      {
+        name: 'Incidents',
+        href: '/incidents',
+        icon: AlertTriangle,
+        description: 'Incident reporting and tracking',
+        color: 'text-yellow-600',
+        bgColor: 'bg-yellow-50'
+      },
+      {
+        name: 'Telehealth',
+        href: '/telehealth',
+        icon: Phone,
+        description: 'Remote healthcare services',
+        color: 'text-green-600',
+        bgColor: 'bg-green-50'
+      },
+    ],
+  },
+  // Family & External
+  {
+    category: 'Family Portal',
+    description: 'Family communication and access',
+    items: [
+      {
+        name: 'Family Access',
+        href: '/family-portal',
+        icon: Users2,
+        description: 'Family portal and communications',
+        color: 'text-blue-600',
+        bgColor: 'bg-blue-50'
+      },
+      {
+        name: 'Access Management',
+        href: '/access-management',
+        icon: UserPlus,
+        description: 'Portal access and permissions',
+        color: 'text-violet-600',
+        bgColor: 'bg-violet-50'
+      },
+      {
+        name: 'Blog',
+        href: '/blog',
+        icon: BookOpen,
+        description: 'News and updates',
+        color: 'text-orange-600',
+        bgColor: 'bg-orange-50'
       },
     ],
   },
   // Staff Management
   {
-    category: 'Staff Management',
+    category: 'Workforce',
+    description: 'Staff and workforce management',
     items: [
       {
         name: 'Staff Directory',
         href: '/staff',
         icon: UserCog,
-        description: 'Staff records and roles',
+        description: 'Staff profiles and records',
+        color: 'text-teal-600',
+        bgColor: 'bg-teal-50'
       },
       {
-        name: 'Schedule',
-        href: '/schedule',
+        name: 'Scheduling',
+        href: '/scheduling',
         icon: Calendar,
-        description: 'Staff scheduling and rotas',
+        description: 'Rotas and shift management',
+        color: 'text-yellow-600',
+        bgColor: 'bg-yellow-50'
       },
       {
         name: 'Training',
         href: '/training',
         icon: GraduationCap,
-        description: 'Staff training and development',
+        description: 'Staff development and training',
+        color: 'text-indigo-600',
+        bgColor: 'bg-indigo-50'
+      },
+      {
+        name: 'HR Management',
+        href: '/hr',
+        icon: Briefcase,
+        description: 'Human resources and policies',
+        color: 'text-slate-600',
+        bgColor: 'bg-slate-50'
       },
     ],
   },
-  // Operations
+  // Finance
   {
-    category: 'Operations',
+    category: 'Finance',
+    description: 'Financial operations and management',
     items: [
       {
-        name: 'Incidents',
-        href: '/incidents',
-        icon: Bell,
-        description: 'Incident reporting and tracking',
+        name: 'Accounting',
+        href: '/accounting',
+        icon: Calculator,
+        description: 'General accounting and books',
+        color: 'text-emerald-600',
+        bgColor: 'bg-emerald-50'
       },
       {
-        name: 'Tasks',
-        href: '/tasks',
-        icon: ClipboardCheck,
-        description: 'Task management',
+        name: 'Payroll',
+        href: '/payroll',
+        icon: PoundSterling,
+        description: 'Staff payroll management',
+        color: 'text-blue-600',
+        bgColor: 'bg-blue-50'
+      },
+      {
+        name: 'Billing',
+        href: '/billing',
+        icon: Receipt,
+        description: 'Invoicing and payments',
+        color: 'text-violet-600',
+        bgColor: 'bg-violet-50'
+      },
+      {
+        name: 'Financial Reports',
+        href: '/financial-reports',
+        icon: FileBarChart,
+        description: 'Financial analytics and reporting',
+        color: 'text-pink-600',
+        bgColor: 'bg-pink-50'
+      },
+    ],
+  },
+  // Reports & Documentation
+  {
+    category: 'Intelligence',
+    description: 'Reports and documentation',
+    items: [
+      {
+        name: 'Analytics',
+        href: '/analytics',
+        icon: BarChart3,
+        description: 'Business analytics',
+        color: 'text-amber-600',
+        bgColor: 'bg-amber-50'
       },
       {
         name: 'Documents',
         href: '/documents',
         icon: FileText,
         description: 'Document management',
+        color: 'text-orange-600',
+        bgColor: 'bg-orange-50'
       },
-      {
-        name: 'Communications',
-        href: '/communications',
-        icon: MessageSquare,
-        description: 'Internal messaging',
-      },
-    ],
-  },
-  // Compliance & Reports
-  {
-    category: 'Compliance & Reports',
-    items: [
       {
         name: 'Compliance',
         href: '/compliance',
         icon: ShieldCheck,
         description: 'Regulatory compliance',
-      },
-      {
-        name: 'Reports',
-        href: '/reports',
-        icon: FileBarChart,
-        description: 'Analytics and reporting',
-      },
-      {
-        name: 'Audits',
-        href: '/audits',
-        icon: BarChart3,
-        description: 'Quality audits',
-      },
-      {
-        name: 'Policies',
-        href: '/policies',
-        icon: BookOpen,
-        description: 'Policies and procedures',
+        color: 'text-green-600',
+        bgColor: 'bg-green-50'
       },
     ],
   },
-  // Settings
+  // Support
   {
-    category: 'Settings',
+    category: 'Support',
+    description: 'Help and system settings',
     items: [
+      {
+        name: 'Help Center',
+        href: '/help',
+        icon: BadgeHelp,
+        description: 'Support and documentation',
+        color: 'text-blue-600',
+        bgColor: 'bg-blue-50'
+      },
+      {
+        name: 'Messages',
+        href: '/messages',
+        icon: MessageSquare,
+        description: 'Internal communications',
+        color: 'text-violet-600',
+        bgColor: 'bg-violet-50'
+      },
       {
         name: 'Settings',
         href: '/settings',
         icon: Settings,
         description: 'System configuration',
+        color: 'text-gray-600',
+        bgColor: 'bg-gray-50'
       },
     ],
   },
@@ -209,7 +383,7 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
     <>
       {/* Mobile backdrop */}
       {open && (
-        <div 
+        <div
           className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm lg:hidden"
           onClick={() => setOpen(false)}
         />
@@ -218,46 +392,49 @@ export function Sidebar({ open, setOpen }: SidebarProps) {
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-72 bg-background border-r lg:static",
-          "transform transition-transform duration-200 ease-in-out lg:transform-none",
+          "fixed inset-y-0 left-0 z-50 w-80 transform bg-card shadow-lg transition-transform duration-300 ease-in-out lg:static lg:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full"
         )}
       >
         {/* Mobile close button */}
-        <div className="flex h-14 items-center justify-end px-4 lg:hidden">
-          <Button variant="ghost" size="icon" onClick={() => setOpen(false)}>
-            <X className="h-5 w-5" />
-            <span className="sr-only">Close sidebar</span>
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="absolute right-4 top-4 lg:hidden"
+          onClick={() => setOpen(false)}
+        >
+          <X className="h-4 w-4" />
+          <span className="sr-only">Close sidebar</span>
+        </Button>
 
         {/* Sidebar content */}
-        <ScrollArea className="h-[calc(100vh-3.5rem)] pb-10">
-          <div className="space-y-6 p-4">
+        <ScrollArea className="h-full py-6">
+          <div className="space-y-6 px-4">
             {sidebarItems.map((section) => (
-              <div key={section.category} className="space-y-2">
-                <h4 className="text-xs font-semibold text-muted-foreground tracking-wide uppercase px-3">
-                  {section.category}
-                </h4>
-                <div className="space-y-1">
-                  {section.items.map((item) => {
-                    const href = `/${region}${item.href}`;
-                    const isActive = pathname === href;
-
-                    return (
-                      <SidebarItem
-                        key={item.href}
-                        name={item.name}
-                        href={href}
-                        icon={item.icon}
-                        isActive={isActive}
-                      />
-                    );
-                  })}
+              <div key={section.category} className="space-y-3">
+                <div className="px-2">
+                  <h4 className="text-sm font-semibold tracking-tight">
+                    {section.category}
+                  </h4>
+                  <p className="text-xs text-muted-foreground">
+                    {section.description}
+                  </p>
                 </div>
-                {section.category !== 'Settings' && (
-                  <Separator className="my-4" />
-                )}
+                <div className="space-y-1">
+                  {section.items.map((item) => (
+                    <SidebarItem
+                      key={item.href}
+                      name={item.name}
+                      href={`/${region}${item.href}`}
+                      icon={item.icon}
+                      description={item.description}
+                      isActive={pathname === `/${region}${item.href}`}
+                      color={item.color}
+                      bgColor={item.bgColor}
+                    />
+                  ))}
+                </div>
+                <Separator />
               </div>
             ))}
           </div>

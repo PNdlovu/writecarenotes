@@ -1,6 +1,6 @@
 'use client';
 
-import { ResidentList } from '@/features/residents/components/resident-list';
+import { ResidentList } from '@/features/residents/components/ResidentList';
 import { useResidents } from '@/features/residents/hooks/use-residents';
 
 export default function ResidentsPage() {

@@ -7,14 +7,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/Table';
 import { ScrollArea } from '@/components/ui/ScrollArea';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from '@/components/ui/Tooltip';
 import { Activity, Eye, Download, Edit, Trash, CheckCircle2, History } from 'lucide-react';
 
 interface AuditEntry {

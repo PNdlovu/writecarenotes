@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card } from "@/components/ui/Card";
-import { Progress } from "@/components/ui/progress";
+import { Card } from "@/components/ui/Card/Card";
+import { Progress } from "@/components/ui/Progress/Progress";
 import {
   Select,
   SelectContent,

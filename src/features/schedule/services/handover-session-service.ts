@@ -1,15 +1,15 @@
 import { HandoverSession, HandoverTask, Staff } from '../types/handover';
-import { ComplianceService } from './compliance-service';
+import { OnCallComplianceService } from '@/app/api/oncall/services/ComplianceService';
 import { HandoverSecurity } from './handover-security';
 import { TenantService } from './tenant-service';
 
+const complianceService = OnCallComplianceService.getInstance();
+
 export class HandoverSessionService {
-  private complianceService: ComplianceService;
   private security: HandoverSecurity;
   private tenantService: TenantService;
 
   constructor() {
-    this.complianceService = new ComplianceService();
     this.security = new HandoverSecurity();
     this.tenantService = new TenantService();
   }
@@ -42,7 +42,7 @@ export class HandoverSessionService {
     };
 
     await this.security.validateSessionAccess(session, 'CREATE');
-    await this.complianceService.validateSession(session);
+    await complianceService.validateSession(session);
     
     return session;
   }
@@ -57,7 +57,7 @@ export class HandoverSessionService {
       updatedAt: new Date(),
     };
 
-    await this.complianceService.validateSession(updatedSession);
+    await complianceService.validateSession(updatedSession);
     
     return updatedSession;
   }
@@ -73,7 +73,7 @@ export class HandoverSessionService {
       updatedAt: new Date(),
     };
 
-    await this.complianceService.validateTask(newTask);
+    await complianceService.validateTask(newTask);
     session.tasks.push(newTask);
 
     return newTask;
@@ -95,7 +95,7 @@ export class HandoverSessionService {
       updatedAt: new Date(),
     };
 
-    await this.complianceService.validateTask(updatedTask);
+    await complianceService.validateTask(updatedTask);
     session.tasks[taskIndex] = updatedTask;
 
     return updatedTask;
@@ -173,7 +173,7 @@ export class HandoverSessionService {
       updatedAt: new Date(),
     };
 
-    await this.complianceService.validateSessionCompletion(completedSession);
+    await complianceService.validateSessionCompletion(completedSession);
     
     return completedSession;
   }

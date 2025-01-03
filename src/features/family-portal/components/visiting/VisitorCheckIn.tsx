@@ -12,7 +12,7 @@ import React, { useState } from 'react';
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button/Button";
 import { Input } from "@/components/ui/Input/Input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui/Label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/UseToast";
 import { QRCode } from "@/components/ui/qr-code";
@@ -25,7 +25,7 @@ import {
   DialogTitle,
 } from "@/components/ui/Dialog/Dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs";
-import { Users, Heart, Briefcase, Tool } from "@/components/ui/icons";
+import { Users, Heart, Briefcase, Tool } from "lucide-react";
 import FamilyVisitorCheckIn from "./FamilyVisitorCheckIn";
 import FriendVisitorCheckIn from "./FriendVisitorCheckIn";
 import ProfessionalVisitorCheckIn from "./ProfessionalVisitorCheckIn";

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui/Label";
 import { Textarea } from "@/components/ui/Form/textarea";
 import {
   Select,
@@ -31,10 +31,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 import { Separator } from "@/components/ui/separator";
-import { Icons } from "@/components/ui/icons";
-import { Progress } from "@/components/ui/progress";
+import { Users, UserPlus, Mail, Phone, MessageSquare, Calendar, Settings, LogOut } from "lucide-react";
+import { Progress } from "@/components/ui/Progress/Progress";
 import { LineChart } from "@/components/ui/line-chart";
 import { PieChart } from "@/components/ui/pie-chart";
 

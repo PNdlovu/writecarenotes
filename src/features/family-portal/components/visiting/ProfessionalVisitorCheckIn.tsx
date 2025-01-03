@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card/Card";
 import { Badge } from "@/components/ui/Badge/Badge";
 import { Button } from "@/components/ui/Button/Button";
-import { Input } from "@/components/ui/Form/input";
+import { Input } from "@/components/ui/Form/Input";
 import { 
   Select,
   SelectContent,
@@ -15,8 +15,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from "@/components/ui/Dialog/Dialog";
-import { Textarea } from "@/components/ui/Form/textarea";
+import { Textarea } from "@/components/ui/Form/Textarea";
 import { 
   Table,
   TableBody,
@@ -24,16 +25,17 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/Table";
 import { 
   Form,
-  FormControl,
   FormField,
   FormItem,
   FormLabel,
+  FormControl,
+  FormDescription,
   FormMessage,
-} from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/Form/checkbox";
+} from "@/components/ui/Form/Form";
+import { Checkbox } from "@/components/ui/Form/Checkbox";
 import { 
   ClipboardCheck,
   UserCheck,

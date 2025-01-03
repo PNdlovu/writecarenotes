@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card/Card";
 import { Button } from "@/components/ui/Button/Button";
-import { Textarea } from "@/components/ui/Form/textarea";
-import { Avatar } from "@/components/ui/Avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/Form/Textarea";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/Avatar/Avatar";
+import { ScrollArea } from "@/components/ui/ScrollArea/ScrollArea";
 
 interface CareJournalProps {
   residentId: string;

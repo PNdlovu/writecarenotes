@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { staffService } from '../../services/staffService';
+import { OnCallStaffService } from '../../../../app/api/oncall/services/StaffService';
 import { Availability } from '../../types/staff';
 import { Dialog } from '@headlessui/react';
 import { format } from 'date-fns';
@@ -23,6 +23,8 @@ const DAYS_OF_WEEK = [
   'Friday',
   'Saturday',
 ];
+
+const staffService = OnCallStaffService.getInstance();
 
 export const StaffAvailabilityPanel: React.FC<StaffAvailabilityPanelProps> = ({
   staffId,

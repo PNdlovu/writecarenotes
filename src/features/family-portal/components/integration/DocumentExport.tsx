@@ -9,11 +9,11 @@
  */
 
 import React, { useState } from 'react';
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card/Card";
 import { Button } from "@/components/ui/Button/Button";
-import { Input } from "@/components/ui/Input/Input";
+import { Input } from "@/components/ui/Form/Input";
 import { Badge } from "@/components/ui/Badge/Badge";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/components/ui/Form/Checkbox";
 import {
   Dialog,
   DialogContent,
@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select/Select";
-import { useToast } from "@/components/ui/UseToast";
+import { useToast } from "@/components/ui/Toast/useToast";
 import { useAccessibility } from '../../hooks/useAccessibility';
 
 interface DocumentExportProps {

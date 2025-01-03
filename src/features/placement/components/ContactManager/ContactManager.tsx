@@ -14,7 +14,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from '@/components/ui/Form';
 import {
   Dialog,
   DialogContent,
@@ -25,7 +25,7 @@ import {
 } from '@/components/ui/Dialog/Dialog';
 import { Button } from '@/components/ui/Button/Button';
 import { Input } from '@/components/ui/Input/Input';
-import { Textarea } from '@/components/ui/Textarea';
+import { Textarea } from '@/components/ui/Textarea/Textarea';
 import {
   Select,
   SelectContent,

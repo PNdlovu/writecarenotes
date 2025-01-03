@@ -23,7 +23,7 @@ import { Input } from '@/components/ui/Input/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Badge } from '@/components/ui/Badge/Badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/UseToast';
 import {
   Select,
   SelectContent,

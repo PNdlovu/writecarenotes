@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button/Button';
-import { Progress } from '@/components/ui/Progress';
+import { Progress } from '@/components/ui/Progress/Progress';
 import { Badge } from '@/components/ui/Badge/Badge';
 import { Icon } from '@/components/ui/Icons';
 import { Spinner } from '@/components/ui/Spinner';

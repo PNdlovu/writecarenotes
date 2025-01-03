@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button/Button";
-import { Input } from "@/components/ui/Form/input";
-import { Textarea } from "@/components/ui/Form/textarea";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Input } from "@/components/ui/Form/Input";
+import { Textarea } from "@/components/ui/Form/Textarea";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 import { Badge } from "@/components/ui/Badge/Badge";
 import {
   Dialog,

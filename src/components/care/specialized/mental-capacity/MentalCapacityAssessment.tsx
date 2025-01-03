@@ -39,9 +39,9 @@
 import { useState } from 'react';
 import { Button } from "@/components/ui/Button/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Label } from "@/components/ui/label";
+import { Label } from "@/components/ui/Label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/form/radio-group";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/components/ui/Textarea";
 import { specializedCare } from '@/lib/services/specialized-care';
 import type { Region } from '@/types/regulatory';
 

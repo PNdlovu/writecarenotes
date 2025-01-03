@@ -26,7 +26,7 @@ import {
 import { useCareAnalytics } from '../../hooks/useCareAnalytics';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 import { Badge } from "@/components/ui/Badge/Badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 
 interface CareInsightsProps {
   residentId: string;

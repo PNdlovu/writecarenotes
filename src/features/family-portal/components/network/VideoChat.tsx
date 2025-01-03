@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button/Button";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar } from "@/components/ui/Calendar";
 import {
   Select,
   SelectContent,
@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select/Select";
-import { Input } from "@/components/ui/Form/input";
+import { Input } from "@/components/ui/Form/Input";
 import { Badge } from "@/components/ui/Badge/Badge";
 
 interface VideoChatProps {

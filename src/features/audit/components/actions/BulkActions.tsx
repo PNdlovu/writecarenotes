@@ -23,7 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/Dialog/Dialog';
-import { Icons } from '@/components/ui/icons';
+import { Icons } from '@/components/ui/Icons';
 import { useToast } from '@/components/ui/use-toast';
 import { AuditService } from '../../services/auditService';
 import { AuditLogEntry, AuditLogFilter } from '../../types/audit.types';

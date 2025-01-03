@@ -14,7 +14,7 @@ import { AuditFilter } from './filters/AuditFilter';
 import { AuditExport } from './export/AuditExport';
 import { AuditPagination } from './tables/AuditPagination';
 import { Button } from '@/components/ui/Button/Button';
-import { Icons } from '@/components/ui/icons';
+import { Icons } from '@/components/ui/Icons';
 import { useToast } from '@/components/ui/use-toast';
 import { AuditService } from '../services/auditService';
 import { 

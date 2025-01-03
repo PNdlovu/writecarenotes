@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/Dialog/Dialog';
+} from '@/components/ui/Dialog';
 import {
   Table,
   TableBody,
@@ -26,7 +26,7 @@ import { Button } from '@/components/ui/Button/Button';
 import { Badge } from '@/components/ui/Badge/Badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
 import { Label } from '@/components/ui/Label';
-import { Input } from '@/components/ui/Input/Input';
+import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import {
   Select,

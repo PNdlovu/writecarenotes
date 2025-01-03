@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button/Button";
-import { Input } from "@/components/ui/Input/Input";
+import { Input } from "@/components/ui/Form/Input";
 import { Badge } from "@/components/ui/Badge/Badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 import {
   Select,
   SelectContent,
@@ -28,9 +28,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
-import { Icons } from "@/components/ui/icons";
+import { Label } from "@/components/ui/Form/Label";
+import { Progress } from "@/components/ui/Progress/Progress";
+import { FileText, Upload, Download, Search, Filter, Plus, Trash } from "lucide-react";
 
 interface Document {
   id: string;
@@ -98,11 +98,11 @@ export const DocumentCenter: React.FC<DocumentCenterProps> = ({
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setIsUploadModalOpen(true)}>
-            <Icons.upload className="mr-2 h-4 w-4" />
+            <Upload className="mr-2 h-4 w-4" />
             Upload
           </Button>
           <Button>
-            <Icons.folderPlus className="mr-2 h-4 w-4" />
+            <Plus className="mr-2 h-4 w-4" />
             New Folder
           </Button>
         </div>
@@ -151,7 +151,7 @@ export const DocumentCenter: React.FC<DocumentCenterProps> = ({
                   <div className="flex items-start justify-between">
                     <div className="flex gap-4">
                       <div className="p-2 bg-secondary rounded-lg">
-                        <Icons.fileText className="h-6 w-6" />
+                        <FileText className="h-6 w-6" />
                       </div>
                       <div>
                         <h4 className="font-semibold">{doc.title}</h4>
@@ -170,25 +170,25 @@ export const DocumentCenter: React.FC<DocumentCenterProps> = ({
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
-                          <Icons.more className="h-4 w-4" />
+                          <Filter className="h-4 w-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem>
-                          <Icons.download className="mr-2 h-4 w-4" />
+                          <Download className="mr-2 h-4 w-4" />
                           Download
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <Icons.share className="mr-2 h-4 w-4" />
+                          <Upload className="mr-2 h-4 w-4" />
                           Share
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <Icons.star className="mr-2 h-4 w-4" />
+                          <Plus className="mr-2 h-4 w-4" />
                           Add to Favorites
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="text-destructive">
-                          <Icons.trash className="mr-2 h-4 w-4" />
+                          <Trash className="mr-2 h-4 w-4" />
                           Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -246,7 +246,7 @@ export const DocumentCenter: React.FC<DocumentCenterProps> = ({
               <Input placeholder="Enter tags (comma separated)" />
             </div>
             <div className="border-2 border-dashed rounded-lg p-6 text-center">
-              <Icons.upload className="mx-auto h-8 w-8 text-muted-foreground" />
+              <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
               <p className="mt-2">Drag and drop files here or click to browse</p>
               <p className="text-sm text-muted-foreground">
                 Supported formats: PDF, DOC, DOCX, JPG, PNG

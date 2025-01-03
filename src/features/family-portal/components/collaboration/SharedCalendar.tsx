@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar } from "@/components/ui/Calendar/Calendar";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button/Button";
 import { Input } from "@/components/ui/Input/Input";
@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/Select/Select";
 import { useSharedCalendar } from '../../hooks/useSharedCalendar';
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { format } from 'date-fns';
 

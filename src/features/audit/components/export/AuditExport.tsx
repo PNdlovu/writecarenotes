@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import { Button } from '@/components/ui/Button/Button';
-import { Icons } from '@/components/ui/icons';
+import { Icons } from '@/components/ui/Icons';
 import { AuditExportProps } from '../../types/ui.types';
 
 export function AuditExport({

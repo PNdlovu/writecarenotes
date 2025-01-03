@@ -17,7 +17,7 @@ import { useTranslation } from '@/i18n'
 import { useArticle } from '../hooks/useArticle'
 import { cn } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/badge'
 import {
   Card,

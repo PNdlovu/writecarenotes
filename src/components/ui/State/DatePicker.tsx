@@ -3,7 +3,7 @@ import format from "date-fns/format"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/Button/Button"
-import { Calendar } from "@/components/ui/calendar"
+import { Calendar } from "@/components/ui/Calendar/Calendar"
 import {
   Popover,
   PopoverContent,

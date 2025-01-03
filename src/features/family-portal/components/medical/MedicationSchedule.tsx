@@ -8,7 +8,7 @@
 import React from 'react';
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge/Badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 import { 
   Table,
   TableBody,
@@ -16,7 +16,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/Table";
 
 interface Medication {
   id: string;

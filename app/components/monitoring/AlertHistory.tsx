@@ -22,7 +22,7 @@ import {
   MenuItem,
   TextField
 } from '@/components/ui';
-import { FilterListIcon, CheckCircleIcon, MoreVertIcon } from '@/components/ui/icons';
+import { FilterListIcon, CheckCircleIcon, MoreVertIcon } from '@/components/ui/Icons';
 import { monitoring } from '../../lib/monitoring';
 
 interface Alert {

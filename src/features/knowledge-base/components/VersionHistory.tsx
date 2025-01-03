@@ -16,15 +16,15 @@ import { useTranslation } from '@/i18n'
 import { useArticle } from '../hooks/useArticle'
 import { cn } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
-import { Button } from '@/components/ui/button'
-import { ScrollArea } from '@/components/ui/scroll-area'
+import { Button } from '@/components/ui/Button'
+import { ScrollArea } from '@/components/ui/ScrollArea'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from '@/components/ui/dialog'
+} from '@/components/ui/Dialog'
 import { Icons } from '@/components/icons'
 import { diffWords } from 'diff'
 

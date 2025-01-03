@@ -1,17 +1,17 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 import { HandoverTask } from '../../types/handover';
 import { ExternalSystemService } from '../../services/external-system-service';
-import { ComplianceService } from '../../services/compliance-service';
+import { OnCallComplianceService } from '@/app/api/oncall/services/ComplianceService';
 import { OfflineSyncService } from '../../services/offline-sync-service';
 
 describe('External Systems Integration', () => {
   let externalSystemService: ExternalSystemService;
-  let complianceService: ComplianceService;
+  let complianceService: OnCallComplianceService;
   let offlineSyncService: OfflineSyncService;
 
   beforeEach(() => {
     externalSystemService = new ExternalSystemService();
-    complianceService = new ComplianceService();
+    complianceService = OnCallComplianceService.getInstance();
     offlineSyncService = new OfflineSyncService('test-tenant');
   });
 

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button/Button";
-import { Input } from "@/components/ui/Form/input";
+import { Input } from "@/components/ui/Form/Input";
 import { Badge } from "@/components/ui/Badge/Badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Textarea } from "@/components/ui/Form/textarea";
+import { ScrollArea } from "@/components/ui/ScrollArea";
+import { Textarea } from "@/components/ui/Form/Textarea";
 import {
   Dialog,
   DialogContent,
@@ -21,8 +21,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { Label } from "@/components/ui/Form/label";
-import { Icons } from "@/components/ui/icons";
+import { Label } from "@/components/ui/Form/Label";
+import { Image, Upload, Download, Search, Filter, Plus, Heart, Share2, Trash } from "lucide-react";
 
 interface Memory {
   id: string;

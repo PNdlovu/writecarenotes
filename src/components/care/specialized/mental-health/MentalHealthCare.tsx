@@ -45,8 +45,8 @@ import { BaseCareComponent, BaseCareProps } from '../../base/BaseCareComponent';
 // UI Components
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button/Button';
-import { Alert } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
+import { Alert } from '@/components/ui/Alert';
+import { Badge } from '@/components/ui/Badge';
 
 interface MentalHealthCareProps extends BaseCareProps {
   mentalHealthAssessment?: {

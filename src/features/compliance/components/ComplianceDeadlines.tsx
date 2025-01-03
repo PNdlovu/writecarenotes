@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card"
 import { Badge } from "@/components/ui/Badge/Badge"
-import { Calendar } from "@/components/ui/calendar"
+import { Calendar } from "@/components/ui/Calendar/Calendar"
 import { format, isSameDay, isAfter, isBefore, addDays } from 'date-fns'
 
 interface ComplianceDeadline {

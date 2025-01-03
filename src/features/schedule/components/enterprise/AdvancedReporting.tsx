@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/Button/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { BarChart, LineChart, PieChart } from "@/components/ui/charts";
+import { BarChart, LineChart, PieChart } from "@/components/ui/Charts";
 import { Download, Filter, BarChart as ChartIcon, LineChart as TrendIcon, PieChart as PieIcon } from "lucide-react";
 import {
   Select,

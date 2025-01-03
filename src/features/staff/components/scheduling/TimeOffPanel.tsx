@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { staffService } from '../../services/staffService';
+import { OnCallStaffService } from '../../../../app/api/oncall/services/StaffService';
 import { TimeOffRequest, StaffMember } from '../../types/staff';
 import { toast } from 'react-hot-toast';
 import { format } from 'date-fns';
@@ -8,6 +8,8 @@ import { Dialog } from '@headlessui/react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { CalendarIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
+
+const staffService = OnCallStaffService.getInstance();
 
 export const TimeOffPanel: React.FC = () => {
   const [isCreateRequestOpen, setIsCreateRequestOpen] = useState(false);

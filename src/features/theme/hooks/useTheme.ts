@@ -1,41 +1,17 @@
 /**
- * @fileoverview Theme Hook
+ * @writecarenotes.com
+ * @fileoverview Theme hook for managing application theme
  * @version 1.0.0
- * @created 2024-03-21
- * @copyright Write Care Notes Ltd
+ * @created 2024-01-03
+ * @updated 2024-01-03
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
  */
 
-import { useContext } from 'react';
-import { ThemeContext } from '../components/ThemeProvider';
-import type { ThemeConfig, AccessibilitySettings } from '../types';
+"use client"
+
+import { useTheme as useNextTheme } from "next-themes"
 
 export function useTheme() {
-  const context = useContext(ThemeContext);
-  
-  if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-
-  const { theme, setTheme } = context;
-
-  const updateAccessibility = (settings: Partial<AccessibilitySettings>) => {
-    setTheme({
-      ...theme,
-      ...settings
-    });
-  };
-
-  const toggleColorMode = () => {
-    setTheme({
-      ...theme,
-      colorMode: theme.colorMode === 'dark' ? 'light' : 'dark'
-    });
-  };
-
-  return {
-    theme,
-    setTheme,
-    updateAccessibility,
-    toggleColorMode
-  };
+  return useNextTheme()
 } 

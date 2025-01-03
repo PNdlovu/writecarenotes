@@ -13,7 +13,7 @@
  */
 
 import React, { useState } from 'react';
-import { Input } from '@/components/ui/Form';
+import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Search, Filter, X } from 'lucide-react';

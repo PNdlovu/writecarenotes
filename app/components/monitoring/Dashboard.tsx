@@ -32,7 +32,7 @@ import {
   HealthAndSafetyIcon,
   DownloadIcon,
   SettingsIcon 
-} from '@/components/ui/icons';
+} from '@/components/ui/Icons';
 import { AlertHistory } from './AlertHistory';
 import { ThresholdConfig } from './ThresholdConfig';
 import { MetricComparison } from './MetricComparison';

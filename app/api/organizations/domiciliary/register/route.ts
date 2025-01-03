@@ -53,7 +53,7 @@ const registrationSchema = z.object({
       breakFrequency: z.number(),
       paidBreaks: z.boolean(),
     }),
-    onCallArrangements: z.object({
+    SmartCareAlertArrangements: z.object({
       enabled: z.boolean(),
       coverage: z.array(z.object({
         dayOfWeek: z.number(),
@@ -134,7 +134,7 @@ export async function POST(req: Request) {
           visitDurationDefault: data.operationalSettings.visitDurationDefault,
           travelTimeAllowance: data.operationalSettings.travelTimeAllowance,
           breakRequirements: data.operationalSettings.breakRequirements,
-          onCallArrangements: data.operationalSettings.onCallArrangements,
+          SmartCareAlertArrangements: data.operationalSettings.SmartCareAlertArrangements,
           createdBy: session.user.id,
           updatedBy: session.user.id,
         },

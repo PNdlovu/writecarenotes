@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/Input/Input';
-import { Textarea } from '@/components/ui/Textarea';
+import { Textarea } from '@/components/ui/Textarea/Textarea';
 import {
   Select,
   SelectContent,

@@ -29,7 +29,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Select/Select";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 import { useAccessibility } from '../../hooks/useAccessibility';
 import { useToast } from "@/components/ui/UseToast";
 

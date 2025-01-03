@@ -44,7 +44,7 @@ import { BaseCareComponent, BaseCareProps } from '../../base/BaseCareComponent';
 // UI Components
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button/Button';
-import { Toggle } from '@/components/ui/toggle';
+import { Toggle } from '@/components/ui/Toggle';
 
 interface ElderlyCareProps extends BaseCareProps {
   mobilityAssessment?: {

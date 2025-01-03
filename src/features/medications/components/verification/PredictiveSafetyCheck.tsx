@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
-import { Progress } from "@/components/ui/Progress";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card/Card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert/Alert";
+import { Progress } from "@/components/ui/Progress/Progress";
 import { AlertTriangle, CheckCircle } from "lucide-react";
 
 interface PredictiveSafetyCheckProps {

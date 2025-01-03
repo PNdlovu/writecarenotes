@@ -9,7 +9,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/Button/Button';
 import { Select } from '@/components/ui/Select/Select';
-import { Icons } from '@/components/ui/icons';
+import { Icons } from '@/components/ui/Icons';
 import { AuditPaginationProps } from '../../types/ui.types';
 
 export function AuditPagination({

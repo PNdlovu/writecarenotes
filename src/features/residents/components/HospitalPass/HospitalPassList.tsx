@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/Table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +18,7 @@ import {
 import { Button } from '@/components/ui/Button/Button';
 import { MoreVertical, Pencil, Trash } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge/Badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/components/ui/Skeleton';
 import { HospitalPass } from '../../types/hospitalPass';
 import { useHospitalPasses } from '../../hooks/useHospitalPasses';
 

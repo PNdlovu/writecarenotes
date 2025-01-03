@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button/Button';
 import { Badge } from '@/components/ui/Badge/Badge';
-import { Progress } from '@/components/ui/Progress';
+import { Progress } from '@/components/ui/Progress/Progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useStock } from '../../hooks/useStock';
 import { AlertTriangle, AlertCircle, Clock, Plus } from 'lucide-react';

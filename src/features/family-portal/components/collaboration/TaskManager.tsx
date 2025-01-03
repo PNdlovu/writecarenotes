@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/Select/Select";
 import { useTaskManager } from '../../hooks/useTaskManager';
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
 import { format } from 'date-fns';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";

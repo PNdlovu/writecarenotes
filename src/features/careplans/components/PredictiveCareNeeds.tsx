@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/Button/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Progress } from "@/components/ui/progress";
+import { Progress } from "@/components/ui/Progress/Progress";
 import { Badge } from "@/components/ui/Badge/Badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 import { Separator } from "@/components/ui/separator";
 import { AlertTriangle, CheckCircle, Clock } from "lucide-react";
 

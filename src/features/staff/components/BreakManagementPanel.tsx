@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { staffService } from '../../services/staffService';
+import { OnCallStaffService } from '../../../../app/api/oncall/services/StaffService';
 import { Break, BreakType, ShiftAssignment } from '../../types/staff';
 import { Dialog } from '@headlessui/react';
 import { format, setHours, setMinutes } from 'date-fns';
@@ -14,6 +14,8 @@ interface BreakManagementPanelProps {
   breaks: Break[];
   onUpdate: () => void;
 }
+
+const staffService = OnCallStaffService.getInstance();
 
 export const BreakManagementPanel: React.FC<BreakManagementPanelProps> = ({
   shiftId,

@@ -61,19 +61,23 @@ export function LoggedInNav({ onMenuClick }: LoggedInNavProps) {
         {/* Right Section - Actions */}
         <div className="flex items-center space-x-4">
           {/* Notifications */}
-          <Button variant="ghost" size="icon" className="relative">
-            <Bell className="h-5 w-5" />
-            <Badge 
-              variant="destructive" 
-              className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
-            >
-              3
-            </Badge>
+          <Button variant="ghost" size="icon" className="relative" asChild>
+            <Link href={`/${region}/notifications`}>
+              <Bell className="h-5 w-5" />
+              <Badge 
+                variant="destructive" 
+                className="absolute -right-1 -top-1 h-5 w-5 rounded-full p-0 text-xs flex items-center justify-center"
+              >
+                3
+              </Badge>
+            </Link>
           </Button>
 
           {/* Help */}
-          <Button variant="ghost" size="icon">
-            <HelpCircle className="h-5 w-5" />
+          <Button variant="ghost" size="icon" asChild>
+            <Link href={`/${region}/help`}>
+              <HelpCircle className="h-5 w-5" />
+            </Link>
           </Button>
 
           {/* Theme Toggle */}
@@ -97,13 +101,15 @@ export function LoggedInNav({ onMenuClick }: LoggedInNavProps) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Settings</span>
+              <DropdownMenuItem asChild>
+                <Link href={`/${region}/settings/profile`}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  Profile Settings
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => signOut()}>
                 <LogOut className="mr-2 h-4 w-4" />
-                <span>Log out</span>
+                Sign Out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -111,4 +117,4 @@ export function LoggedInNav({ onMenuClick }: LoggedInNavProps) {
       </div>
     </nav>
   );
-} 
+}

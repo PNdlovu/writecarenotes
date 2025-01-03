@@ -46,7 +46,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/Table';
 import { Download } from 'lucide-react';
 
 const analyticsService = new StockAnalyticsService();

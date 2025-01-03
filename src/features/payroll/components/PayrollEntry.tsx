@@ -13,7 +13,7 @@ import {
   FormControl,
   FormDescription,
   FormMessage
-} from '@/components/ui/form'
+} from '@/components/ui/Form'
 import { Input } from '@/components/ui/Input/Input'
 import { Button } from '@/components/ui/Button/Button'
 import { useToast } from '@/components/ui/UseToast'
@@ -21,7 +21,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
-import { Icons } from '@/components/ui/icons'
+import { Icons } from '@/components/ui/Icons'
 import { formatCurrency } from '@/lib/formatting'
 import { Badge } from '@/components/ui/Badge/Badge'
 

@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { PlusIcon } from '@heroicons/react/24/outline';
 import { StaffRole } from '@/types/models';
-import { uploadStaffDocument } from '@/lib/azure/staff-service';
+import { OnCallStaffService } from '@/app/api/oncall/services/StaffService';
 
 interface StaffFormData {
   firstName: string;
@@ -26,6 +26,8 @@ const initialFormData: StaffFormData = {
   qualifications: '',
   documents: [],
 };
+
+const staffService = OnCallStaffService.getInstance();
 
 export default function AddStaffButton() {
   const [isOpen, setIsOpen] = useState(false);
@@ -73,7 +75,7 @@ export default function AddStaffButton() {
         if (data.documents?.length) {
           await Promise.all(
             data.documents.map(file =>
-              uploadStaffDocument(
+              staffService.uploadDocument(
                 staffMember.id,
                 file,
                 'identification' // You might want to add a field to specify document type

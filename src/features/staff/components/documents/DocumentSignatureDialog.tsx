@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/Select/Select';
-import { Textarea } from '@/components/ui/Textarea';
+import { Textarea } from '@/components/ui/Textarea/Textarea';
 import { useToast } from '@/components/ui/UseToast';
 import { Document } from '@/features/staff/types';
 

@@ -9,7 +9,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/UseToast';
 import { useOffline } from '@/features/offline/hooks/useOffline';
 import type { CareHomeChange } from '../types';
 

@@ -1,4 +1,4 @@
-import { staffService } from '@/lib/staff-service';
+import { OnCallStaffService } from '../../../../app/api/oncall/services/StaffService';
 import { Skill, SkillLevel } from '@/features/staff/types';
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -36,5 +36,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/Table';
+
+const staffService = OnCallStaffService.getInstance();
 
 

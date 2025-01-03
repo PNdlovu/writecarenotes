@@ -8,7 +8,7 @@ import {
   Legend,
 } from 'recharts'
 import { Badge } from '@/components/ui/Badge/Badge'
-import { Progress } from '@/components/ui/Progress'
+import { Progress } from '@/components/ui/Progress/Progress'
 import { ArrowUp, ArrowDown, Minus } from 'lucide-react'
 
 interface ComplianceOverviewProps {

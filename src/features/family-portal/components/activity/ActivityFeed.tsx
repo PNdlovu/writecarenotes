@@ -6,12 +6,12 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Card } from "@/components/ui/Card";
+import { Card } from "@/components/ui/Card/Card";
 import { Badge } from "@/components/ui/Badge/Badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea/ScrollArea";
 import { Button } from "@/components/ui/Button/Button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs/Tabs";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/Avatar/Avatar";
 import { 
   Heart,
   Calendar,

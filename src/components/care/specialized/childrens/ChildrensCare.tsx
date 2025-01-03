@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { Progress } from "@/components/ui/progress";
+import { Progress } from "@/components/ui/Progress/Progress";
 import { BasePerson, OfstedRequirements } from '@/types/regulatory';
 
 interface ChildrensCareProps {

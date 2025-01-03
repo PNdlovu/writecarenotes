@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/Dialog/Dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 
 interface CareTeamMember {
   id: string;

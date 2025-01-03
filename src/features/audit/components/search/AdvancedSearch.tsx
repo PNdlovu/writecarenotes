@@ -18,7 +18,7 @@ import {
   SelectValue 
 } from '@/components/ui/Select/Select';
 import { DateRangePicker } from '@/components/ui/date-range-picker';
-import { Icons } from '@/components/ui/icons';
+import { Icons } from '@/components/ui/Icons';
 import { 
   AuditLogAction, 
   AuditLogStatus,

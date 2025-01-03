@@ -1,22 +1,22 @@
 /**
  * @writecarenotes.com
- * @fileoverview E2E Tests for OnCall System
+ * @fileoverview E2E Tests for SmartCareAlert System
  * @version 1.0.0
  * @created 2025-01-02
  * @author Write Care Notes team
  * @copyright Phibu Cloud Solutions Ltd
  */
 
-describe('OnCall System', () => {
+describe('SmartCareAlert System', () => {
     beforeEach(() => {
         // Setup test data and intercept API calls
-        cy.intercept('GET', '/api/v1/oncall/records*', { fixture: 'oncall/activeRecords.json' }).as('getRecords');
-        cy.intercept('GET', '/api/v1/oncall/staff/available*', { fixture: 'oncall/availableStaff.json' }).as('getStaff');
-        cy.intercept('POST', '/api/v1/oncall/records', { fixture: 'oncall/newRecord.json' }).as('createRecord');
-        cy.intercept('PATCH', '/api/v1/oncall/records/*', { fixture: 'oncall/updatedRecord.json' }).as('updateRecord');
+        cy.intercept('GET', '/api/v1/SmartCareAlert/records*', { fixture: 'SmartCareAlert/activeRecords.json' }).as('getRecords');
+        cy.intercept('GET', '/api/v1/SmartCareAlert/staff/available*', { fixture: 'SmartCareAlert/availableStaff.json' }).as('getStaff');
+        cy.intercept('POST', '/api/v1/SmartCareAlert/records', { fixture: 'SmartCareAlert/newRecord.json' }).as('createRecord');
+        cy.intercept('PATCH', '/api/v1/SmartCareAlert/records/*', { fixture: 'SmartCareAlert/updatedRecord.json' }).as('updateRecord');
         
-        // Visit the OnCall dashboard
-        cy.visit('/care/oncall');
+        // Visit the SmartCareAlert dashboard
+        cy.visit('/care/SmartCareAlert');
     });
 
     it('should load and display the dashboard', () => {

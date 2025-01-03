@@ -21,34 +21,51 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Invalid credentials")
-        }
+        try {
+          if (!credentials?.email || !credentials?.password) {
+            console.error('Missing credentials')
+            throw new Error("Please provide both email and password")
+          }
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-          include: {
-            organization: true,
-          },
-        })
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email },
+            include: {
+              organization: true,
+              careHome: true,
+            },
+          })
 
-        if (!user) {
-          throw new Error("Invalid credentials")
-        }
+          if (!user) {
+            console.error('User not found:', credentials.email)
+            throw new Error("Invalid credentials")
+          }
 
-        const isPasswordValid = await compare(credentials.password, user.password)
+          if (!user.hashedPassword) {
+            console.error('User has no password:', credentials.email)
+            throw new Error("Please use magic link to sign in")
+          }
 
-        if (!isPasswordValid) {
-          throw new Error("Invalid credentials")
-        }
+          const isPasswordValid = await compare(credentials.password, user.hashedPassword)
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: `${user.firstName} ${user.lastName}`,
-          role: user.role,
-          organizationId: user.organizationId,
-          organization: user.organization,
+          if (!isPasswordValid) {
+            console.error('Invalid password for user:', credentials.email)
+            throw new Error("Invalid credentials")
+          }
+
+          console.log('User authenticated successfully:', credentials.email)
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            organizationId: user.organizationId,
+            organization: user.organization,
+            careHomeId: user.careHomeId,
+            careHome: user.careHome,
+          }
+        } catch (error) {
+          console.error('Authorization error:', error)
+          throw error
         }
       }
     })
@@ -63,6 +80,8 @@ const handler = NextAuth({
         token.role = user.role
         token.organizationId = user.organizationId
         token.organization = user.organization
+        token.careHomeId = user.careHomeId
+        token.careHome = user.careHome
       }
       return token
     },
@@ -71,13 +90,17 @@ const handler = NextAuth({
         session.user.role = token.role
         session.user.organizationId = token.organizationId
         session.user.organization = token.organization
+        session.user.careHomeId = token.careHomeId
+        session.user.careHome = token.careHome
       }
       return session
     }
   },
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
+  debug: process.env.NODE_ENV === 'development',
 })
 
 export { handler as GET, handler as POST }

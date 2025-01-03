@@ -6,7 +6,7 @@ import { useEmergencyResponse } from '@/hooks/useEmergencyResponse';
 import { EmergencyMode } from '../medications/emergency/EmergencyMode';
 import { AutomatedAlerts } from '../medications/alerts/AutomatedAlerts';
 import { useEffect, useState } from 'react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/UseToast';
 import { Skeleton } from '@/components/ui/skeleton';
 
 interface EmergencyDashboardProps {

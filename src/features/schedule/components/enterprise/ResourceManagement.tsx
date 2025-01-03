@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table";
-import { Badge } from "@/components/ui/Badge";
-import { Progress } from "@/components/ui/Progress";
+import { Badge } from "@/components/ui/Badge/Badge";
+import { Progress } from "@/components/ui/Progress/Progress";
 import { ScrollArea } from "@/components/ui/ScrollArea";
 
 export function ResourceManagement() {

@@ -10,8 +10,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/Input/Input';
+} from '@/components/ui/Form';
+import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button/Button';
 import { Textarea } from '@/components/ui/Textarea';
 import {
@@ -20,8 +20,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/Select/Select';
-import { Checkbox } from '@/components/ui/checkbox';
+} from '@/components/ui/Form/Select';
+import { Checkbox } from '@/components/ui/Checkbox';
 import { useToast } from '@/components/ui/UseToast';
 import { CreateHospitalPassInput } from '../../types/hospitalPass';
 import { useHospitalPasses } from '../../hooks/useHospitalPasses';

@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button/Button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/Dialog";
-import { Input } from "@/components/ui/Input";
+  DialogFooter,
+  DialogDescription,
+} from "@/components/ui/Dialog/Dialog";
+import { Input } from "@/components/ui/Form/Input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/Select";
-import { Badge } from "@/components/ui/Badge";
-import { ScrollArea } from "@/components/ui/ScrollArea";
-import { Separator } from "@/components/ui/Separator";
+} from "@/components/ui/Select/Select";
+import { Badge } from "@/components/ui/Badge/Badge";
+import { ScrollArea } from "@/components/ui/ScrollArea/ScrollArea";
+import { Separator } from "@/components/ui/Separator/Separator";
 import { format, isAfter } from 'date-fns';
 
 interface Training {

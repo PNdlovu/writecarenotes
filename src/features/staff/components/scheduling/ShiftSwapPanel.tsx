@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { staffService } from '../../services/staffService';
+import { OnCallStaffService } from '../../../../app/api/oncall/services/StaffService';
 import { ShiftSwapRequest, ShiftAssignment, StaffMember } from '../../types/staff';
 import { Dialog } from '@headlessui/react';
 import { format } from 'date-fns';
@@ -16,6 +16,8 @@ interface ShiftSwapPanelProps {
   currentShiftId: string;
   onUpdate: () => void;
 }
+
+const staffService = OnCallStaffService.getInstance();
 
 export const ShiftSwapPanel: React.FC<ShiftSwapPanelProps> = ({
   currentStaffId,

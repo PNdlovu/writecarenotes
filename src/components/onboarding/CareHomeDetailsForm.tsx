@@ -6,7 +6,7 @@ import * as z from 'zod'
 import { Button } from '@/components/ui/Button/Button'
 import { Input } from '@/components/ui/Input/Input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form'
-import { toast } from '@/components/ui/use-toast'
+import { toast } from '@/components/ui/UseToast'
 
 const formSchema = z.object({
   cqcNumber: z.string().min(1, 'CQC registration number is required'),

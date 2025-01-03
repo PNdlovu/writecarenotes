@@ -16,36 +16,27 @@ import {
   StorageQuota,
   NetworkStatus,
   SyncStatus,
-  ConflictResolution,
-  ConflictResolutionDetails,
-  ConflictStrategy,
-  ConflictDetails,
-  OperationalTransform,
-  MergeStrategy,
-  DiffResult
+  ConflictResolution
 } from '../types';
 import { StorageError, SyncError } from '../types/errors';
 
 export class OfflineService {
   private static instance: OfflineService;
-  private db: IndexedDB;
-  private networkMonitor: NetworkMonitor;
-  private syncQueue: SyncQueue;
-  private conflictResolver: ConflictResolver;
+  private db: IndexedDB | null = null;
+  private networkMonitor: NetworkMonitor | null = null;
+  private syncQueue: SyncQueue | null = null;
+  private conflictResolver: ConflictResolver | null = null;
   private logger: Logger;
   private metrics: Metrics;
-  private config: OfflineConfig;
+  private config: OfflineConfig | null = null;
   private isInitialized = false;
   private syncInProgress = false;
   private lastSyncTimestamp = 0;
+  private isServerSide = typeof window === 'undefined';
 
   private constructor() {
     this.logger = new Logger('OfflineService');
     this.metrics = new Metrics('offline');
-    this.db = new IndexedDB();
-    this.networkMonitor = new NetworkMonitor();
-    this.syncQueue = new SyncQueue();
-    this.conflictResolver = new ConflictResolver();
   }
 
   public static getInstance(): OfflineService {
@@ -56,51 +47,66 @@ export class OfflineService {
   }
 
   async initialize(config: OfflineConfig): Promise<void> {
+    // Skip initialization on server side
+    if (this.isServerSide) {
+      this.logger.info('Skipping offline service initialization on server side');
+      return;
+    }
+
     if (this.isInitialized) return;
 
     try {
       this.config = config;
       
-      // Only initialize IndexedDB if we're in a browser environment
-      if (typeof window !== 'undefined') {
-        try {
-          await this.db.initialize(config.storage);
-        } catch (error) {
-          this.logger.warn('Failed to initialize IndexedDB, offline storage will not be available', { error });
-        }
+      // Initialize services
+      this.db = new IndexedDB();
+      this.networkMonitor = new NetworkMonitor();
+      this.syncQueue = new SyncQueue();
+      this.conflictResolver = new ConflictResolver();
+      
+      try {
+        await this.db.initialize(config.storage);
+      } catch (error) {
+        this.logger.warn('Failed to initialize IndexedDB, offline storage will not be available', { error });
+        this.db = null;
       }
       
-      this.networkMonitor.initialize({
-        pingEndpoint: config.network.pingEndpoint,
-        pingInterval: config.network.pingInterval,
-        onStatusChange: this.handleNetworkStatusChange.bind(this)
-      });
+      if (this.networkMonitor) {
+        this.networkMonitor.initialize({
+          pingEndpoint: config.network.pingEndpoint,
+          pingInterval: config.network.pingInterval,
+          onStatusChange: this.handleNetworkStatusChange.bind(this)
+        });
+      }
 
-      await this.syncQueue.initialize({
-        maxRetries: config.sync.maxRetries,
-        retryDelay: config.sync.retryDelay,
-        batchSize: config.sync.batchSize
-      });
+      if (this.syncQueue) {
+        await this.syncQueue.initialize({
+          maxRetries: config.sync.maxRetries,
+          retryDelay: config.sync.retryDelay,
+          batchSize: config.sync.batchSize
+        });
+      }
 
       // Setup periodic cleanup
-      if (typeof window !== 'undefined') {
-        setInterval(() => this.cleanupStorage(), config.storage.cleanupInterval);
-      }
+      setInterval(() => this.cleanupStorage(), config.storage.cleanupInterval);
 
       this.isInitialized = true;
       this.logger.info('Offline service initialized');
       
       // Initial sync if online
-      if (this.networkMonitor.isOnline()) {
+      if (this.networkMonitor?.isOnline()) {
         await this.sync();
       }
     } catch (error) {
       this.logger.error('Failed to initialize offline service', { error });
-      throw new Error('Failed to initialize offline service');
+      // Don't throw error, just log it
+      this.logger.warn('Offline service will run in limited mode');
     }
   }
 
   private async handleNetworkStatusChange(status: NetworkStatus): Promise<void> {
+    if (!this.isInitialized || this.isServerSide) return;
+
     if (status === 'online') {
       this.logger.info('Network connection restored');
       await this.sync();
@@ -117,7 +123,10 @@ export class OfflineService {
       priority?: 'high' | 'normal' | 'low';
     } = {}
   ): Promise<void> {
-    this.checkInitialization();
+    if (!this.isInitialized || !this.db || this.isServerSide) {
+      this.logger.warn('Offline storage not available');
+      return;
+    }
 
     try {
       // Check storage quota
@@ -150,7 +159,10 @@ export class OfflineService {
   }
 
   async retrieve<T>(key: string): Promise<T | null> {
-    this.checkInitialization();
+    if (!this.isInitialized || !this.db || this.isServerSide) {
+      this.logger.warn('Offline storage not available');
+      return null;
+    }
 
     try {
       const entry = await this.db.get<T>(key);
@@ -170,9 +182,11 @@ export class OfflineService {
   }
 
   async sync(): Promise<SyncStatus> {
-    this.checkInitialization();
+    if (!this.isInitialized || !this.syncQueue || this.isServerSide) {
+      return { status: 'skipped', timestamp: this.lastSyncTimestamp };
+    }
 
-    if (this.syncInProgress || !this.networkMonitor.isOnline()) {
+    if (this.syncInProgress || !this.networkMonitor?.isOnline()) {
       return { status: 'skipped', timestamp: this.lastSyncTimestamp };
     }
 
@@ -186,12 +200,14 @@ export class OfflineService {
       for (const operation of operations) {
         try {
           // Check for conflicts
-          const conflicts = await this.conflictResolver.checkConflicts(operation);
-          
-          if (conflicts.length > 0) {
-            const resolution = await this.conflictResolver.resolveConflicts(conflicts);
-            if (resolution === ConflictResolution.ABORT) {
-              continue;
+          if (this.conflictResolver) {
+            const conflicts = await this.conflictResolver.checkConflicts(operation);
+            
+            if (conflicts.length > 0) {
+              const resolution = await this.conflictResolver.resolveConflicts(conflicts);
+              if (resolution === ConflictResolution.ABORT) {
+                continue;
+              }
             }
           }
 
@@ -206,7 +222,7 @@ export class OfflineService {
             error 
           });
           
-          if (operation.retryCount >= this.config.sync.maxRetries) {
+          if (operation.retryCount >= (this.config?.sync.maxRetries ?? 3)) {
             await this.syncQueue.markFailed(operation.id);
           } else {
             await this.syncQueue.incrementRetry(operation.id);
@@ -234,8 +250,9 @@ export class OfflineService {
   }
 
   private async executeSyncOperation(operation: SyncOperation): Promise<void> {
-    const { type, resourceType, resourceId, data, baseVersion } = operation;
+    if (!this.config || this.isServerSide) return;
 
+    const { type, resourceType, resourceId, data, baseVersion } = operation;
     const endpoint = `${this.config.apiEndpoint}/${resourceType}/${resourceId}`;
     
     const response = await fetch(endpoint, {
@@ -248,16 +265,21 @@ export class OfflineService {
     });
 
     if (!response.ok) {
-      throw new Error(`API request failed: ${response.statusText}`);
+      throw new Error(`Failed to execute sync operation: ${response.statusText}`);
     }
   }
 
   private async cleanupStorage(): Promise<void> {
+    if (!this.isInitialized || !this.db || this.isServerSide) return;
+
     try {
-      // Delete expired items
-      const expired = await this.db.getExpiredItems();
-      for (const item of expired) {
-        await this.db.delete(item.id);
+      const entries = await this.db.getAll();
+      const now = Date.now();
+
+      for (const [key, entry] of entries) {
+        if (entry.expiresAt && entry.expiresAt < now) {
+          await this.db.delete(key);
+        }
       }
     } catch (error) {
       this.logger.error('Failed to cleanup storage', { error });
@@ -265,19 +287,11 @@ export class OfflineService {
   }
 
   async getStorageQuota(): Promise<StorageQuota> {
-    this.checkInitialization();
-    return await this.db.getQuota();
-  }
-
-  async getPendingChangesCount(module: string): Promise<number> {
-    this.checkInitialization();
-    try {
-      const operations = await this.syncQueue.getPendingOperations();
-      return operations.filter(op => op.resourceType === module).length;
-    } catch (error) {
-      this.logger.error('Failed to get pending changes count', { module, error });
-      return 0;
+    if (!this.isInitialized || !this.db || this.isServerSide) {
+      return { used: 0, total: 0, percentage: 0 };
     }
+
+    return this.db.getQuota();
   }
 
   private checkInitialization(): void {

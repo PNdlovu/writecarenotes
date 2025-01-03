@@ -1,39 +1,43 @@
 /**
- * @fileoverview Accessibility Settings Component
+ * @writecarenotes.com
+ * @fileoverview Accessibility settings component for theme customization
  * @version 1.0.0
- * @created 2024-03-21
- * @copyright Write Care Notes Ltd
+ * @created 2024-01-03
+ * @updated 2024-01-03
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
  */
 
-'use client';
-
-import React from 'react';
-import { useTheme } from '../hooks/useTheme';
+import { Label } from "@/components/ui/Label"
+import { Switch } from "@/components/ui/Switch"
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/Select';
-import { Switch } from '@/components/ui/Switch';
-import { Label } from '@/components/ui/Form/Label';
+} from "@/components/ui/select"
+import { useTheme } from "next-themes"
 
 export function AccessibilitySettings() {
-  const { theme, updateAccessibility } = useTheme();
+  const { theme, setTheme } = useTheme()
 
   return (
     <div className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="fontSize">Font Size</Label>
-        <Select
-          value={theme.fontSize}
-          onValueChange={(value) => updateAccessibility({ fontSize: value as any })}
-        >
-          <SelectTrigger id="fontSize">
-            <SelectValue placeholder="Select font size" />
+      <div className="flex items-center justify-between">
+        <Label htmlFor="dark-mode">Dark Mode</Label>
+        <Switch
+          id="dark-mode"
+          checked={theme === "dark"}
+          onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+        />
+      </div>
+
+      <div className="flex items-center justify-between">
+        <Label htmlFor="font-size">Font Size</Label>
+        <Select value="medium" onValueChange={() => {}}>
+          <SelectTrigger className="w-32">
+            <SelectValue placeholder="Select size" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="small">Small</SelectItem>
@@ -43,30 +47,15 @@ export function AccessibilitySettings() {
         </Select>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="contrast">Contrast</Label>
-        <Select
-          value={theme.contrast}
-          onValueChange={(value) => updateAccessibility({ contrast: value as any })}
-        >
-          <SelectTrigger id="contrast">
-            <SelectValue placeholder="Select contrast" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="normal">Normal</SelectItem>
-            <SelectItem value="high">High Contrast</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="flex items-center justify-between">
+        <Label htmlFor="motion">Reduce Motion</Label>
+        <Switch id="motion" />
       </div>
 
       <div className="flex items-center justify-between">
-        <Label htmlFor="motion">Reduce Motion</Label>
-        <Switch
-          id="motion"
-          checked={theme.reducedMotion}
-          onCheckedChange={(checked) => updateAccessibility({ reducedMotion: checked })}
-        />
+        <Label htmlFor="contrast">High Contrast</Label>
+        <Switch id="contrast" />
       </div>
     </div>
-  );
+  )
 } 

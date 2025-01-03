@@ -24,9 +24,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/Form/Input';
-import { Button } from '@/components/ui/Button/Button';
+} from '@/components/ui/Form';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { Textarea } from '@/components/ui/Textarea';
 import { useSuppliers } from '../../hooks/useSuppliers';

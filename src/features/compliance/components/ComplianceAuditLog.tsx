@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Card } from "@/components/ui/Card"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea } from "@/components/ui/ScrollArea"
 import { Avatar } from "@/components/ui/Avatar"
 import { Badge } from "@/components/ui/Badge/Badge"
 import { formatDistanceToNow } from 'date-fns'

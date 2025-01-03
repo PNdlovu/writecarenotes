@@ -8,9 +8,9 @@ import { scheduleAPI } from '../../api/scheduleAPI';
 import { Badge } from "@/components/ui/Badge/Badge";
 import { Button } from "@/components/ui/Button/Button";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/Card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/Table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/Dialog/Dialog";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/components/ui/Form/Textarea";
 
 interface ShiftBiddingProps {
   shifts: Shift[];

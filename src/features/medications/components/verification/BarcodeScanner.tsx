@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/Button/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card/Card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/Alert/Alert";
 import { Loader2, Camera, AlertTriangle } from "lucide-react";
 
 interface BarcodeScannerProps {

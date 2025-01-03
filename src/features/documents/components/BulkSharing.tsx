@@ -18,8 +18,8 @@ import {
   DialogTitle,
 } from '@/components/ui/Dialog/Dialog';
 import { Button } from '@/components/ui/Button/Button';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/Label';
+import { Switch } from '@/components/ui/Switch';
 import {
   Select,
   SelectContent,
@@ -29,7 +29,7 @@ import {
 } from '@/components/ui/Select/Select';
 import { Input } from '@/components/ui/Input/Input';
 import { Badge } from '@/components/ui/Badge/Badge';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/UseToast';
 import {
   Table,
   TableBody,
@@ -37,7 +37,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/ui/Table';
 
 interface Staff {
   id: string;

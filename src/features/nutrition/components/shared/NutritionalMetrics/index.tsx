@@ -1,6 +1,6 @@
 import React from 'react'
 import { Card } from '@/components/ui/Card'
-import { Progress } from '@/components/ui/Progress'
+import { Progress } from '@/components/ui/Progress/Progress'
 
 interface NutritionalMetricsProps {
   calories: number

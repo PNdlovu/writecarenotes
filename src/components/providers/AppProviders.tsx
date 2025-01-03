@@ -3,7 +3,7 @@ import { ThemeProvider } from '@/components/ui/ThemeProvider';
 import { AccessibilityProvider } from '@/lib/accessibility/AccessibilityProvider';
 import { OfflineProvider } from '@/lib/offline/OfflineProvider';
 import { I18nProviderClient } from '@/lib/i18n/config';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/components/ui/Toaster';
 import { OfflineStatus } from '@/components/offline/OfflineStatus';
 import { DocumentProvider } from '../features/documents/providers/DocumentProvider';
 

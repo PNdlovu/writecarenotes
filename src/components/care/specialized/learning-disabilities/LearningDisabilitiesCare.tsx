@@ -45,8 +45,8 @@ import { BaseCareComponent, BaseCareProps } from '../../base/BaseCareComponent';
 // UI Components
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button/Button';
-import { Progress } from '@/components/ui/Progress';
-import { Select } from '@/components/ui/select';
+import { Progress } from '@/components/ui/Progress/Progress';
+import { Select } from '@/components/ui/Select';
 
 interface LearningDisabilitiesCareProps extends BaseCareProps {
   learningAssessment?: {

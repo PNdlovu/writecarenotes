@@ -37,7 +37,7 @@ export * from './Sheet'
 export * from './Skeleton'
 export * from './Slider'
 export * from './Table'
-export * from './Tabs/Tabs'
+export * from './Tabs'
 export * from './Toast/Toast'
 export { Tooltip } from "./Tooltip";
 export * from './Typography' 

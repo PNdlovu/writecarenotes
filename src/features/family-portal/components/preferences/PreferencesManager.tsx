@@ -13,13 +13,13 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
+  DialogDescription,
 } from "@/components/ui/Dialog/Dialog";
 import { Alert, AlertDescription } from "@/components/ui/Alert";
-import { Icons } from "@/components/ui/Icons";
+import { Save, Edit, AlertCircle } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
@@ -118,7 +118,7 @@ export const PreferencesManager: React.FC<PreferencesManagerProps> = ({
         </div>
         {hasUnsavedChanges && (
           <Button onClick={handleSave}>
-            <Icons.save className="mr-2 h-4 w-4" />
+            <Save className="mr-2 h-4 w-4" />
             Save Changes
           </Button>
         )}
@@ -132,10 +132,10 @@ export const PreferencesManager: React.FC<PreferencesManagerProps> = ({
               <h3 className="text-2xl font-semibold tracking-tight">Notifications</h3>
               <Button
                 variant="ghost"
-                size="icon"
+                size="sm"
                 onClick={() => setIsEditNotificationsOpen(true)}
               >
-                <Icons.edit className="h-4 w-4" />
+                <Edit className="h-4 w-4" />
               </Button>
             </div>
 
@@ -349,7 +349,7 @@ export const PreferencesManager: React.FC<PreferencesManagerProps> = ({
                   </div>
                   {communicationPrefs.doNotDisturb && (
                     <Alert>
-                      <Icons.alertCircle className="h-4 w-4" />
+                      <AlertCircle className="h-4 w-4" />
                       <AlertDescription>
                         Non-emergency notifications will be muted during Do Not Disturb hours.
                       </AlertDescription>

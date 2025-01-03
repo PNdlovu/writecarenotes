@@ -1,25 +1,30 @@
-'use client'
+/**
+ * @writecarenotes.com
+ * @fileoverview Application providers wrapper
+ * @version 1.0.0
+ * @created 2024-01-03
+ * @updated 2024-01-03
+ * @author Write Care Notes team
+ * @copyright Phibu Cloud Solutions Ltd
+ */
 
-import { SessionProvider } from 'next-auth/react'
-import { ThemeProvider } from '@/components/ui/theme-provider'
-import { AuthProvider } from '@/lib/contexts/auth-context'
-import { ErrorBoundary } from '@/error/components/ErrorBoundary'
+"use client"
 
-export function Providers({ children }: { children: React.ReactNode }) {
+import { SessionProvider } from "next-auth/react"
+import { ThemeProvider } from "@/features/theme/providers/ThemeProvider"
+import { Toaster } from "@/components/ui/Toast/Toaster"
+
+interface ProvidersProps {
+  children: React.ReactNode
+}
+
+export function Providers({ children }: ProvidersProps) {
   return (
-    <ErrorBoundary>
-      <SessionProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>
-            {children}
-          </AuthProvider>
-        </ThemeProvider>
-      </SessionProvider>
-    </ErrorBoundary>
+    <SessionProvider>
+      <ThemeProvider>
+        {children}
+        <Toaster />
+      </ThemeProvider>
+    </SessionProvider>
   )
 }

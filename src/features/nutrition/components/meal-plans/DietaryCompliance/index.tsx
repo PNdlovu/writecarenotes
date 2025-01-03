@@ -2,7 +2,7 @@ import React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { nutritionalAnalysisService } from '@/features/nutrition/services/nutritional-analysis-service'
 import { Alert } from '@/components/ui/Alert'
-import { Progress } from '@/components/ui/Progress'
+import { Progress } from '@/components/ui/Progress/Progress'
 
 interface DietaryComplianceProps {
   mealPlanId: string

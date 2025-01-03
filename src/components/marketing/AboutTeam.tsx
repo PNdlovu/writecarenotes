@@ -12,7 +12,7 @@
 import { Card } from '@/components/ui/Card'
 import { Linkedin, Twitter, Mail } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { PlaceholderImage } from '@/components/ui/placeholder-image'
+import { PlaceholderImage } from '@/components/ui/PlaceholderImage'
 
 const team = [
   {
