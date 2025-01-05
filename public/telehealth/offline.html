@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write Care Notes - Offline Mode</title>
+    <link rel="stylesheet" href="/telehealth/assets/offline.css">
+</head>
+<body>
+    <div class="offline-container">
+        <div class="offline-content">
+            <h1>Currently Offline</h1>
+            <p>You're currently offline, but don't worry! You can still:</p>
+            <ul>
+                <li>View cached consultations</li>
+                <li>Create new consultation drafts</li>
+                <li>Review offline documents</li>
+            </ul>
+            <p>Your changes will sync automatically when you're back online.</p>
+            
+            <div class="offline-status">
+                <div class="status-indicator"></div>
+                <span>Offline Mode</span>
+            </div>
+
+            <div class="offline-actions">
+                <button id="viewCached" class="btn primary">View Cached Data</button>
+                <button id="createDraft" class="btn secondary">Create Draft</button>
+            </div>
+
+            <div class="sync-status">
+                <h3>Pending Sync</h3>
+                <div id="syncQueue"></div>
+            </div>
+        </div>
+    </div>
+    <script src="/telehealth/assets/offline.js"></script>
+</body>
+</html> 

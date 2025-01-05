@@ -1,0 +1,16 @@
+{
+    "audit": {
+        "title": "Audit Log",
+        "actions": {
+            "view": "View Audit Log",
+            "export": "Export Audit Log",
+            "filter": "Filter Logs"
+        },
+        "fields": {
+            "timestamp": "Timestamp",
+            "action": "Action",
+            "user": "User",
+            "details": "Details"
+        }
+    }
+}

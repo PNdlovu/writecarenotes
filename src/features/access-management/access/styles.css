@@ -1,0 +1,77 @@
+:root {
+  --font-size: 16px;
+  --high-contrast-text: #ffffff;
+  --high-contrast-bg: #000000;
+  --reduced-motion-duration: 0s;
+}
+
+/* Base font size */
+html {
+  font-size: var(--font-size);
+}
+
+/* High Contrast Mode */
+.high-contrast {
+  background-color: var(--high-contrast-bg);
+  color: var(--high-contrast-text);
+}
+
+.high-contrast a {
+  color: #ffff00;
+}
+
+.high-contrast button {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid #ffffff;
+}
+
+/* Reduced Motion */
+.reduce-motion * {
+  animation-duration: var(--reduced-motion-duration) !important;
+  transition-duration: var(--reduced-motion-duration) !important;
+}
+
+/* Color Blind Mode */
+.color-blind {
+  /* Use color-blind friendly palette */
+  --primary-color: #0077bb;   /* Blue */
+  --secondary-color: #ee7733; /* Orange */
+  --success-color: #009988;   /* Teal */
+  --error-color: #ee3377;     /* Magenta */
+  --warning-color: #eec300;   /* Yellow */
+}
+
+/* Focus Styles for Keyboard Navigation */
+:focus {
+  outline: 3px solid #4a90e2;
+  outline-offset: 2px;
+}
+
+/* Screen Reader Only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip Links */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000000;
+  color: white;
+  padding: 8px;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+} 

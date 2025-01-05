@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Write Care Notes - Offline</title>
+  <style>
+    :root {
+      --primary: #0070f3;
+      --secondary: #666;
+      --background: #fff;
+      --error: #ff4444;
+      --success: #00c853;
+      --warning: #ffa000;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--background);
+      color: var(--secondary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .container {
+      max-width: 600px;
+      padding: 2rem;
+    }
+
+    .logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      color: var(--primary);
+      font-size: 2rem;
+      margin: 0 0 1rem;
+    }
+
+    p {
+      margin: 0 0 1.5rem;
+      line-height: 1.5;
+    }
+
+    .status {
+      margin: 2rem 0;
+      padding: 1rem;
+      border-radius: 8px;
+      background: #f5f5f5;
+    }
+
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .status-item:last-child {
+      border-bottom: none;
+    }
+
+    .status-label {
+      font-weight: 500;
+    }
+
+    .status-value {
+      padding: 0.25rem 0.75rem;
+      border-radius: 16px;
+      font-size: 0.875rem;
+    }
+
+    .status-value.online {
+      background: var(--success);
+      color: white;
+    }
+
+    .status-value.offline {
+      background: var(--warning);
+      color: white;
+    }
+
+    .status-value.error {
+      background: var(--error);
+      color: white;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      background: var(--primary);
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .button:hover {
+      background: #0051cc;
+    }
+
+    .button:active {
+      background: #003d99;
+    }
+
+    .button.secondary {
+      background: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .button.secondary:hover {
+      background: #f0f7ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="/logo.png" alt="Write Care Notes Logo" class="logo">
+    <h1>You're Offline</h1>
+    <p>
+      Don't worry! Write Care Notes works offline. You can continue working,
+      and your changes will sync automatically when you're back online.
+    </p>
+
+    <div class="status">
+      <div class="status-item">
+        <span class="status-label">Connection Status</span>
+        <span id="connection-status" class="status-value offline">Offline</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Pending Changes</span>
+        <span id="pending-changes">Checking...</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Last Sync</span>
+        <span id="last-sync">Never</span>
+      </div>
+      <div class="status-item">
+        <span class="status-label">Storage Usage</span>
+        <span id="storage-usage">Calculating...</span>
+      </div>
+    </div>
+
+    <div>
+      <a href="/" class="button">Try Again</a>
+      <button onclick="clearData()" class="button secondary" style="margin-left: 1rem">
+        Clear Data
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Update connection status
+    function updateConnectionStatus() {
+      const status = document.getElementById('connection-status');
+      if (navigator.onLine) {
+        status.textContent = 'Online';
+        status.classList.remove('offline');
+        status.classList.add('online');
+      } else {
+        status.textContent = 'Offline';
+        status.classList.remove('online');
+        status.classList.add('offline');
+      }
+    }
+
+    // Update pending changes count
+    async function updatePendingChanges() {
+      try {
+        const db = await openDB();
+        const count = await getQueueSize(db);
+        document.getElementById('pending-changes').textContent = 
+          count > 0 ? `${count} changes` : 'No changes';
+      } catch (error) {
+        document.getElementById('pending-changes').textContent = 'Error';
+      }
+    }
+
+    // Update last sync time
+    function updateLastSync() {
+      const lastSync = localStorage.getItem('lastSync');
+      if (lastSync) {
+        const date = new Date(parseInt(lastSync));
+        document.getElementById('last-sync').textContent = 
+          formatDistanceToNow(date);
+      }
+    }
+
+    // Update storage usage
+    async function updateStorageUsage() {
+      try {
+        if ('storage' in navigator && 'estimate' in navigator.storage) {
+          const estimate = await navigator.storage.estimate();
+          const usage = formatBytes(estimate.usage || 0);
+          const quota = formatBytes(estimate.quota || 0);
+          document.getElementById('storage-usage').textContent = 
+            `${usage} / ${quota}`;
+        } else {
+          const db = await openDB();
+          const data = await getOfflineData(db);
+          const usage = formatBytes(new Blob([JSON.stringify(data)]).size);
+          document.getElementById('storage-usage').textContent = usage;
+        }
+      } catch (error) {
+        document.getElementById('storage-usage').textContent = 'Error';
+      }
+    }
+
+    // Format bytes to human readable string
+    function formatBytes(bytes) {
+      if (bytes === 0) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+    }
+
+    // Format relative time
+    function formatDistanceToNow(date) {
+      const seconds = Math.floor((new Date() - date) / 1000);
+      
+      if (seconds < 30) return 'just now';
+      if (seconds < 60) return 'less than a minute ago';
+      if (seconds < 120) return '1 minute ago';
+      
+      const minutes = Math.floor(seconds / 60);
+      if (minutes < 60) return `${minutes} minutes ago`;
+      if (minutes < 120) return '1 hour ago';
+      
+      const hours = Math.floor(minutes / 60);
+      if (hours < 24) return `${hours} hours ago`;
+      if (hours < 48) return 'yesterday';
+      
+      const days = Math.floor(hours / 24);
+      return `${days} days ago`;
+    }
+
+    // Open IndexedDB
+    async function openDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open('writecarenotes-offline', 1);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result);
+      });
+    }
+
+    // Get queue size
+    async function getQueueSize(db) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('syncQueue', 'readonly');
+        const store = tx.objectStore('syncQueue');
+        const request = store.count();
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result);
+      });
+    }
+
+    // Get offline data
+    async function getOfflineData(db) {
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('offlineStore', 'readonly');
+        const store = tx.objectStore('offlineStore');
+        const request = store.getAll();
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result);
+      });
+    }
+
+    // Clear offline data
+    async function clearData() {
+      if (!confirm('Are you sure? This will delete all offline data.')) {
+        return;
+      }
+
+      try {
+        const db = await openDB();
+        const tx = db.transaction(['offlineStore', 'syncQueue'], 'readwrite');
+        await Promise.all([
+          tx.objectStore('offlineStore').clear(),
+          tx.objectStore('syncQueue').clear()
+        ]);
+        localStorage.removeItem('lastSync');
+        location.reload();
+      } catch (error) {
+        console.error('Failed to clear data:', error);
+        alert('Failed to clear data. Please try again.');
+      }
+    }
+
+    // Initialize
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+    
+    updateConnectionStatus();
+    updatePendingChanges();
+    updateLastSync();
+    updateStorageUsage();
+
+    // Update status periodically
+    setInterval(() => {
+      updateConnectionStatus();
+      updatePendingChanges();
+      updateLastSync();
+      updateStorageUsage();
+    }, 30000);
+  </script>
+</body>
+</html> 

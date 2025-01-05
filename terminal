@@ -1,0 +1,2 @@
+# Remove only the api folder from documents
+rm -rf documents/api 

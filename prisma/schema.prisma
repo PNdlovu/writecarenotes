@@ -1,0 +1,188 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  STAFF
+  NURSE
+  MANAGER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum CareHomeType {
+  RESIDENTIAL
+  NURSING
+  DEMENTIA
+  LEARNING_DISABILITIES
+  MENTAL_HEALTH
+  CHILDREN
+  SUPPORTED_LIVING
+}
+
+enum Region {
+  ENGLAND
+  WALES
+  SCOTLAND
+  NORTHERN_IRELAND
+  IRELAND
+}
+
+enum RegulatoryBody {
+  CQC
+  OFSTED
+  CIW
+  CARE_INSPECTORATE
+  HIQA
+  RQIA
+}
+
+model User {
+  id                String       @id @default(cuid())
+  name              String
+  email             String       @unique
+  hashedPassword    String?
+  emailVerified     DateTime?
+  avatar            String?
+  role              UserRole     @default(USER)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  organizationId    String?
+  organization      Organization? @relation(fields: [organizationId], references: [id])
+  careHomeId        String?
+  careHome          CareHome?    @relation(fields: [careHomeId], references: [id])
+  staffProfile      Staff?
+  posts             Post[]
+
+  @@index([email])
+  @@index([role])
+  @@index([organizationId])
+  @@index([careHomeId])
+}
+
+model Organization {
+  id              String      @id @default(cuid())
+  name            String
+  code            String      @unique
+  type            String
+  address         String
+  phone           String
+  email           String
+  website         String?
+  status          String      @default("ACTIVE")
+  region          Region
+  regulatoryBody  RegulatoryBody
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  users           User[]
+  careHomes       CareHome[]
+  staff           Staff[]
+
+  @@index([code])
+  @@index([status])
+  @@index([region])
+}
+
+model CareHome {
+  id              String       @id @default(cuid())
+  name            String
+  type            CareHomeType
+  capacity        Int
+  address         String
+  phone           String
+  email           String
+  status          String       @default("ACTIVE")
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  users           User[]
+  staff           Staff[]
+  residents       Resident[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([organizationId])
+  @@index([status])
+  @@index([type])
+}
+
+model Staff {
+  id              String       @id @default(cuid())
+  userId          String       @unique
+  user            User         @relation(fields: [userId], references: [id])
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  careHomeId      String
+  careHome        CareHome     @relation(fields: [careHomeId], references: [id])
+  position        String
+  startDate       DateTime
+  endDate         DateTime?
+  isActive        Boolean      @default(true)
+  qualifications  String[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([userId])
+  @@index([organizationId])
+  @@index([careHomeId])
+}
+
+model Resident {
+  id              String       @id @default(cuid())
+  careHomeId      String
+  careHome        CareHome     @relation(fields: [careHomeId], references: [id])
+  firstName       String
+  lastName        String
+  dateOfBirth     DateTime
+  nhsNumber       String?
+  roomNumber      String?
+  admissionDate   DateTime
+  dischargeDate   DateTime?
+  status          String       @default("ACTIVE")
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([careHomeId])
+  @@index([status])
+  @@index([nhsNumber])
+}
+
+model Post {
+  id              String       @id @default(cuid())
+  title           String
+  slug            String       @unique
+  content         String
+  excerpt         String?
+  featuredImage   String?
+  status          String       @default("DRAFT")
+  publishedAt     DateTime?
+  authorId        String
+  author          User         @relation(fields: [authorId], references: [id])
+  categories      Category[]
+  regions         String[]
+  regulatoryBodies String[]
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([authorId])
+  @@index([status])
+  @@index([slug])
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  type      String
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([type])
+}

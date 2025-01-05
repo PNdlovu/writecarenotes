@@ -1,0 +1,158 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View",
+    "status": "Status",
+    "actions": "Actions",
+    "loading": "Loading...",
+    "noData": "No data available"
+  },
+  "journal": {
+    "title": "Journal Entries",
+    "new": "New Journal Entry",
+    "edit": "Edit Journal Entry",
+    "view": "View Journal Entry",
+    "fields": {
+      "date": "Date",
+      "reference": "Reference",
+      "description": "Description",
+      "debit": "Debit",
+      "credit": "Credit",
+      "account": "Account",
+      "costCenter": "Cost Centre"
+    },
+    "validation": {
+      "balanceRequired": "Debits must equal credits",
+      "minEntries": "At least two entries required",
+      "accountRequired": "Account is required",
+      "amountRequired": "Amount is required"
+    },
+    "status": {
+      "draft": "Draft",
+      "posted": "Posted",
+      "voided": "Voided"
+    }
+  },
+  "accounts": {
+    "title": "Chart of Accounts",
+    "new": "New Account",
+    "edit": "Edit Account",
+    "view": "View Account",
+    "types": {
+      "asset": "Asset",
+      "liability": "Liability",
+      "equity": "Equity",
+      "revenue": "Revenue",
+      "expense": "Expense"
+    },
+    "fields": {
+      "code": "Account Code",
+      "name": "Account Name",
+      "type": "Account Type",
+      "category": "Category",
+      "description": "Description",
+      "parent": "Parent Account",
+      "balance": "Balance"
+    }
+  },
+  "statements": {
+    "balanceSheet": "Balance Sheet",
+    "incomeStatement": "Income Statement",
+    "cashFlow": "Cash Flow Statement",
+    "trialBalance": "Trial Balance",
+    "sections": {
+      "assets": "Assets",
+      "liabilities": "Liabilities",
+      "equity": "Equity",
+      "revenue": "Revenue",
+      "expenses": "Expenses"
+    }
+  },
+  "tax": {
+    "vat": {
+      "title": "VAT Returns",
+      "new": "New VAT Return",
+      "view": "View VAT Return",
+      "fields": {
+        "period": "Period",
+        "vatDueSales": "VAT Due on Sales",
+        "vatDueAcquisitions": "VAT Due on EU Acquisitions",
+        "totalVatDue": "Total VAT Due",
+        "vatReclaimedCurrPeriod": "VAT Reclaimed",
+        "netVatDue": "Net VAT Due",
+        "totalValueSalesExVAT": "Total Value of Sales ex. VAT",
+        "totalValuePurchasesExVAT": "Total Value of Purchases ex. VAT",
+        "totalValueGoodsSuppliedExVAT": "Total Value of Supplies ex. VAT",
+        "totalAcquisitionsExVAT": "Total Value of Acquisitions ex. VAT"
+      },
+      "status": {
+        "draft": "Draft",
+        "submitted": "Submitted",
+        "accepted": "Accepted",
+        "rejected": "Rejected"
+      }
+    },
+    "mtd": {
+      "title": "Making Tax Digital",
+      "connect": "Connect to HMRC",
+      "disconnect": "Disconnect from HMRC",
+      "status": {
+        "connected": "Connected to HMRC",
+        "disconnected": "Not connected to HMRC"
+      }
+    }
+  },
+  "offlineEntry": {
+    "queued": "Entry Queued",
+    "willSyncWhenOnline": "This entry will be synchronized when you're back online",
+    "error": "Error",
+    "createFailed": "Failed to create entry",
+    "syncFailed": "Failed to sync entry"
+  },
+  "sync": {
+    "complete": "Sync Complete",
+    "entriesSynced": "All entries have been synchronized",
+    "error": "Sync Error",
+    "failed": "Failed to synchronize entries",
+    "inProgress": "Synchronization in progress",
+    "pendingEntries": "{{count}} entries pending sync"
+  },
+  "errors": {
+    "unauthorized": "You don't have permission to perform this action",
+    "invalidData": "Invalid data provided",
+    "serverError": "Server error occurred",
+    "networkError": "Network error occurred",
+    "conflictError": "Data conflict detected"
+  },
+  "compliance": {
+    "hmrc": {
+      "title": "HMRC Compliance",
+      "mtdEnabled": "MTD Enabled",
+      "vatRegistered": "VAT Registered",
+      "nextReturn": "Next Return Due"
+    },
+    "companies": {
+      "title": "Companies House",
+      "filingDue": "Filing Due",
+      "lastFiled": "Last Filed"
+    }
+  },
+  "audit": {
+    "title": "Audit Trail",
+    "fields": {
+      "date": "Date",
+      "user": "User",
+      "action": "Action",
+      "details": "Details"
+    },
+    "actions": {
+      "created": "Created",
+      "modified": "Modified",
+      "deleted": "Deleted",
+      "viewed": "Viewed"
+    }
+  }
+} 

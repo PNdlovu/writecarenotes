@@ -1,0 +1,105 @@
+{
+  "assessment": {
+    "title": "Assessment",
+    "labels": {
+      "resident": "Resident",
+      "type": "Assessment Type",
+      "status": "Status",
+      "dueDate": "Due Date",
+      "completedBy": "Completed By",
+      "completedAt": "Completion Date",
+      "witness": "Witness",
+      "attachments": "Attachments",
+      "notes": "Notes"
+    },
+    "types": {
+      "initial": "Initial Assessment",
+      "periodic": "Periodic Review",
+      "incident": "Incident Assessment",
+      "careReview": "Care Review"
+    },
+    "status": {
+      "draft": "Draft",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "archived": "Archived",
+      "requiresReview": "Requires Review",
+      "overdue": "Overdue"
+    },
+    "priority": {
+      "high": "High Priority",
+      "medium": "Medium Priority",
+      "low": "Low Priority"
+    },
+    "actions": {
+      "create": "Create Assessment",
+      "edit": "Edit Assessment",
+      "delete": "Delete Assessment",
+      "archive": "Archive Assessment",
+      "complete": "Complete Assessment",
+      "review": "Review Assessment",
+      "export": "Export Assessment",
+      "print": "Print Assessment",
+      "share": "Share Assessment",
+      "addWitness": "Add Witness",
+      "addAttachment": "Add Attachment",
+      "saveDraft": "Save Draft",
+      "submit": "Submit Assessment"
+    },
+    "messages": {
+      "createSuccess": "Assessment created successfully",
+      "updateSuccess": "Assessment updated successfully",
+      "deleteSuccess": "Assessment deleted successfully",
+      "archiveSuccess": "Assessment archived successfully",
+      "completeSuccess": "Assessment completed successfully",
+      "witnessRequired": "This assessment requires a witness",
+      "attachmentsRequired": "This assessment requires attachments",
+      "confirmDelete": "Are you sure you want to delete this assessment?",
+      "confirmArchive": "Are you sure you want to archive this assessment?",
+      "unsavedChanges": "You have unsaved changes"
+    },
+    "errors": {
+      "notFound": "Assessment not found",
+      "fetchFailed": "Failed to fetch assessment",
+      "createFailed": "Failed to create assessment",
+      "updateFailed": "Failed to update assessment",
+      "deleteFailed": "Failed to delete assessment",
+      "invalidStatus": "Invalid assessment status",
+      "invalidTransition": "Invalid status transition",
+      "validationError": "Validation error",
+      "requiredFieldMissing": "Required field missing",
+      "invalidDate": "Invalid date",
+      "invalidAnswerType": "Invalid answer type",
+      "unauthorized": "Unauthorized access",
+      "insufficientPermissions": "Insufficient permissions",
+      "duplicate": "Duplicate assessment",
+      "incomplete": "Assessment is incomplete",
+      "witnessRequired": "Witness is required",
+      "attachmentsRequired": "Attachments are required",
+      "lockedForEditing": "Assessment is locked for editing",
+      "systemError": "System error occurred",
+      "networkError": "Network error occurred",
+      "databaseError": "Database error occurred"
+    },
+    "validation": {
+      "required": "This field is required",
+      "invalidDate": "Please enter a valid date",
+      "futureDate": "Date cannot be in the future",
+      "pastDate": "Date cannot be in the past",
+      "minLength": "Minimum {{min}} characters required",
+      "maxLength": "Maximum {{max}} characters allowed",
+      "invalidFormat": "Invalid format"
+    },
+    "filters": {
+      "title": "Filters",
+      "status": "Filter by Status",
+      "type": "Filter by Type",
+      "priority": "Filter by Priority",
+      "timeframe": "Filter by Timeframe",
+      "resident": "Filter by Resident",
+      "completedBy": "Filter by Completed By",
+      "search": "Search Assessments",
+      "clearAll": "Clear All Filters"
+    }
+  }
+}

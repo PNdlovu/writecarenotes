@@ -1,0 +1,50 @@
+{
+  "audit": {
+    "title": "Audit Log",
+    "error": "Failed to load audit log",
+    "selectDateRange": "Select date range",
+    "selectCategory": "Select category",
+    "selectAction": "Select action",
+    "allCategories": "All Categories",
+    "allActions": "All Actions",
+    "medical": "Medical",
+    "personal": "Personal",
+    "financial": "Financial",
+    "communication": "Communication",
+    "view": "View",
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "export": "Export",
+    "share": "Share",
+    "reason": "Reason",
+    "resourceAccessed": "{{user}} {{action}} {{resource}}"
+  },
+  "permissions": {
+    "title": "Permission Manager",
+    "error": "Failed to load permissions",
+    "updateSuccess": "Permission Updated",
+    "updateSuccessDetail": "The permission has been updated successfully",
+    "updateError": "Update Failed",
+    "updateErrorDetail": "Failed to update the permission. Please try again.",
+    "medical": "Medical",
+    "personal": "Personal",
+    "financial": "Financial",
+    "communication": "Communication",
+    "read": "Read",
+    "write": "Write",
+    "admin": "Admin",
+    "toggle": "Toggle permission",
+    "details": "View Details",
+    "grantedTo": "Granted To",
+    "conditions": "Conditions",
+    "expiration": "Expiration Date"
+  },
+  "common": {
+    "offlineMode": "Offline Mode",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page",
+    "close": "Close"
+  }
+}

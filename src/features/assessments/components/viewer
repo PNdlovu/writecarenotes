@@ -1,0 +1,290 @@
+import React from 'react';
+import { Card } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/ScrollArea';
+import {
+  ClipboardList,
+  Clock,
+  AlertCircle,
+  CheckCircle2,
+  Calendar,
+  History,
+  FileText,
+  Edit,
+  Printer,
+  Share2,
+} from 'lucide-react';
+
+interface AssessmentSection {
+  title: string;
+  questions: {
+    id: string;
+    question: string;
+    type: 'TEXT' | 'CHECKBOX' | 'SELECT' | 'SCALE';
+    answer?: string | boolean | number;
+    notes?: string;
+  }[];
+}
+
+interface AssessmentHistory {
+  date: string;
+  action: string;
+  user: {
+    id: string;
+    name: string;
+  };
+  details?: string;
+}
+
+interface Assessment {
+  id: string;
+  title: string;
+  type: string;
+  residentId: string;
+  residentName: string;
+  dueDate: string;
+  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'OVERDUE' | 'REQUIRES_REVIEW';
+  priority: 'HIGH' | 'MEDIUM' | 'LOW';
+  description?: string;
+  sections: AssessmentSection[];
+  requiresWitnessing: boolean;
+  attachmentsRequired: boolean;
+  completedBy?: {
+    id: string;
+    name: string;
+  };
+  completedAt?: string;
+  witness?: {
+    id: string;
+    name: string;
+  };
+  attachments?: {
+    id: string;
+    name: string;
+    type: string;
+    url: string;
+  }[];
+  history: AssessmentHistory[];
+  lastUpdated: string;
+}
+
+interface AssessmentViewerProps {
+  assessment: Assessment;
+  onEdit: () => void;
+  onPrint: () => void;
+  onShare: () => void;
+  onComplete: () => void;
+}
+
+const statusColors = {
+  PENDING: 'bg-blue-100 text-blue-800',
+  IN_PROGRESS: 'bg-yellow-100 text-yellow-800',
+  COMPLETED: 'bg-green-100 text-green-800',
+  OVERDUE: 'bg-red-100 text-red-800',
+  REQUIRES_REVIEW: 'bg-purple-100 text-purple-800',
+};
+
+export function AssessmentViewer({
+  assessment,
+  onEdit,
+  onPrint,
+  onShare,
+  onComplete,
+}: AssessmentViewerProps) {
+  const getStatusIcon = (status: Assessment['status']) => {
+    switch (status) {
+      case 'PENDING':
+        return <Clock className="h-4 w-4" />;
+      case 'IN_PROGRESS':
+        return <ClipboardList className="h-4 w-4" />;
+      case 'COMPLETED':
+        return <CheckCircle2 className="h-4 w-4" />;
+      case 'OVERDUE':
+        return <AlertCircle className="h-4 w-4" />;
+      case 'REQUIRES_REVIEW':
+        return <ClipboardList className="h-4 w-4" />;
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <Card className="p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <div className="flex items-center space-x-2 mb-2">
+              <h1 className="text-2xl font-semibold">{assessment.title}</h1>
+              <Badge
+                className={`${
+                  statusColors[assessment.status]
+                } flex items-center space-x-1`}
+              >
+                {getStatusIcon(assessment.status)}
+                <span>{assessment.status.replace('_', ' ')}</span>
+              </Badge>
+              {assessment.priority === 'HIGH' && (
+                <Badge variant="destructive">High Priority</Badge>
+              )}
+            </div>
+            <p className="text-gray-500">
+              Resident: {assessment.residentName}
+            </p>
+          </div>
+          
+          <div className="flex items-center space-x-2">
+            {assessment.status !== 'COMPLETED' && (
+              <Button onClick={onComplete} variant="default">
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                Complete Assessment
+              </Button>
+            )}
+            <Button onClick={onEdit} variant="outline">
+              <Edit className="h-4 w-4 mr-2" />
+              Edit
+            </Button>
+            <Button onClick={onPrint} variant="outline">
+              <Printer className="h-4 w-4 mr-2" />
+              Print
+            </Button>
+            <Button onClick={onShare} variant="outline">
+              <Share2 className="h-4 w-4 mr-2" />
+              Share
+            </Button>
+          </div>
+        </div>
+
+        <Tabs defaultValue="details">
+          <TabsList>
+            <TabsTrigger value="details">
+              <FileText className="h-4 w-4 mr-2" />
+              Details
+            </TabsTrigger>
+            <TabsTrigger value="history">
+              <History className="h-4 w-4 mr-2" />
+              History
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="details" className="space-y-6">
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div>
+                <p className="text-sm text-gray-500">Assessment Type</p>
+                <p className="font-medium">{assessment.type}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Due Date</p>
+                <p className="font-medium">
+                  {new Date(assessment.dueDate).toLocaleDateString()}
+                </p>
+              </div>
+              {assessment.completedBy && (
+                <>
+                  <div>
+                    <p className="text-sm text-gray-500">Completed By</p>
+                    <p className="font-medium">{assessment.completedBy.name}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Completed At</p>
+                    <p className="font-medium">
+                      {new Date(assessment.completedAt!).toLocaleString()}
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
+
+            {assessment.description && (
+              <div className="mb-6">
+                <h3 className="text-sm font-medium mb-2">Description</h3>
+                <p className="text-gray-600">{assessment.description}</p>
+              </div>
+            )}
+
+            <ScrollArea className="h-[400px]">
+              {assessment.sections.map((section, index) => (
+                <div key={index} className="mb-6">
+                  <h3 className="text-lg font-medium mb-4">{section.title}</h3>
+                  <div className="space-y-4">
+                    {section.questions.map((question) => (
+                      <div key={question.id} className="p-4 bg-gray-50 rounded-lg">
+                        <p className="font-medium mb-2">{question.question}</p>
+                        {question.answer !== undefined && (
+                          <div className="ml-4">
+                            <p className="text-gray-600">
+                              {typeof question.answer === 'boolean'
+                                ? question.answer
+                                  ? 'Yes'
+                                  : 'No'
+                                : question.answer}
+                            </p>
+                            {question.notes && (
+                              <p className="text-sm text-gray-500 mt-1">
+                                Notes: {question.notes}
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              {assessment.attachments && assessment.attachments.length > 0 && (
+                <div className="mb-6">
+                  <h3 className="text-lg font-medium mb-4">Attachments</h3>
+                  <div className="space-y-2">
+                    {assessment.attachments.map((attachment) => (
+                      <Card
+                        key={attachment.id}
+                        className="p-3 flex items-center justify-between"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <FileText className="h-4 w-4 text-gray-500" />
+                          <span>{attachment.name}</span>
+                        </div>
+                        <Button variant="ghost" size="sm" asChild>
+                          <a href={attachment.url} target="_blank" rel="noopener noreferrer">
+                            View
+                          </a>
+                        </Button>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </ScrollArea>
+          </TabsContent>
+
+          <TabsContent value="history">
+            <ScrollArea className="h-[500px]">
+              <div className="space-y-4">
+                {assessment.history.map((event, index) => (
+                  <Card key={index} className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">{event.action}</p>
+                        <p className="text-sm text-gray-500">
+                          By: {event.user.name}
+                        </p>
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        {new Date(event.date).toLocaleString()}
+                      </p>
+                    </div>
+                    {event.details && (
+                      <p className="text-sm text-gray-600 mt-2">
+                        {event.details}
+                      </p>
+                    )}
+                  </Card>
+                ))}
+              </div>
+            </ScrollArea>
+          </TabsContent>
+        </Tabs>
+      </Card>
+    </div>
+  );
+}

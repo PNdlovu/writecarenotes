@@ -1,0 +1,158 @@
+{
+  "common": {
+    "save": "Sábháil",
+    "cancel": "Cealaigh",
+    "edit": "Cuir in Eagar",
+    "delete": "Scrios",
+    "view": "Féach",
+    "status": "Stádas",
+    "actions": "Gníomhartha",
+    "loading": "Ag Lódáil...",
+    "noData": "Níl aon sonraí ar fáil"
+  },
+  "journal": {
+    "title": "Iontrálacha Dialainne",
+    "new": "Iontráil Dialainne Nua",
+    "edit": "Cuir Iontráil Dialainne in Eagar",
+    "view": "Féach ar Iontráil Dialainne",
+    "fields": {
+      "date": "Dáta",
+      "reference": "Tagairt",
+      "description": "Cur Síos",
+      "debit": "Dochar",
+      "credit": "Sochar",
+      "account": "Cuntas",
+      "costCenter": "Ionad Costais"
+    },
+    "validation": {
+      "balanceRequired": "Caithfidh dochair a bheith cothrom le sochair",
+      "minEntries": "Dhá iontráil ar a laghad ag teastáil",
+      "accountRequired": "Cuntas ag teastáil",
+      "amountRequired": "Méid ag teastáil"
+    },
+    "status": {
+      "draft": "Dréacht",
+      "posted": "Postáilte",
+      "voided": "Neamhnithe"
+    }
+  },
+  "accounts": {
+    "title": "Cairt na gCuntas",
+    "new": "Cuntas Nua",
+    "edit": "Cuir Cuntas in Eagar",
+    "view": "Féach ar Chuntas",
+    "types": {
+      "asset": "Sócmhainn",
+      "liability": "Dliteanas",
+      "equity": "Cothromas",
+      "revenue": "Ioncam",
+      "expense": "Costas"
+    },
+    "fields": {
+      "code": "Cód Cuntais",
+      "name": "Ainm Cuntais",
+      "type": "Cineál Cuntais",
+      "category": "Catagóir",
+      "description": "Cur Síos",
+      "parent": "Cuntas Tuismitheora",
+      "balance": "Iarmhéid"
+    }
+  },
+  "statements": {
+    "balanceSheet": "Clár Comhardaithe",
+    "incomeStatement": "Ráiteas Ioncaim",
+    "cashFlow": "Ráiteas Sreabhadh Airgid",
+    "trialBalance": "Comhardú Trialach",
+    "sections": {
+      "assets": "Sócmhainní",
+      "liabilities": "Dliteanais",
+      "equity": "Cothromas",
+      "revenue": "Ioncam",
+      "expenses": "Costais"
+    }
+  },
+  "tax": {
+    "vat": {
+      "title": "Tuairisceáin CBL",
+      "new": "Tuairisceán CBL Nua",
+      "view": "Féach ar Thuairisceán CBL",
+      "fields": {
+        "period": "Tréimhse",
+        "vatDueSales": "CBL ar Dhíolacháin",
+        "vatDueAcquisitions": "CBL ar Éadálacha AE",
+        "totalVatDue": "CBL Iomlán Dlite",
+        "vatReclaimedCurrPeriod": "CBL Éilithe",
+        "netVatDue": "Glan-CBL Dlite",
+        "totalValueSalesExVAT": "Luach Iomlán Díolachán gan CBL",
+        "totalValuePurchasesExVAT": "Luach Iomlán Ceannachán gan CBL",
+        "totalValueGoodsSuppliedExVAT": "Luach Iomlán Earraí Soláthraithe gan CBL",
+        "totalAcquisitionsExVAT": "Luach Iomlán Éadálacha gan CBL"
+      },
+      "status": {
+        "draft": "Dréacht",
+        "submitted": "Curtha Isteach",
+        "accepted": "Glactha",
+        "rejected": "Diúltaithe"
+      }
+    },
+    "mtd": {
+      "title": "Cáin Dhigiteach",
+      "connect": "Ceangail le Revenue",
+      "disconnect": "Dícheangail ó Revenue",
+      "status": {
+        "connected": "Ceangailte le Revenue",
+        "disconnected": "Dícheangailte ó Revenue"
+      }
+    }
+  },
+  "offlineEntry": {
+    "queued": "Iontráil sa Scuaine",
+    "willSyncWhenOnline": "Sioncrónaítear an iontráil seo nuair a bheidh tú ar líne arís",
+    "error": "Earráid",
+    "createFailed": "Theip ar chruthú na hiontrála",
+    "syncFailed": "Theip ar shioncronú na hiontrála"
+  },
+  "sync": {
+    "complete": "Sioncronú Críochnaithe",
+    "entriesSynced": "Tá gach iontráil sioncronaithe",
+    "error": "Earráid Shioncronaithe",
+    "failed": "Theip ar shioncronú na n-iontrálacha",
+    "inProgress": "Sioncronú ar siúl",
+    "pendingEntries": "{{count}} iontráil ag fanacht le sioncronú"
+  },
+  "errors": {
+    "unauthorized": "Níl cead agat an gníomh seo a dhéanamh",
+    "invalidData": "Sonraí neamhbhailí curtha ar fáil",
+    "serverError": "Tharla earráid freastalaí",
+    "networkError": "Tharla earráid líonra",
+    "conflictError": "Coinbhleacht sonraí braite"
+  },
+  "compliance": {
+    "revenue": {
+      "title": "Comhlíonadh Revenue",
+      "rtdEnabled": "RTD Cumasaithe",
+      "vatRegistered": "Cláraithe do CBL",
+      "nextReturn": "Chéad Tuairisceán Eile Dlite"
+    },
+    "companies": {
+      "title": "Oifig na gCuideachtaí",
+      "filingDue": "Comhdú Dlite",
+      "lastFiled": "Comhdaithe Deireanach"
+    }
+  },
+  "audit": {
+    "title": "Rian Iniúchta",
+    "fields": {
+      "date": "Dáta",
+      "user": "Úsáideoir",
+      "action": "Gníomh",
+      "details": "Sonraí"
+    },
+    "actions": {
+      "created": "Cruthaithe",
+      "modified": "Modhnaithe",
+      "deleted": "Scriosta",
+      "viewed": "Feicthe"
+    }
+  }
+} 

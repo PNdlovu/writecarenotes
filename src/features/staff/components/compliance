@@ -1,0 +1,374 @@
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Button } from '@/components/ui/Button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Input } from '@/components/ui/Input';
+import { Textarea } from '@/components/ui/Textarea';
+import { Label } from '@/components/ui/form/label';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Progress } from '@/components/ui/Progress';
+import type { RegionType, RegulatorType, ComplianceLevel } from '@/lib/compliance/regulatoryFramework';
+
+interface RegulatoryInspectionProps {
+  staffId: string;
+  region: RegionType;
+}
+
+const inspectionSchema = z.object({
+  date: z.date(),
+  regulatorType: z.enum(['CQC', 'CI', 'CIW', 'RQIA', 'HIQA']),
+  findings: z.array(
+    z.object({
+      requirement: z.string(),
+      complianceLevel: z.enum([
+        'COMPLIANT',
+        'SUBSTANTIALLY_COMPLIANT',
+        'NOT_COMPLIANT',
+        'MAJOR_NON_COMPLIANCE',
+      ]),
+      evidence: z.string(),
+      actionRequired: z.string().optional(),
+    })
+  ),
+});
+
+export function RegulatoryInspection({ staffId, region }: RegulatoryInspectionProps) {
+  const [selectedCategory, setSelectedCategory] = React.useState<string>('');
+  const queryClient = useQueryClient();
+
+  // Fetch regulator info
+  const { data: regulator, isLoading: loadingRegulator } = useQuery({
+    queryKey: ['regulator', region],
+    queryFn: async () => {
+      const response = await fetch(`/api/staff/${staffId}/compliance/regulator?region=${region}`);
+      if (!response.ok) throw new Error('Failed to fetch regulator info');
+      return response.json();
+    },
+  });
+
+  // Fetch regional standards
+  const { data: standards, isLoading: loadingStandards } = useQuery({
+    queryKey: ['standards', region],
+    queryFn: async () => {
+      const response = await fetch(`/api/staff/${staffId}/compliance/standards?region=${region}`);
+      if (!response.ok) throw new Error('Failed to fetch standards');
+      return response.json();
+    },
+  });
+
+  // Fetch compliance status
+  const { data: compliance, isLoading: loadingCompliance } = useQuery({
+    queryKey: ['compliance', staffId, region],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/staff/${staffId}/compliance/status?region=${region}`
+      );
+      if (!response.ok) throw new Error('Failed to fetch compliance status');
+      return response.json();
+    },
+  });
+
+  // Calculate compliance statistics
+  const complianceStats = React.useMemo(() => {
+    if (!compliance) return null;
+
+    let total = 0;
+    let compliant = 0;
+    let substantial = 0;
+    let nonCompliant = 0;
+
+    Object.values(compliance).forEach(category => {
+      Object.values(category).forEach((status: any) => {
+        total++;
+        if (status.level === 'COMPLIANT') compliant++;
+        else if (status.level === 'SUBSTANTIALLY_COMPLIANT') substantial++;
+        else nonCompliant++;
+      });
+    });
+
+    return {
+      total,
+      compliant,
+      substantial,
+      nonCompliant,
+      complianceRate: (compliant / total) * 100,
+    };
+  }, [compliance]);
+
+  const createInspection = useMutation({
+    mutationFn: async (data: z.infer<typeof inspectionSchema>) => {
+      const response = await fetch(
+        `/api/staff/${staffId}/compliance/inspections?region=${region}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        }
+      );
+      if (!response.ok) throw new Error('Failed to create inspection record');
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['compliance', staffId, region] });
+    },
+  });
+
+  if (loadingRegulator || loadingStandards || loadingCompliance) {
+    return (
+      <div className="flex justify-center p-4">
+        <Loader2 className="w-6 h-6 animate-spin" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Regulator Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span>{regulator.name}</span>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.open(regulator.website, '_blank')}
+            >
+              Visit Website
+            </Button>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-gray-500">
+            Standards and guidance documentation can be found at{' '}
+            <a
+              href={regulator.standardsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              {regulator.standardsUrl}
+            </a>
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Compliance Overview */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Overall Compliance</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <Progress value={complianceStats?.complianceRate} />
+              <p className="text-2xl font-bold">
+                {complianceStats?.complianceRate.toFixed(1)}%
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Compliant Areas</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold text-green-600">
+              {complianceStats?.compliant}
+            </p>
+            <p className="text-sm text-gray-500">of {complianceStats?.total}</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Needs Improvement</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold text-yellow-600">
+              {complianceStats?.substantial}
+            </p>
+            <p className="text-sm text-gray-500">areas need attention</p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Non-Compliant</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-2xl font-bold text-red-600">
+              {complianceStats?.nonCompliant}
+            </p>
+            <p className="text-sm text-gray-500">require immediate action</p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Standards and Requirements */}
+      <Accordion
+        type="single"
+        collapsible
+        value={selectedCategory}
+        onValueChange={setSelectedCategory}
+      >
+        {Object.entries(standards).map(([category, requirements]) => (
+          <AccordionItem key={category} value={category}>
+            <AccordionTrigger>
+              <div className="flex items-center justify-between w-full">
+                <span>{category}</span>
+                <ComplianceBadge
+                  level={getCategoryComplianceLevel(category, compliance)}
+                />
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Requirement</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Last Updated</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {(requirements as string[]).map((requirement, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{requirement}</TableCell>
+                      <TableCell>
+                        <ComplianceBadge
+                          level={
+                            compliance?.[category]?.[requirement]?.level ||
+                            'NOT_COMPLIANT'
+                          }
+                        />
+                      </TableCell>
+                      <TableCell>
+                        {compliance?.[category]?.[requirement]?.lastAssessed
+                          ? format(
+                              new Date(
+                                compliance[category][requirement].lastAssessed
+                              ),
+                              'dd MMM yyyy'
+                            )
+                          : '-'}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              // Handle viewing evidence
+                            }}
+                          >
+                            Evidence
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              // Handle updating compliance
+                            }}
+                          >
+                            Update
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </AccordionContent>
+          </AccordionItem>
+        ))}
+      </Accordion>
+    </div>
+  );
+}
+
+function ComplianceBadge({ level }: { level: ComplianceLevel }) {
+  const variants: Record<ComplianceLevel, any> = {
+    COMPLIANT: {
+      color: 'bg-green-100 text-green-800',
+      icon: CheckCircle,
+    },
+    SUBSTANTIALLY_COMPLIANT: {
+      color: 'bg-yellow-100 text-yellow-800',
+      icon: AlertTriangle,
+    },
+    NOT_COMPLIANT: {
+      color: 'bg-red-100 text-red-800',
+      icon: XCircle,
+    },
+    MAJOR_NON_COMPLIANCE: {
+      color: 'bg-red-200 text-red-900',
+      icon: XCircle,
+    },
+  };
+
+  const { color, icon: Icon } = variants[level];
+
+  return (
+    <span
+      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color}`}
+    >
+      <Icon className="w-4 h-4 mr-1" />
+      {level.replace(/_/g, ' ')}
+    </span>
+  );
+}
+
+function getCategoryComplianceLevel(
+  category: string,
+  compliance: Record<string, Record<string, any>> | undefined
+): ComplianceLevel {
+  if (!compliance || !compliance[category]) return 'NOT_COMPLIANT';
+
+  const requirements = Object.values(compliance[category]);
+  const levels = requirements.map(req => req.level);
+
+  if (levels.includes('MAJOR_NON_COMPLIANCE')) return 'MAJOR_NON_COMPLIANCE';
+  if (levels.includes('NOT_COMPLIANT')) return 'NOT_COMPLIANT';
+  if (levels.includes('SUBSTANTIALLY_COMPLIANT')) return 'SUBSTANTIALLY_COMPLIANT';
+  return 'COMPLIANT';
+}

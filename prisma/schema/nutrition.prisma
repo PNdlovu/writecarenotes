@@ -1,0 +1,50 @@
+// Hydration Models
+model HydrationRecord {
+  id                String   @id @default(cuid())
+  residentId        String
+  resident          Resident @relation(fields: [residentId], references: [id])
+  timestamp         DateTime @default(now())
+  amount            Float
+  unit              String   // ML, OZ
+  type              String   // WATER, TEA, COFFEE, etc.
+  method            String   // INDEPENDENT, ASSISTED, etc.
+  consistency       String?  // For thickened liquids
+  temperature       String?  // Hot, Cold, Room Temperature
+  assistanceRequired Boolean @default(false)
+  assistanceNotes    String?
+  containerType     String
+  visualLevel       Float    // Percentage filled
+  notes             String?
+  takenWithMedication Boolean @default(false)
+  completed         Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  createdBy         String
+  updatedBy         String
+
+  @@index([residentId])
+  @@index([timestamp])
+}
+
+model HydrationGoal {
+  id                String   @id @default(cuid())
+  residentId        String
+  resident          Resident @relation(fields: [residentId], references: [id])
+  dailyTarget       Float
+  unit              String   // ML, OZ
+  reminders         Boolean  @default(true)
+  reminderFrequency Int      // minutes
+  startTime         String   // HH:mm
+  endTime           String   // HH:mm
+  adjustForWeather  Boolean  @default(true)
+  preferences       String[] // Array of preferred liquid types
+  restrictions      String[] // Array of restrictions
+  thickeningRequired Boolean @default(false)
+  thickeningLevel   String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  createdBy         String
+  updatedBy         String
+
+  @@index([residentId])
+}

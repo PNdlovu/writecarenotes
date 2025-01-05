@@ -1,0 +1,62 @@
+{
+  "StaffOnboarding": {
+    "title": "Clàradh Luchd-obrach",
+    "description": "Clàraich prìomh bhuill luchd-obrach airson do dhachaigh cùraim. Faodaidh tu barrachd luchd-obrach a chur ris nas fhaide air adhart.",
+    "fields": {
+      "firstName": "Ciad Ainm",
+      "lastName": "Sloinneadh",
+      "email": "Seòladh Post-d",
+      "phone": "Àireamh Fòn",
+      "role": "Dreuchd",
+      "regulatoryBody": "Buidheann Riaghlaidh",
+      "qualificationNumber": "Àireamh Clàraidh Proifeiseanta",
+      "emergencyContact": "Fios Èiginn"
+    },
+    "placeholders": {
+      "selectRole": "Tagh dreuchd",
+      "selectRegulator": "Tagh buidheann riaghlaidh",
+      "emergencyName": "Ainm Neach-conaltraidh",
+      "relationship": "Dàimh",
+      "emergencyPhone": "Fòn Èiginn"
+    },
+    "roles": {
+      "careWorker": "Neach-cùraim",
+      "seniorCareWorker": "Prìomh Neach-cùraim",
+      "nurse": "Nursaidh",
+      "manager": "Manaidsear Dachaigh Cùraim",
+      "deputyManager": "Iar-mhanaidsear",
+      "administrator": "Rianaire",
+      "activitiesCoordinator": "Co-òrdanaiche Ghnìomhachdan",
+      "maintenance": "Luchd-obrach Cumail Suas",
+      "kitchenStaff": "Luchd-obrach Cidsin",
+      "housekeeping": "Luchd-glanaidh"
+    },
+    "regulators": {
+      "CQC": "Coimisean Càileachd Cùraim",
+      "CIW": "Arolygiaeth Gofal Cymru",
+      "CI": "Sgrùdadh Cùraim Alba",
+      "RQIA": "RQIA Èirinn a Tuath",
+      "HIQA": "HIQA Èirinn"
+    },
+    "buttons": {
+      "back": "Air ais",
+      "continue": "Lean gu Gèilleadh",
+      "saving": "A' sàbhaladh..."
+    },
+    "success": {
+      "title": "Luchd-obrach Clàraichte",
+      "description": "Chaidh ball luchd-obrach a chlàradh gu soirbheachail."
+    },
+    "error": {
+      "title": "Mearachd Clàraidh",
+      "description": "Cha deach leinn ball luchd-obrach a chlàradh. Feuch a-rithist.",
+      "offline": "Chan eil thu air-loidhne an-dràsta. Thèid na h-atharraichean agad a shàbhaladh agus a shioncronachadh nuair a bhios tu air ais air-loidhne."
+    },
+    "validation": {
+      "required": "Tha am raon seo riatanach",
+      "email": "Cuir a-steach seòladh post-d dligheach",
+      "phone": "Cuir a-steach àireamh fòn dligheach",
+      "qualificationNumber": "Cuir a-steach àireamh clàraidh dligheach"
+    }
+  }
+}

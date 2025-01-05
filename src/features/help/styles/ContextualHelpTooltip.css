@@ -1,0 +1,106 @@
+.contextual-help-tooltip {
+    position: fixed;
+    width: 300px;
+    max-height: 400px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.tooltip-header {
+    padding: 12px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tooltip-header h3 {
+    margin: 0;
+    font-size: 16px;
+    color: #343a40;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0 4px;
+}
+
+.close-button:hover {
+    color: #343a40;
+}
+
+.tooltip-content {
+    padding: 12px;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.help-entry {
+    margin-bottom: 16px;
+}
+
+.help-entry:last-child {
+    margin-bottom: 0;
+}
+
+.help-entry h4 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: #495057;
+}
+
+.help-entry p {
+    margin: 0 0 8px 0;
+    font-size: 13px;
+    color: #6c757d;
+    line-height: 1.4;
+}
+
+.contextual-hint {
+    background: #e3f2fd;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #0d47a1;
+    margin-top: 8px;
+}
+
+.tooltip-footer {
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+.keyboard-hint {
+    font-size: 12px;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Animation */
+.contextual-help-tooltip {
+    animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+} 

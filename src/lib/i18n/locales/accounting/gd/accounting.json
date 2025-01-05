@@ -1,0 +1,158 @@
+{
+  "common": {
+    "save": "Sàbhail",
+    "cancel": "Sguir dheth",
+    "edit": "Deasaich",
+    "delete": "Sguab às",
+    "view": "Seall",
+    "status": "Inbhe",
+    "actions": "Gnìomhan",
+    "loading": "A' luchdadh...",
+    "noData": "Chan eil dàta ri fhaighinn"
+  },
+  "journal": {
+    "title": "Inntrigidhean Leabhair",
+    "new": "Inntrigeadh Leabhair Ùr",
+    "edit": "Deasaich Inntrigeadh Leabhair",
+    "view": "Seall Inntrigeadh Leabhair",
+    "fields": {
+      "date": "Ceann-latha",
+      "reference": "Iomradh",
+      "description": "Tuairisgeul",
+      "debit": "Fiachan",
+      "credit": "Creideas",
+      "account": "Cunntas",
+      "costCenter": "Ionad Cosgais"
+    },
+    "validation": {
+      "balanceRequired": "Feumaidh fiachan is creideas a bhith co-ionann",
+      "minEntries": "Co-dhiù dà inntrigeadh a dhìth",
+      "accountRequired": "Cunntas a dhìth",
+      "amountRequired": "Suim a dhìth"
+    },
+    "status": {
+      "draft": "Dreachd",
+      "posted": "Air a chlàradh",
+      "voided": "Air a dhubhadh às"
+    }
+  },
+  "accounts": {
+    "title": "Clàr nan Cunntasan",
+    "new": "Cunntas Ùr",
+    "edit": "Deasaich Cunntas",
+    "view": "Seall Cunntas",
+    "types": {
+      "asset": "So-mhaoin",
+      "liability": "Fiachan",
+      "equity": "Cothromas",
+      "revenue": "Teachd-a-steach",
+      "expense": "Cosgais"
+    },
+    "fields": {
+      "code": "Còd Cunntais",
+      "name": "Ainm Cunntais",
+      "type": "Seòrsa Cunntais",
+      "category": "Roinn",
+      "description": "Tuairisgeul",
+      "parent": "Cunntas Pàrant",
+      "balance": "Cothromachadh"
+    }
+  },
+  "statements": {
+    "balanceSheet": "Duilleag Cothromachaidh",
+    "incomeStatement": "Aithris Teachd-a-steach",
+    "cashFlow": "Aithris Sruth-airgid",
+    "trialBalance": "Cothromachadh Deuchainn",
+    "sections": {
+      "assets": "So-mhaoin",
+      "liabilities": "Fiachan",
+      "equity": "Cothromas",
+      "revenue": "Teachd-a-steach",
+      "expenses": "Cosgaisean"
+    }
+  },
+  "tax": {
+    "vat": {
+      "title": "Tilleadh VAT",
+      "new": "Tilleadh VAT Ùr",
+      "view": "Seall Tilleadh VAT",
+      "fields": {
+        "period": "Ùine",
+        "vatDueSales": "VAT air Reicean",
+        "vatDueAcquisitions": "VAT air Ceannachd AE",
+        "totalVatDue": "VAT Iomlan ri Phàigheadh",
+        "vatReclaimedCurrPeriod": "VAT air Ais-thagradh",
+        "netVatDue": "VAT Lom ri Phàigheadh",
+        "totalValueSalesExVAT": "Luach Iomlan Reicean às aonais VAT",
+        "totalValuePurchasesExVAT": "Luach Iomlan Ceannachd às aonais VAT",
+        "totalValueGoodsSuppliedExVAT": "Luach Iomlan Bathar Solairt às aonais VAT",
+        "totalAcquisitionsExVAT": "Luach Iomlan Ceannachd às aonais VAT"
+      },
+      "status": {
+        "draft": "Dreachd",
+        "submitted": "Air a chur a-steach",
+        "accepted": "Air gabhail ris",
+        "rejected": "Air a dhiùltadh"
+      }
+    },
+    "mtd": {
+      "title": "Cìsean Didseatach",
+      "connect": "Ceangail ri HMRC",
+      "disconnect": "Dì-cheangail bho HMRC",
+      "status": {
+        "connected": "Ceangailte ri HMRC",
+        "disconnected": "Neo-cheangailte ri HMRC"
+      }
+    }
+  },
+  "offlineEntry": {
+    "queued": "Inntrigeadh sa Chuairteachan",
+    "willSyncWhenOnline": "Thèid an inntrigeadh seo a shioncronachadh nuair a bhios thu air-loidhne",
+    "error": "Mearachd",
+    "createFailed": "Dh'fhàillig cruthachadh na h-inntrigidh",
+    "syncFailed": "Dh'fhàillig sioncronachadh na h-inntrigidh"
+  },
+  "sync": {
+    "complete": "Sioncronachadh Deiseil",
+    "entriesSynced": "Chaidh a h-uile inntrigeadh a shioncronachadh",
+    "error": "Mearachd Sioncronachaidh",
+    "failed": "Dh'fhàillig sioncronachadh nan inntrigidhean",
+    "inProgress": "Sioncronachadh a' dol air adhart",
+    "pendingEntries": "{{count}} inntrigeadh ri shioncronachadh"
+  },
+  "errors": {
+    "unauthorized": "Chan eil cead agad an gnìomh seo a dhèanamh",
+    "invalidData": "Dàta neo-dhligheach air a thoirt seachad",
+    "serverError": "Thachair mearachd frithealaiche",
+    "networkError": "Thachair mearachd lìonraidh",
+    "conflictError": "Chaidh còmhstri dàta a lorg"
+  },
+  "compliance": {
+    "hmrc": {
+      "title": "Gèilleadh HMRC",
+      "mtdEnabled": "MTD an Gnìomh",
+      "vatRegistered": "Clàraichte airson VAT",
+      "nextReturn": "An ath Thilleadh ri Phàigheadh"
+    },
+    "companies": {
+      "title": "Taigh nan Companaidhean",
+      "filingDue": "Clàradh ri Phàigheadh",
+      "lastFiled": "Air a Chlàradh mu Dheireadh"
+    }
+  },
+  "audit": {
+    "title": "Slighe Sgrùdaidh",
+    "fields": {
+      "date": "Ceann-latha",
+      "user": "Cleachdaiche",
+      "action": "Gnìomh",
+      "details": "Fiosrachadh"
+    },
+    "actions": {
+      "created": "Air a Chruthachadh",
+      "modified": "Air Atharrachadh",
+      "deleted": "Air a Sguabadh às",
+      "viewed": "Air Fhaicinn"
+    }
+  }
+} 

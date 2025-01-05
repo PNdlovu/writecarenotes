@@ -1,0 +1,158 @@
+{
+  "common": {
+    "save": "Cadw",
+    "cancel": "Canslo",
+    "edit": "Golygu",
+    "delete": "Dileu",
+    "view": "Gweld",
+    "status": "Statws",
+    "actions": "Gweithredoedd",
+    "loading": "Llwytho...",
+    "noData": "Dim data ar gael"
+  },
+  "journal": {
+    "title": "Cofnodion Cyfnodol",
+    "new": "Cofnod Cyfnodol Newydd",
+    "edit": "Golygu Cofnod Cyfnodol",
+    "view": "Gweld Cofnod Cyfnodol",
+    "fields": {
+      "date": "Dyddiad",
+      "reference": "Cyfeirnod",
+      "description": "Disgrifiad",
+      "debit": "Debyd",
+      "credit": "Credyd",
+      "account": "Cyfrif",
+      "costCenter": "Canolfan Gost"
+    },
+    "validation": {
+      "balanceRequired": "Rhaid i ddebydau fod yn hafal â chredydau",
+      "minEntries": "O leiaf dau gofnod yn ofynnol",
+      "accountRequired": "Cyfrif yn ofynnol",
+      "amountRequired": "Swm yn ofynnol"
+    },
+    "status": {
+      "draft": "Drafft",
+      "posted": "Wedi'i Bostio",
+      "voided": "Wedi'i Ddileu"
+    }
+  },
+  "accounts": {
+    "title": "Siart Cyfrifon",
+    "new": "Cyfrif Newydd",
+    "edit": "Golygu Cyfrif",
+    "view": "Gweld Cyfrif",
+    "types": {
+      "asset": "Ased",
+      "liability": "Rhwymedigaeth",
+      "equity": "Ecwiti",
+      "revenue": "Refeniw",
+      "expense": "Treuliau"
+    },
+    "fields": {
+      "code": "Cod Cyfrif",
+      "name": "Enw Cyfrif",
+      "type": "Math o Gyfrif",
+      "category": "Categori",
+      "description": "Disgrifiad",
+      "parent": "Cyfrif Rhiant",
+      "balance": "Balans"
+    }
+  },
+  "statements": {
+    "balanceSheet": "Mantolen",
+    "incomeStatement": "Datganiad Incwm",
+    "cashFlow": "Datganiad Llif Arian",
+    "trialBalance": "Mantolen Brawf",
+    "sections": {
+      "assets": "Asedau",
+      "liabilities": "Rhwymedigaethau",
+      "equity": "Ecwiti",
+      "revenue": "Refeniw",
+      "expenses": "Treuliau"
+    }
+  },
+  "tax": {
+    "vat": {
+      "title": "Ffurflenni TAW",
+      "new": "Ffurflen TAW Newydd",
+      "view": "Gweld Ffurflen TAW",
+      "fields": {
+        "period": "Cyfnod",
+        "vatDueSales": "TAW yn Ddyledus ar Werthiannau",
+        "vatDueAcquisitions": "TAW yn Ddyledus ar Gaffaeliadau UE",
+        "totalVatDue": "Cyfanswm TAW yn Ddyledus",
+        "vatReclaimedCurrPeriod": "TAW wedi'i Hawlio",
+        "netVatDue": "TAW Net yn Ddyledus",
+        "totalValueSalesExVAT": "Cyfanswm Gwerth Gwerthiannau heb TAW",
+        "totalValuePurchasesExVAT": "Cyfanswm Gwerth Pryniadau heb TAW",
+        "totalValueGoodsSuppliedExVAT": "Cyfanswm Gwerth Cyflenwadau heb TAW",
+        "totalAcquisitionsExVAT": "Cyfanswm Gwerth Caffaeliadau heb TAW"
+      },
+      "status": {
+        "draft": "Drafft",
+        "submitted": "Wedi'i Gyflwyno",
+        "accepted": "Wedi'i Dderbyn",
+        "rejected": "Wedi'i Wrthod"
+      }
+    },
+    "mtd": {
+      "title": "Gwneud Treth yn Ddigidol",
+      "connect": "Cysylltu â CThEM",
+      "disconnect": "Datgysylltu o CThEM",
+      "status": {
+        "connected": "Wedi Cysylltu â CThEM",
+        "disconnected": "Heb Gysylltu â CThEM"
+      }
+    }
+  },
+  "offlineEntry": {
+    "queued": "Cofnod mewn Ciw",
+    "willSyncWhenOnline": "Bydd y cofnod hwn yn cael ei gydamseru pan fyddwch ar-lein eto",
+    "error": "Gwall",
+    "createFailed": "Methu creu cofnod",
+    "syncFailed": "Methu cydamseru cofnod"
+  },
+  "sync": {
+    "complete": "Cydamseru'n Gyflawn",
+    "entriesSynced": "Mae pob cofnod wedi'i gydamseru",
+    "error": "Gwall Cydamseru",
+    "failed": "Methu cydamseru cofnodion",
+    "inProgress": "Cydamseru'n mynd rhagddo",
+    "pendingEntries": "{{count}} cofnod yn aros i gydamseru"
+  },
+  "errors": {
+    "unauthorized": "Nid oes gennych ganiatâd i wneud y weithred hon",
+    "invalidData": "Data annilys wedi'i ddarparu",
+    "serverError": "Gwall gweinydd wedi digwydd",
+    "networkError": "Gwall rhwydwaith wedi digwydd",
+    "conflictError": "Gwrthdaro data wedi'i ganfod"
+  },
+  "compliance": {
+    "hmrc": {
+      "title": "Cydymffurfiaeth CThEM",
+      "mtdEnabled": "GTD wedi'i Alluogi",
+      "vatRegistered": "Cofrestredig ar gyfer TAW",
+      "nextReturn": "Ffurflen Nesaf yn Ddyledus"
+    },
+    "companies": {
+      "title": "Tŷ'r Cwmnïau",
+      "filingDue": "Ffeilio'n Ddyledus",
+      "lastFiled": "Wedi Ffeilio Ddiwethaf"
+    }
+  },
+  "audit": {
+    "title": "Trywydd Archwilio",
+    "fields": {
+      "date": "Dyddiad",
+      "user": "Defnyddiwr",
+      "action": "Gweithred",
+      "details": "Manylion"
+    },
+    "actions": {
+      "created": "Wedi'i Greu",
+      "modified": "Wedi'i Addasu",
+      "deleted": "Wedi'i Ddileu",
+      "viewed": "Wedi'i Weld"
+    }
+  }
+} 

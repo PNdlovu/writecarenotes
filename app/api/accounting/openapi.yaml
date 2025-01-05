@@ -1,0 +1,429 @@
+openapi: 3.1.0
+info:
+  title: Write Care Notes Accounting API
+  version: 1.0.0
+  description: |
+    Enterprise-grade API for managing care home accounting operations including payments, pricing, and reporting.
+    
+    ## Subscription-Based Modules
+    All modules are fully integrated within the application and are activated through subscription:
+    - Accounting & Finance
+    - Care Planning & Documentation
+    - Staff Management & Scheduling
+    - Medication Management
+    - Compliance & Auditing
+    
+    ## Third-Party Integrations
+    The application integrates with authorized healthcare and financial systems:
+    - NHS Digital Services
+    - GP Connect
+    - Pharmacy Systems
+    - Banking Systems
+    - HMRC Services
+    
+    ## Authentication
+    All endpoints require a valid JWT token in the Authorization header.
+    
+    ## Rate Limiting
+    API requests are rate limited based on organization and endpoint.
+    
+    ## Error Handling
+    Standard error responses follow RFC 7807 Problem Details format.
+    
+    ## Health Checks
+    The application provides comprehensive health check endpoints to monitor system status and component health.
+
+servers:
+  - url: /api/accounting
+    description: Accounting API routes
+  - url: /api/health
+    description: Health check endpoints
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        details:
+          type: array
+          items:
+            type: object
+        requestId:
+          type: string
+
+    HealthStatus:
+      type: object
+      required:
+        - status
+        - timestamp
+        - version
+        - components
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+          description: Overall system health status
+        timestamp:
+          type: string
+          format: date-time
+          description: Time when the health check was performed
+        version:
+          type: string
+          description: Application version
+        components:
+          type: object
+          additionalProperties:
+            type: object
+            required:
+              - status
+              - lastChecked
+            properties:
+              status:
+                type: string
+                enum: [healthy, degraded, unhealthy]
+                description: Component health status
+              latency:
+                type: number
+                description: Response time in milliseconds
+              message:
+                type: string
+                description: Additional status information
+              lastChecked:
+                type: string
+                format: date-time
+                description: Time when the component was last checked
+
+    PriceConfig:
+      type: object
+      required:
+        - name
+        - type
+        - currency
+        - amount
+        - effectiveFrom
+      properties:
+        name:
+          type: string
+          minLength: 1
+        type:
+          type: string
+          enum: [FIXED, VARIABLE, TIERED, VOLUME]
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+        amount:
+          type: number
+          format: float
+          minimum: 0
+        effectiveFrom:
+          type: string
+          format: date-time
+        effectiveTo:
+          type: string
+          format: date-time
+        rules:
+          type: array
+          items:
+            type: object
+            properties:
+              condition:
+                type: string
+              value:
+                type: number
+        metadata:
+          type: object
+          additionalProperties: true
+
+    Report:
+      type: object
+      required:
+        - type
+        - startDate
+        - endDate
+      properties:
+        type:
+          type: string
+          enum: [REVENUE, PAYMENTS, PRICING, TRANSACTIONS, RECONCILIATION, AUDIT]
+          description: Type of report to generate
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        format:
+          type: string
+          enum: [PDF, CSV, EXCEL]
+          default: PDF
+          description: Output format for the report
+        filters:
+          type: object
+          properties:
+            status:
+              type: string
+              description: Filter by payment/transaction status
+            method:
+              type: string
+              description: Filter by payment method
+            category:
+              type: string
+              description: Filter by transaction category
+            region:
+              type: string
+              description: Filter by geographical region
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional report configuration
+
+    ReportSchedule:
+      type: object
+      required:
+        - type
+        - frequency
+        - recipients
+      properties:
+        type:
+          type: string
+          enum: [REVENUE, PAYMENTS, PRICING, TRANSACTIONS, RECONCILIATION, AUDIT]
+          description: Type of report to schedule
+        frequency:
+          type: string
+          enum: [DAILY, WEEKLY, MONTHLY, QUARTERLY]
+          description: How often the report should be generated
+        format:
+          type: string
+          enum: [PDF, CSV, EXCEL]
+          default: PDF
+          description: Output format for the report
+        recipients:
+          type: array
+          items:
+            type: string
+            format: email
+          description: Email addresses to receive the report
+        filters:
+          type: object
+          properties:
+            status:
+              type: string
+              description: Filter by payment/transaction status
+            method:
+              type: string
+              description: Filter by payment method
+            category:
+              type: string
+              description: Filter by transaction category
+            region:
+              type: string
+              description: Filter by geographical region
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Additional schedule configuration
+
+paths:
+  /health:
+    get:
+      summary: Get system health status
+      operationId: getHealthStatus
+      tags: [Health]
+      description: |
+        Checks the health of all system components including:
+        - Redis Cache
+        - Job Queues
+        - NHS Integration
+        - GP Connect
+        - HMRC Integration
+        - Database
+      responses:
+        '200':
+          description: System health status retrieved successfully (healthy or degraded)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+        '503':
+          description: System is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+
+  /pricing:
+    post:
+      summary: Create a new price configuration
+      operationId: createPriceConfig
+      tags: [Pricing]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PriceConfig'
+      responses:
+        '201':
+          description: Price configuration created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PriceConfig'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '429':
+          description: Too many requests
+
+    get:
+      summary: Get price configurations
+      operationId: getPriceConfigs
+      tags: [Pricing]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [FIXED, VARIABLE, TIERED, VOLUME]
+        - name: effectiveDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: currency
+          in: query
+          schema:
+            type: string
+            minLength: 3
+            maxLength: 3
+      responses:
+        '200':
+          description: List of price configurations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PriceConfig'
+        '401':
+          description: Unauthorized
+        '429':
+          description: Too many requests
+
+  /reports:
+    post:
+      summary: Generate a new report
+      operationId: generateReport
+      tags: [Reports]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Report'
+      responses:
+        '201':
+          description: Report generation started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Report'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '429':
+          description: Too many requests
+
+    get:
+      summary: Get report history
+      operationId: getReports
+      tags: [Reports]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [REVENUE, PAYMENTS, PRICING, TRANSACTIONS, RECONCILIATION, AUDIT]
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of reports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Report'
+        '401':
+          description: Unauthorized
+        '429':
+          description: Too many requests
+
+    put:
+      summary: Schedule a report
+      operationId: scheduleReport
+      tags: [Reports]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportSchedule'
+      responses:
+        '200':
+          description: Report scheduled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportSchedule'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '429':
+          description: Too many requests 

@@ -1,0 +1,36 @@
+name: Translation Check
+
+on:
+  push:
+    paths:
+      - 'src/lib/i18n/locales/**'
+      - 'src/lib/i18n/__tests__/**'
+  pull_request:
+    paths:
+      - 'src/lib/i18n/locales/**'
+      - 'src/lib/i18n/__tests__/**'
+
+jobs:
+  test:
+    name: Check Translations
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run translation tests
+        run: npm test src/lib/i18n/__tests__/translations.test.ts
+
+      - name: Check for missing translations
+        if: failure()
+        run: |
+          echo "::warning::Translation tests failed. Please check the test output for missing or invalid translations."

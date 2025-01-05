@@ -1,0 +1,30 @@
+{
+  "organization": {
+    "dashboard": {
+      "title": "Dangosfwrdd Sefydliad",
+      "description": "Rheoli gosodiadau eich sefydliad a gweld dadansoddeg",
+      "stats": {
+        "totalCareHomes": "Cyfanswm Cartrefi Gofal",
+        "activeResidents": "Preswylwyr Gweithredol",
+        "totalStaff": "Cyfanswm Staff"
+      }
+    },
+    "settings": {
+      "title": "Gosodiadau Sefydliad",
+      "sections": {
+        "general": "Gosodiadau Cyffredinol",
+        "security": "Diogelwch a Chydymffurfiaeth",
+        "billing": "Bilio a Thanysgrifiad",
+        "integrations": "Integreiddiadau"
+      }
+    },
+    "analytics": {
+      "title": "Dadansoddeg Sefydliad",
+      "metrics": {
+        "occupancy": "Cyfradd Meddiannaeth",
+        "staffing": "Lefelau Staffio",
+        "compliance": "Sgôr Cydymffurfiaeth"
+      }
+    }
+  }
+}

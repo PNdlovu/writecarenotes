@@ -1,0 +1,235 @@
+openapi: 3.0.0
+info:
+  title: Activities API
+  version: '3.0.0'
+  description: |
+    API for managing care home activities with full enterprise features including
+    multi-tenancy, offline support, and regional compliance.
+
+servers:
+  - url: /api
+    description: API base URL
+
+components:
+  schemas:
+    Activity:
+      type: object
+      required:
+        - id
+        - title
+        - type
+        - status
+        - startTime
+        - organizationId
+        - careHomeId
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum: [PHYSICAL, SOCIAL, CREATIVE, COGNITIVE, SPIRITUAL]
+        status:
+          type: string
+          enum: [SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED]
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        organizationId:
+          type: string
+          format: uuid
+        careHomeId:
+          type: string
+          format: uuid
+        durationMinutes:
+          type: integer
+        consentDate:
+          type: string
+          format: date-time
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/ActivityParticipant'
+
+    ActivityParticipant:
+      type: object
+      required:
+        - id
+        - activityId
+        - userId
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        activityId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [INVITED, CONFIRMED, ATTENDED, DECLINED]
+        consentDate:
+          type: string
+          format: date-time
+
+    ActivityStats:
+      type: object
+      properties:
+        total:
+          type: string
+        completed:
+          type: string
+        inProgress:
+          type: string
+        scheduled:
+          type: string
+        cancelled:
+          type: string
+        participantCount:
+          type: string
+        byCategory:
+          type: object
+          additionalProperties:
+            type: string
+        averageDuration:
+          type: string
+        completionRate:
+          type: string
+        complianceRate:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        details:
+          type: object
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+paths:
+  /organizations/{organizationId}/care-homes/{careHomeId}/activities:
+    get:
+      summary: List activities
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: careHomeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [PHYSICAL, SOCIAL, CREATIVE, COGNITIVE, SPIRITUAL]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED]
+      responses:
+        '200':
+          description: List of activities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Activity'
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /organizations/{organizationId}/care-homes/{careHomeId}/activities/analytics:
+    get:
+      summary: Get activity analytics
+      parameters:
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: careHomeId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: startDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [PHYSICAL, SOCIAL, CREATIVE, COGNITIVE, SPIRITUAL]
+        - name: timezone
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Activity statistics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityStats'
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+security:
+  - bearerAuth: []
